@@ -18,15 +18,14 @@ const Backlog: React.FC = () => {
     const [isPlayedSectionOpen, setIsPlayedSectionOpen] = useState(false);
     const [isNotPlayedSectionOpen, setIsNotPlayedSectionOpen] = useState(false);
     
-    useEffect(() => {
-        const getGames = async () => {
-            const games = await fetchGames();
-            if (games) {
-                setGamesList(games);
-                setSteamApiConnected(true);
-            }
+    const getGames = async () => {
+        const games = await fetchGames();
+        if (games) {
+            setGamesList(games);
+            setSteamApiConnected(true);
         }
-        
+    }
+    useEffect(() => {   
         getGames();
     }, []);
         
@@ -59,6 +58,7 @@ const Backlog: React.FC = () => {
                                         name={game.title}
                                         status={game.status}
                                         playtime={game.playtime}
+                                        onUpdate={getGames}
                                     />
                                 ))}
                             </div>
@@ -85,6 +85,7 @@ const Backlog: React.FC = () => {
                                             name={game.title}
                                             status={game.status}
                                             playtime={game.playtime}
+                                            onUpdate={getGames}
                                         />
                                     )) : playedGames.slice(0, 5).map(game => (
                                         <GameCard
@@ -95,6 +96,7 @@ const Backlog: React.FC = () => {
                                             name={game.title}
                                             status={game.status}
                                             playtime={game.playtime}
+                                            onUpdate={getGames}
                                         />
                                     ))}
                                 </div>
@@ -121,6 +123,7 @@ const Backlog: React.FC = () => {
                                             name={game.title}
                                             status={game.status}
                                             playtime={game.playtime}
+                                            onUpdate={getGames}
                                         />
                                     )) : notPlayedGames.slice(0, 5).map(game => (
                                         <GameCard
@@ -131,6 +134,7 @@ const Backlog: React.FC = () => {
                                             name={game.title}
                                             status={game.status}
                                             playtime={game.playtime}
+                                            onUpdate={getGames}
                                         />
                                     ))}
                                 </div>

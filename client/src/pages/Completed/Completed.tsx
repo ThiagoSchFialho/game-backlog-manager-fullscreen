@@ -14,15 +14,14 @@ const Completed: React.FC = () => {
     const [currentPage] = useState('completed');
     const [gamesList, setGamesList] = useState<Game[]>([]);
     
-    useEffect(() => {
-        const getGames = async () => {
-            const games = await fetchGames();
-            if (games) {
-                setGamesList(games);
-                setSteamApiConnected(true);
-            }
+    const getGames = async () => {
+        const games = await fetchGames();
+        if (games) {
+            setGamesList(games);
+            setSteamApiConnected(true);
         }
-        
+    }
+    useEffect(() => {   
         getGames();
     }, []);
 
@@ -52,6 +51,7 @@ const Completed: React.FC = () => {
                                     name={game.title}
                                     status={game.status}
                                     playtime={game.playtime}
+                                    onUpdate={getGames}
                                 />
                             )
                         ))}

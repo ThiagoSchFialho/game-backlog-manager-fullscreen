@@ -43,15 +43,14 @@ const Collection: React.FC = () => {
         setCurrentPage(`collection${id}`);
     }, [id]);
 
-    useEffect(() => {
-        const getCollections = async () => {
-            const collections = await fetchCollections();
-            if (collections) {
-                setCollectionsList(collections);
-                setSteamApiConnected(true);
-            }
+    const getCollections = async () => {
+        const collections = await fetchCollections();
+        if (collections) {
+            setCollectionsList(collections);
+            setSteamApiConnected(true);
         }
-        
+    }
+    useEffect(() => {
         getCollections();
     }, []);
 
@@ -76,6 +75,7 @@ const Collection: React.FC = () => {
                                 name={game.title}
                                 status={game.status}
                                 playtime={game.playtime}
+                                onUpdate={getCollections}
                             />
                         ))}
                     </div>

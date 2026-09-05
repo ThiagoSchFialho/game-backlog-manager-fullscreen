@@ -22,15 +22,14 @@ const Home: React.FC = () => {
     const [selected] = useState('home');
     const [gamesList, setGamesList] = useState<Game[]>([]);
     
-    useEffect(() => {
-        const getGames = async () => {
-            const games = await fetchGames();
-            if (games) {
-                setGamesList(games);
-                setSteamApiConnected(true);
-            }
+    const getGames = async () => {
+        const games = await fetchGames();
+        if (games) {
+            setGamesList(games);
+            setSteamApiConnected(true);
         }
-        
+    }
+    useEffect(() => {   
         getGames();
     }, []);
     
@@ -117,6 +116,7 @@ const Home: React.FC = () => {
                                         name={game.title}
                                         status={game.status}
                                         playtime={game.playtime}
+                                        onUpdate={getGames}
                                     />
                                 ))}
                             </div>

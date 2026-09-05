@@ -19,6 +19,7 @@ interface GameCardsProps {
     name: string;
     status: 'completed' | 'not-played' | 'played' | 'playing';
     playtime: number;
+    onUpdate?: () => void;
 }
 
 const statusConfig = {
@@ -28,7 +29,7 @@ const statusConfig = {
     completed: { icon: completed, label: 'Zerado' },
 };
 
-const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, playtime }) => {
+const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, playtime, onUpdate }) => {
     const { fetchGames, updateStatus } = useDb();
     const { fetchCollections, addToCollection, deleteFromCollection, getCollectionsFromGame } = useCollection();
     const currentStatus = statusConfig[status];
@@ -41,21 +42,21 @@ const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, pl
     const [collectionsList, setCollectionsList] = useState<ICollection[]>([]);
     const [gameCollectionsList, setGameCollectionsList] = useState<ICollection[]>([]);
     
-    useEffect(() => {
-        const getCollections = async () => {
-            const collections = await fetchCollections();
-            if (collections) {
-                setCollectionsList(collections);
-            }
+    const getCollections = async () => {
+        const collections = await fetchCollections();
+        if (collections) {
+            setCollectionsList(collections);
         }
-        
-        const getGameCollections = async () => {
-            const gameCollections = await getCollectionsFromGame(id);
-            if (gameCollections) {
-                setGameCollectionsList(gameCollections);
-            }
+    }
+    
+    const getGameCollections = async () => {
+        const gameCollections = await getCollectionsFromGame(id);
+        if (gameCollections) {
+            setGameCollectionsList(gameCollections);
         }
+    }
 
+    useEffect(() => {
         getCollections();
         getGameCollections();
     }, []);
@@ -86,7 +87,9 @@ const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, pl
         const updated = await updateStatus(id, status);
         if (!updated) return;
 
-        window.location.reload();
+        getCollections();
+        getGameCollections();
+        onUpdate?.();
     };
 
     const cancelClose = () => {
@@ -126,7 +129,9 @@ const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, pl
         if (result.error) {
             alert(result.error);
         } else {
-            window.location.reload();
+            getCollections();
+            getGameCollections();
+            onUpdate?.();
         }
     }
 
@@ -141,7 +146,9 @@ const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, pl
         if (result.error) {
             alert(result.error);
         } else {
-            window.location.reload();
+            getCollections();
+            getGameCollections();
+            onUpdate?.();
         }
     }
 
