@@ -1,0 +1,65 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    height: 90px;
+    background-color: var(--bg-primary);
+    border-bottom: var(--border-primary);
+    box-shadow: var(--shadow);
+}
+
+.logo {
+    cursor: pointer;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: var(--bg-secondary);
+    border: var(--border-primary);
+    border-radius: 10px;
+}
+
+.search-input {
+    width: 680px;
+    border: none;
+    outline: none;
+    background-color: var(--bg-secondary);
+    font-size: 16px;
+}
+
+.search-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+.steam-api-indicator-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.steam-api-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.steam-api-indicator::before {
+    content: '';
+    transform: translateY(1.5px);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.steam-api-indicator.connected {
+    color: var(--success);
+}
+
+.steam-api-indicator.disconnected {
+    color: var(--danger);
+}

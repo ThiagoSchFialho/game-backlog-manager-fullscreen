@@ -1,0 +1,37 @@
+.collection-folder-container {
+    margin-bottom: 30px;
+}
+
+.collection-folder-container p {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.collection-folder {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 20px;
+    width: 281px;
+    height: 281px;
+    cursor: pointer;
+}
+
+.game {
+    width: 112px;
+    height: 112px;
+    background-color: var(--primary);
+    border-radius: 10px;
+}
+
+.collection-game-img {
+    width: 112px;
+    height: 112px;
+    border-radius: 10px;
+}

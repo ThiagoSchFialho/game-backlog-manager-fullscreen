@@ -1,0 +1,238 @@
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body {
+    background-color: var(--bg-secondary);
+}
+
+.main-container {
+    display: flex;
+}
+
+.home-main-content {
+    margin: 0 auto;
+    padding: 20px 0 50px 0;
+}
+
+.content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.content-header-text h1 {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.content-header-text p {
+    color: var(--text-secondary);
+}
+
+.info-cards-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 290px;
+    height: 85px;
+    padding: 15px 20px;
+    background-color: red;
+    border-radius: 10px;
+}
+
+.background-blue{
+    background-color: rgba(83, 159, 233, 0.2);
+    border: 1px solid rgba(83, 159, 233, 0.5);
+}
+.background-green{
+    background-color: rgba(31, 192, 109, 0.2);
+    border: 1px solid rgba(31, 192, 109, 0.5);
+}
+.background-purple{
+    background-color: rgba(123, 92, 255, 0.2);
+    border: 1px solid rgba(123, 92, 255, 0.5);
+}
+.background-yellow{
+    background-color: rgba(212, 172, 39, 0.2);
+    border: 1px solid rgba(212, 172, 39, 0.5);
+}
+
+.info-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 15px;
+}
+
+.blue{
+    background-color: rgba(83, 159, 233, 0.4);
+}
+.green{
+    background-color: rgba(31, 192, 109, 0.4);
+}
+.purple{
+    background-color: rgba(123, 92, 255, 0.4);
+}
+.yellow{
+    background-color: rgba(212, 172, 39, 0.4);
+}
+
+.info-card-title {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.info-card-text {
+    font-size: 14px;
+}
+
+.blue-text p {
+    color: var(--info);
+}
+.green-text p {
+    color: var(--success);
+}
+.purple-text p {
+    color: var(--primary-light);
+}
+.yellow-text p {
+    color: var(--warning);
+}
+
+
+.playing-now-container {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 20px;
+    padding: 15px 20px 20px 20px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+}
+
+.playing-now-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.playing-now-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.playing-now-header p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--info);
+    cursor: pointer;
+}
+
+.game-cards-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.backlog-overview-container {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 20px;
+    padding: 15px 20px 20px 20px;
+    box-shadow: var(--shadow);
+}
+
+.backlog-overview-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.overview-lists-container {
+    display: flex;
+    gap: 22px;
+}
+
+.overview-list {
+    flex: 1;
+    padding: 15px;
+    background-color: var(--bg-card-secondary);
+    border: var(--border-primary);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.overview-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.overview-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.not-played {
+    color: var(--warning);
+}
+.played {
+    color: var(--info);
+}
+.completed {
+    color: var(--primary-light);
+}
+
+.overview-header p {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--info);
+}
+
+.overview ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.overview ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.overview .game-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.overview .game-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.overview .aditional-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}

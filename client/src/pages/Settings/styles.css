@@ -1,0 +1,71 @@
+.settings-main-content {
+    width: 100%;
+    margin: 0;
+    padding: 20px 30px 50px 40px;
+}
+
+.steam-section {
+    width: fit-content;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 20px;
+    padding: 15px 20px;
+}
+
+.steam-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.steam-section-form {
+    padding-left: 10px;
+}
+
+.input-label-container {
+    margin-bottom: 20px;
+}
+
+.input-label-container label {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.input-label-container input {
+    width: 400px;
+    display: block;
+    background-color: var(--bg-secondary);
+    border: var(--border-primary);
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 20px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.steam-section-btn-container {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    background-color: var(--primary);
+    border-radius: 5px;
+    padding: 10px 30px;
+    margin-top: 40px;
+    cursor: pointer;
+}
+
+.steam-section-btn {
+    background-color: var(--primary);
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+}

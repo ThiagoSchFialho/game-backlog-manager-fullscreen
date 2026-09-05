@@ -1,0 +1,62 @@
+{
+  "description": "Gerenciador de backlog de jogos",
+  "author": "Thiago Scheffer Fialho",
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "electron-pack": "npm run build && npm run build:electron && electron-builder"
+  },
+  "build": {
+    "files": ["dist/**/*", "dist-electron/**/*"],
+    "extraResources": [
+      {
+        "from": "../server/dist",
+        "to": "backend/dist"
+      },
+      {
+        "from": "../server/node_modules",
+        "to": "backend/node_modules"
+      },
+      {
+        "from": "../server/package.json",
+        "to": "backend/package.json"
+      },
+      {
+        "from": "../server/.env",
+        "to": "backend/.env"
+      }
+    ]
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.65.0",
+    "vite": "^8.2.0",
+    "wait-on": "^9.1.0"
+  }
+}

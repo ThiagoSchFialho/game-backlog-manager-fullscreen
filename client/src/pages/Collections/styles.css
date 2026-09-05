@@ -1,0 +1,78 @@
+.collection-title-form-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    background-color: var(--bg-primary);
+    box-shadow: 0px 4px 40px 10px rgba(0, 0, 0, 0.5);
+    border: var(--border-primary);
+    border-radius: 10px;
+    padding: 15px 50px 30px 50px;
+}
+
+.collection-title-form-container img {
+    display: block;
+    width: 40px;
+    margin-left: auto;
+    margin-bottom: 20px;
+    transform: translateX(30px);
+    cursor: pointer;
+}
+
+.collection-title-form-container label {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.collection-title-form-container input {
+    background-color: var(--bg-secondary);
+    border: var(--border-primary);
+    border-radius: 10px;
+    padding: 10px 20px;
+    width: 400px;
+    outline: none;
+    font-size: 16px;
+    margin-bottom: 50px;
+}
+
+.collection-title-form-container div {
+    width: fit-content;
+    background-color: var(--primary);
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+
+.collections-main-content {
+    width: 100%;
+    margin: 0;
+    padding: 20px 30px 50px 40px;
+}
+
+.create-collection-btn-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--primary);
+    border-radius: 5px;
+    padding: 10px 30px;
+    margin-right: 60px;
+    cursor: pointer;
+}
+
+.create-collection-btn {
+    background-color: var(--primary);
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+}
+
+.collection-folders-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}

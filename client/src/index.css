@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --bg-primary: #091221;
+  --bg-secondary: #111D31;
+  --bg-card: #1B283C;
+  --bg-card-secondary: #24334A;
+  --bg-card-hover: #142238;
+  --border: #2A3E56;
+  --primary: #5D3DF1;
+  --primary-light: #7B5CFF;
+  --primary-dark: #34218F;
+  --text-primary: #EDF0F1;
+  --text-secondary: #BDCFE0;
+  --text-muted: #6F7578;
+  --text-placeholder: #687B94;
+  --success: #1FC06D;
+  --info: #539FE9;
+  --warning: #D4AC27;
+  --achievement: #713FF0;
+  --danger: #D43A2D;
+
+  --shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  --border-primary: 1px solid var(--border);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  color: var(--text-primary);
+}

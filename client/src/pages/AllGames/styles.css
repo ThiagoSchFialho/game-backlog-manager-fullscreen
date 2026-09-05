@@ -1,0 +1,99 @@
+.main-container {
+    display: flex;
+    align-items: left;
+}
+
+.all-games-main-content {
+    width: 100%;
+    margin: 0;
+    padding: 20px 137px 50px 40px;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 110px;
+}
+
+.page-header .title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+
+.page-header .sync-steam-btn-container {
+    width: fit-content;
+}
+
+.game-filter-container {
+    padding-left: 20px;
+}
+
+.filters-container {
+    height: fit-content;
+    padding: 15px 20px;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.filter-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.filters-container h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.filters-container p {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-light);
+    cursor: pointer;
+}
+
+.filter-form {
+    display: flex;
+    align-items:last baseline;
+    justify-content: space-between;
+}
+
+.filter-form-inputs {
+    width: 100%;
+    display: flex;
+    gap: 30px;
+}
+
+.filter-input-container {
+    flex: 1;
+}
+
+.filter-form label {
+    display: block;
+    font-weight: 500;
+}
+
+.filter-form select {
+    width: 100%;
+    background-color: var(--bg-secondary);
+    border: var(--border-primary);
+    border-radius: 5px;
+    outline: none;
+    padding: 8px 10px;
+    margin-top: 2px;
+    font-size: 17px;
+}
+
+.list-game-container {
+    padding-left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
