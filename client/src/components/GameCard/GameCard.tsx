@@ -226,9 +226,9 @@ const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, status, pl
                     className="custom-menu"
                 >
                     <ul>
-                        {collectionsList.map(collection => (
+                        {collectionsList.length > 0 ? collectionsList.map(collection => (
                             <li onClick={() => handleAddToCollection(id, collection.id)}>{collection.title}</li>
-                        ))}
+                        )): (<p>Nenhuma coleção criada</p>)}
                     </ul>
                 </div>
             )}
