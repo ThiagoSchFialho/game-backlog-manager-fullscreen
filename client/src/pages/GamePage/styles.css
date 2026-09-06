@@ -1,0 +1,73 @@
+.error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--danger);
+    font-size: 50px;
+}
+
+.game-page-title {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.game-page-details-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-page-details-section {
+    padding: 15px 20px 5px 20px;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 10px;
+}
+
+.game-page-details-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px; 
+}
+
+.game-page-details-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    padding: 15px;
+    background-color: var(--bg-card-secondary);
+    border: var(--border-primary);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.game-page-details-item div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.game-page-details-item img {
+    width: 30px;
+}
+
+.game-page-details-item .title {
+    color: var(--text-secondary);
+}
+
+.game-page-options-item {
+    width: 300px;
+    cursor: pointer;
+}
+
+.game-page-statistics-item {
+    width: 400px;
+}
+
+.game-page-achievements {
+    width: 720px;
+}

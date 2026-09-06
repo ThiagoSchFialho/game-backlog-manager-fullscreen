@@ -5,14 +5,14 @@ import type { Game } from '../../types/gamesType';
 import { orderBy } from '../../utils/orderBy';
 import play from '../../assets/icons/play.svg';
 
-interface GameCardsProps {
+interface GameLandscapeProps {
     id: string;
     steamId: string;
     img: string;
     name: string;
 }
 
-const GameLandscape: React.FC<GameCardsProps> = ({ id, steamId, img, name }) => {
+const GameLandscape: React.FC<GameLandscapeProps> = ({ id, steamId, img, name }) => {
     const { fetchGames, updateStatus } = useDb();
     
     const getGames = async () => {

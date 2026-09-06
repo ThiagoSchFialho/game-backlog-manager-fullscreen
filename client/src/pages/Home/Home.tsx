@@ -48,7 +48,6 @@ const Home: React.FC = () => {
                             <GameCard
                                 key={game.id}
                                 id={game.id}
-                                steamId={game.steam_id}
                                 img={getGameCover(game.title, 'square')}
                                 name={game.title}
                             />

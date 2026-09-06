@@ -87,5 +87,5 @@ export const useDb = () => {
         }
     }
 
-    return { fetchGames, updateStatus, syncSteam };
+    return { getGameById, fetchGames, updateStatus, syncSteam };
 }

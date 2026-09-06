@@ -5,7 +5,7 @@ import Completed from '../pages/Completed/Completed';
 import Backlog from '../pages/Backlog/Backlog';
 import Collections from '../pages/Collections/Collections';
 import Collection from '../pages/Collection/Collection';
-import Settings from '../pages/Settings/Settings';
+import GamePage from '../pages/GamePage/GamePage';
 
 
 const AppRoutes = () => {
@@ -18,7 +18,7 @@ const AppRoutes = () => {
                 <Route path='/backlog' element={<Backlog />} />
                 <Route path='/collections' element={<Collections />} />
                 <Route path='/collection/:id' element={<Collection />} />
-                <Route path='/settings' element={<Settings />} />
+                <Route path='/game-page/:id' element={<GamePage />} />
             </Routes>
         </HashRouter>
     )
