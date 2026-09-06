@@ -2,5 +2,6 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     justify-content: space-between;
-    gap: 44px;
+    gap: 30px;
+    padding: 0 30px;
 }

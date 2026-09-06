@@ -1,5 +1,6 @@
 .create-collection-container {
-   margin-bottom: 30px; 
+   margin-bottom: 30px;
+   padding: 0 30px;
 }
 
 .create-collection-container-btn {
@@ -21,6 +22,8 @@
     grid-template-columns: repeat(4, 1fr);
     justify-content: space-between;
     gap: 45px;
+    gap: 30px;
+    padding: 0 30px;
 }
 
 .collection-title-form-container {
