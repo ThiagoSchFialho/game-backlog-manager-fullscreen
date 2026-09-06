@@ -16,6 +16,7 @@ const Library: React.FC = () => {
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [sortedGamesList, setSortedGamesList] = useState<Game[]>([]);
     const [sortMethod, setSortMethod] = useState('recentlyPlayed');
+    const [selectedSortingMethod, setSelectedSorginMethod] = useState(sortMethod);
         
     const getGames = async () => {
         const games = await fetchGames();
@@ -30,10 +31,13 @@ const Library: React.FC = () => {
     const sortGames = (method: string, list: Game[] = gamesList) => {
         setSortMethod(method);
         if (method === 'recentlyPlayed') {
+            setSelectedSorginMethod('recentlyPlayed')
             setSortedGamesList(orderBy(list, 'rtime_last_played', 'desc'));
         } else if (method === 'mostPlayed') {
+            setSelectedSorginMethod('mostPlayed')
             setSortedGamesList(orderBy(list, 'playtime', 'desc'));
         } else if (method === 'alphabet') {
+            setSelectedSorginMethod('alphabet')
             setSortedGamesList(orderBy(list, 'title', 'asc'));
         }
     }
@@ -45,17 +49,26 @@ const Library: React.FC = () => {
         <>
             <SideMenu currentPage={currentPage} />
             <div className="main-content">
-                <div className="filters-container">
+                <div className="sortings-container">
                     <ul>
-                        <li onClick={() => sortGames('recentlyPlayed')} >
+                        <li
+                            className={selectedSortingMethod === 'recentlyPlayed' ? 'selected-method' : ''}
+                            onClick={() => sortGames('recentlyPlayed')}
+                        >
                             <img src={recentlyPlayed} />
                             <p>Jogados Recentemente</p>
                         </li>
-                        <li onClick={() => sortGames('mostPlayed')} >
+                        <li
+                            className={selectedSortingMethod === 'mostPlayed' ? 'selected-method' : ''}
+                            onClick={() => sortGames('mostPlayed')}
+                        >
                             <img src={mostPlayed} />
                             <p>Mais jogados</p>
                         </li>
-                        <li onClick={() => sortGames('alphabet')} >
+                        <li
+                            className={selectedSortingMethod === 'alphabet' ? 'selected-method' : ''}
+                            onClick={() => sortGames('alphabet')}
+                        >
                             <img src={alphabet} />
                             <p>Alfabeticamente</p>
                         </li>

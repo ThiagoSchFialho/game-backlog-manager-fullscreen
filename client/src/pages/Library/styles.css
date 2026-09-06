@@ -5,17 +5,17 @@
     gap: 44px;
 }
 
-.filters-container {
+.sortings-container {
     margin-bottom: 40px;
 }
 
-.filters-container ul {
+.sortings-container ul {
     list-style: none;
     display: flex;
     gap: 20px;
 }
 
-.filters-container li {
+.sortings-container li {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,11 +28,16 @@
     cursor: pointer;
 }
 
-.filters-container li img {
+.sortings-container .selected-method {
+    background-color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.sortings-container li img {
     width: 30px;
 }
 
-.filters-container li p {
+.sortings-container li p {
     font-size: 16px;
     font-weight: 400;
 }
