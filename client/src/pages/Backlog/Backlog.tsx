@@ -1,145 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
-import Header from '../../components/Header/Header';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
 import { getGameCover } from '../../utils/getGameCover';
 import type { Game } from '../../types/gamesType';
 import { useDb } from '../../hooks/useDb';
+import recentlyPlayed from '../../assets/icons/recently-played.svg';
+import mostPlayed from '../../assets/icons/most-played.svg'
+import alphabet from '../../assets/icons/alphabet.svg';
 import { orderBy } from '../../utils/orderBy';
-import SyncSteamBtn from '../../components/syncSteamBtn/SyncSteamBtn';
-import arrow from '../../assets/icons/menu-arrow.svg';
 
 const Backlog: React.FC = () => {
     const { fetchGames } = useDb();
-    const [steamApiConnected, setSteamApiConnected] = useState(false);
     const [currentPage] = useState('backlog');
     const [gamesList, setGamesList] = useState<Game[]>([]);
-    const [isPlayedSectionOpen, setIsPlayedSectionOpen] = useState(false);
-    const [isNotPlayedSectionOpen, setIsNotPlayedSectionOpen] = useState(false);
-    
+    const [sortedGamesList, setSortedGamesList] = useState<Game[]>([]);
+    const [sortMethod, setSortMethod] = useState('alphabet');
+    const [selectedSortingMethod, setSelectedSorginMethod] = useState(sortMethod);
+        
     const getGames = async () => {
         const games = await fetchGames();
         if (games) {
-            setGamesList(games);
-            setSteamApiConnected(true);
+            const filteredGames = games.filter((game: Game) => {
+                if (game.status !== 'completed' && game.beatable === true) {
+                    return game;
+                }
+            });
+            setGamesList(filteredGames);
         }
     }
     useEffect(() => {   
         getGames();
     }, []);
-        
-    const playingGames = orderBy(gamesList.filter(game => game.status === 'playing'), 'rtime_last_played', 'desc');
-    const playedGames = orderBy(gamesList.filter(game => game.status === 'played'), 'title', 'asc');
-    const notPlayedGames = orderBy(gamesList.filter(game => game.status === 'not-played'), 'title', 'asc');
+    
+    const sortGames = (method: string, list: Game[] = gamesList) => {
+        setSortMethod(method);
+        if (method === 'recentlyPlayed') {
+            setSelectedSorginMethod('recentlyPlayed')
+            setSortedGamesList(orderBy(list, 'rtime_last_played', 'desc'));
+        } else if (method === 'mostPlayed') {
+            setSelectedSorginMethod('mostPlayed')
+            setSortedGamesList(orderBy(list, 'playtime', 'desc'));
+        } else if (method === 'alphabet') {
+            setSelectedSorginMethod('alphabet')
+            setSortedGamesList(orderBy(list, 'title', 'asc'));
+        }
+    }
+    useEffect(() => {
+        sortGames(sortMethod, gamesList);
+    }, [gamesList]);
 
     return (
         <>
-            <Header steamApiConnected={steamApiConnected} />
-            <div className="main-container">
-                <SideMenu currentPage={currentPage} />
-                
-                <div className="backlog-main-content">
-                    <div className="page-header">
-                        <h1 className="title">Backlog</h1>
-                        <SyncSteamBtn />
-                    </div>
-
-                    <section id="playing-section">
-                        <div className="backlog-games-container backlog-playing-games">
-                            <h1 className="backlog-games-container-title">Jogando</h1>
-                            <div className="game-container">
-                                {playingGames.slice(0, 5).map(game => (
-                                    <GameCard
-                                        key={game.id}
-                                        id={game.id}
-                                        steamId={game.steam_id}
-                                        img={getGameCover(game.title)}
-                                        name={game.title}
-                                        status={game.status}
-                                        playtime={game.playtime}
-                                        onUpdate={getGames}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="played-section">
-                            <div className="backlog-games-container backlog-played-games">
-                                <div className="backlog-games-container-header">
-                                    <h1 className="backlog-games-container-title">Jogado</h1>
-                                    <img
-                                        onClick={() => setIsPlayedSectionOpen(!isPlayedSectionOpen)}
-                                        className={isPlayedSectionOpen ? "expand-arrow-active" : "expand-arrow"}
-                                        src={arrow}
-                                    />
-                                </div>
-                                <div className="game-container">
-                                    {isPlayedSectionOpen ? playedGames.map(game => (
-                                        <GameCard
-                                            key={game.id}
-                                            id={game.id}
-                                            steamId={game.steam_id}
-                                            img={getGameCover(game.title)}
-                                            name={game.title}
-                                            status={game.status}
-                                            playtime={game.playtime}
-                                            onUpdate={getGames}
-                                        />
-                                    )) : playedGames.slice(0, 5).map(game => (
-                                        <GameCard
-                                            key={game.id}
-                                            id={game.id}
-                                            steamId={game.steam_id}
-                                            img={getGameCover(game.title)}
-                                            name={game.title}
-                                            status={game.status}
-                                            playtime={game.playtime}
-                                            onUpdate={getGames}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                    </section>
-                    
-                    <section id="not-played-section">
-                            <div className="backlog-games-container backlog-not-played-games">
-                                <div className="backlog-games-container-header">
-                                    <h1 className="backlog-games-container-title">Não jogado</h1>
-                                    <img
-                                        onClick={() => setIsNotPlayedSectionOpen(!isNotPlayedSectionOpen)}
-                                        className={isNotPlayedSectionOpen ? "expand-arrow-active" : "expand-arrow"}
-                                        src={arrow}
-                                    />
-                                </div>
-                                <div className="game-container">
-                                    {isNotPlayedSectionOpen ? notPlayedGames.map(game => (
-                                        <GameCard
-                                            key={game.id}
-                                            id={game.id}
-                                            steamId={game.steam_id}
-                                            img={getGameCover(game.title)}
-                                            name={game.title}
-                                            status={game.status}
-                                            playtime={game.playtime}
-                                            onUpdate={getGames}
-                                        />
-                                    )) : notPlayedGames.slice(0, 5).map(game => (
-                                        <GameCard
-                                            key={game.id}
-                                            id={game.id}
-                                            steamId={game.steam_id}
-                                            img={getGameCover(game.title)}
-                                            name={game.title}
-                                            status={game.status}
-                                            playtime={game.playtime}
-                                            onUpdate={getGames}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                    </section>
+            <SideMenu currentPage={currentPage} />
+            <div className="main-content">
+                <div className="sortings-container">
+                    <ul>
+                        <li
+                            className={selectedSortingMethod === 'recentlyPlayed' ? 'selected-method' : ''}
+                            onClick={() => sortGames('recentlyPlayed')}
+                        >
+                            <img src={recentlyPlayed} />
+                            <p>Jogados Recentemente</p>
+                        </li>
+                        <li
+                            className={selectedSortingMethod === 'mostPlayed' ? 'selected-method' : ''}
+                            onClick={() => sortGames('mostPlayed')}
+                        >
+                            <img src={mostPlayed} />
+                            <p>Mais jogados</p>
+                        </li>
+                        <li
+                            className={selectedSortingMethod === 'alphabet' ? 'selected-method' : ''}
+                            onClick={() => sortGames('alphabet')}
+                        >
+                            <img src={alphabet} />
+                            <p>Alfabeticamente</p>
+                        </li>
+                    </ul>
+                </div>
+                <div className="backlog-games-container">
+                    {sortedGamesList.map(game => (
+                        <GameCard
+                            key={game.id}
+                            id={game.id}
+                            steamId={game.steam_id}
+                            img={getGameCover(game.title, 'square')}
+                            name={game.title}
+                        />
+                    ))}
                 </div>
             </div>
         </>

@@ -13,7 +13,7 @@ export class GamesModel implements IGamesModel {
                 INSERT INTO games (
                     title, steam_id, developer, release_date,
                     rtime_last_played, playtime, status, cover_square,
-                    cover_hero, cover_grid, personal_rating, favorite
+                    cover_hero, cover_grid, personal_rating, beatable
                 )
                 VALUES ($1, $2, $3, $4, to_timestamp($5), $6, $7, $8, $9, $10, $11, $12)
                 RETURNING *;    
@@ -29,7 +29,7 @@ export class GamesModel implements IGamesModel {
                 input.cover_hero ?? null,
                 input.cover_grid ?? null,
                 input.personal_rating ?? null,
-                input.favorite ?? false,
+                input.beatable ?? true,
             ]);
             
             return result.rows[0];
@@ -169,7 +169,7 @@ export class GamesModel implements IGamesModel {
                     cover_hero = $10,
                     cover_grid = $11,
                     personal_rating = $12,
-                    favorite = $13
+                    beatable = $13
                 WHERE id = $1
                 RETURNING *;
             `, [
@@ -185,7 +185,7 @@ export class GamesModel implements IGamesModel {
                 input.cover_hero ?? null,
                 input.cover_grid ?? null,
                 input.personal_rating ?? null,
-                input.favorite ?? false,
+                input.beatable ?? true,
             ]);
 
             return result.rows[0];

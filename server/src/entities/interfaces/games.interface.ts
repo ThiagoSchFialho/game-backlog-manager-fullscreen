@@ -8,7 +8,7 @@ export interface IGames {
     developer: string;
     release_date: string;
     rtime_last_played: string;
-    favorite: boolean;
+    beatable: boolean;
     personal_rating?: number;
     playtime: number;
     status: string;

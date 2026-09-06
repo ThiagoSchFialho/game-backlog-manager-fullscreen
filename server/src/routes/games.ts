@@ -16,7 +16,7 @@ interface CreateGameInput {
     cover_hero?: string | undefined;
     cover_grid?: string | undefined;
     personal_rating?: number | undefined;
-    favorite?: boolean | undefined;
+    beatable?: boolean | undefined;
 }
 
 router.post('/', async function (req: Request, res: Response) {
@@ -32,7 +32,7 @@ router.post('/', async function (req: Request, res: Response) {
         cover_hero,
         cover_grid,
         personal_rating,
-        favorite,
+        beatable,
     }: CreateGameInput = req.body;
 
     const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, playtime, status };
@@ -56,7 +56,7 @@ router.post('/', async function (req: Request, res: Response) {
             ...(cover_hero !== undefined && { cover_hero }),
             ...(cover_grid !== undefined && { cover_grid }),
             ...(personal_rating !== undefined && { personal_rating }),
-            ...(favorite !== undefined && { favorite })
+            ...(beatable !== undefined && { beatable })
         });
 
         if (!game) {
@@ -169,7 +169,7 @@ router.put('/:id', async function (req: Request, res: Response) {
         cover_hero,
         cover_grid,
         personal_rating,
-        favorite
+        beatable
     }: CreateGameInput = req.body;
 
     const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, playtime, status };
@@ -199,7 +199,7 @@ router.put('/:id', async function (req: Request, res: Response) {
             ...(cover_hero !== undefined && { cover_hero }),
             ...(cover_grid !== undefined && { cover_grid }),
             ...(personal_rating !== undefined && { personal_rating }),
-            ...(favorite !== undefined && { favorite })
+            ...(beatable !== undefined && { beatable })
         });
 
         if (!updatedGame) {

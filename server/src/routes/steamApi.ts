@@ -143,7 +143,7 @@ async function syncGames(
                         cover_hero: details?.cover_hero ?? gameCheck?.cover_hero ?? undefined,
                         cover_grid: gameCheck?.cover_grid ?? undefined,
                         personal_rating: gameCheck?.personal_rating ?? undefined,
-                        favorite: gameCheck?.favorite ?? false,
+                        beatable: gameCheck?.beatable ?? true,
                     };
 
                     if (gameCheck?.id) {

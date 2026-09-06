@@ -14,7 +14,7 @@ CREATE TABLE games (
     developer VARCHAR(255),
     release_date DATE,
     rtime_last_played TIMESTAMPTZ,
-    favorite boolean DEFAULT false NOT NULL,
+    beatable boolean DEFAULT true NOT NULL,
     personal_rating INTEGER CHECK (personal_rating BETWEEN 1 AND 5),
     playtime INTEGER NOT NULL DEFAULT 0 CHECK (playtime >= 0),
     status VARCHAR(50)

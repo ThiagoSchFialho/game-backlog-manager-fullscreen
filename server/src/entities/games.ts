@@ -10,7 +10,7 @@ export class Games implements IGames {
     developer: string;
     release_date: string;
     rtime_last_played: string;
-    favorite: boolean;
+    beatable: boolean;
     personal_rating?: number;
     playtime: number;
     status: string;
@@ -24,7 +24,7 @@ export class Games implements IGames {
         developer: string,
         release_date: string,
         rtime_last_played: string,
-        favorite: boolean,
+        beatable: boolean,
         personal_rating: number,
         playtime: number,
         status: string
@@ -37,7 +37,7 @@ export class Games implements IGames {
         this.developer = developer;
         this.release_date = release_date;
         this.rtime_last_played = rtime_last_played;
-        this.favorite = favorite;
+        this.beatable = beatable;
         this.personal_rating = personal_rating;
         this.playtime = playtime;
         this.status = status;

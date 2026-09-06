@@ -10,8 +10,8 @@ export interface Game {
     developer: string;
     release_date: string;
     rtime_last_played: string;
-    favorite: boolean;
     personal_rating: number;
     playtime: number;
     status: GameStatus;
+    beatable: boolean;
 }
