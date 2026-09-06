@@ -1,6 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home/Home';
-import AllGames from '../pages/AllGames/AllGames';
+import Library from '../pages/Library/Library';
 import Favorites from '../pages/Favorites/Favorites';
 import Completed from '../pages/Completed/Completed';
 import Backlog from '../pages/Backlog/Backlog';
@@ -14,7 +14,7 @@ const AppRoutes = () => {
         <HashRouter>
             <Routes>
                 <Route path='/' element={<Home />} />
-                <Route path='/allGames' element={<AllGames />} />
+                <Route path='/library' element={<Library />} />
                 <Route path='/favorites' element={<Favorites />} />
                 <Route path='/completed' element={<Completed />} />
                 <Route path='/backlog' element={<Backlog />} />

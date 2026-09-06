@@ -31,7 +31,7 @@ const Home: React.FC = () => {
     return (
         <>
             <SideMenu currentPage={selected} />
-            <div className="home-main-content">
+            <div className="main-content">
                 {games.slice(0, 1).map(game => (
                     <GameLandscape
                         id={game.id}
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
                                 name={game.title}
                             />
                         ))}
-                        <div onClick={() => navigation('/allGames')} className="continue-playing-more">
+                        <div onClick={() => navigation('/library')} className="continue-playing-more">
                             <img src={arrow} />
                         </div>
                     </div>

@@ -1,0 +1,38 @@
+.list-game-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.filters-container {
+    margin-bottom: 40px;
+}
+
+.filters-container ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.filters-container li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 15px;
+    box-shadow: var(--shadow);
+    background-color: var(--bg-card-secondary);
+    border: var(--border-primary);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.filters-container li img {
+    width: 30px;
+}
+
+.filters-container li p {
+    font-size: 16px;
+    font-weight: 400;
+}

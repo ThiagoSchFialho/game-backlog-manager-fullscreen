@@ -1,9 +1,10 @@
 .header {
+    height: 113px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 60px 0 40px;
-    height: 113px;
+    margin-bottom: 20px;
 }
 
 .logo {

@@ -33,8 +33,8 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
                             <img src={selected == 'home' ? homeSelected : home} alt="casa" />
                             <p>Inicio</p>
                         </li>
-                        <li onClick={() => navigation('/allGames')} className={selected === 'allGames' ? 'selected' : ''}>
-                            <img src={selected == 'allGames' ? gamepadSelected : gamepad} alt="joystick" />
+                        <li onClick={() => navigation('/library')} className={selected === 'library' ? 'selected' : ''}>
+                            <img src={selected == 'library' ? gamepadSelected : gamepad} alt="joystick" />
                             <p>Biblioteca</p>
                         </li>
                         <li onClick={() => navigation('/collections')} className={selected === 'collections' ? 'selected' : ''}>
