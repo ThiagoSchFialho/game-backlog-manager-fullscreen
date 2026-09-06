@@ -1,3 +1,27 @@
+.create-collection-container {
+   margin-bottom: 40px; 
+}
+
+.create-collection-container-btn {
+    width: fit-content;
+    padding: 15px 30px;
+    box-shadow: var(--shadow);
+    background-color: var(--primary);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.create-collection-container-btn p {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.collection-folders-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
 .collection-title-form-container {
     position: absolute;
     left: 50%;
@@ -44,35 +68,4 @@
     padding: 10px 20px;
     margin-left: auto;
     cursor: pointer;
-}
-
-
-.collections-main-content {
-    width: 100%;
-    margin: 0;
-    padding: 20px 30px 50px 40px;
-}
-
-.create-collection-btn-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--primary);
-    border-radius: 5px;
-    padding: 10px 30px;
-    margin-right: 60px;
-    cursor: pointer;
-}
-
-.create-collection-btn {
-    background-color: var(--primary);
-    font-size: 16px;
-    font-weight: 700;
-    border: none;
-}
-
-.collection-folders-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
 }

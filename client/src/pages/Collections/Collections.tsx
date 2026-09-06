@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './styles.css';
-import Header from '../../components/Header/Header';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import CollectionFolder from '../../components/CollectionFolder/CollectionFolder';
 import type { ICollection } from '../../types/collectionsType';
@@ -10,7 +9,6 @@ import closeIcon from '../../assets/icons/close.svg';
 const Collections: React.FC = () => {
     const { fetchCollections, createCollection } = useCollection();
     const [isCollectionFormOpen, setIsCollectionFormOpen] = useState(false);
-    const [steamApiConnected, setSteamApiConnected] = useState(false);
     const [currentPage] = useState('collections');
     const [collectionsList, setCollectionsList] = useState<ICollection[]>([]);
     const [collectionTitle, setCollectionTitle] = useState<string | undefined>('');
@@ -20,7 +18,6 @@ const Collections: React.FC = () => {
             const collections = await fetchCollections();
             if (collections) {
                 setCollectionsList(collections);
-                setSteamApiConnected(true);
             }
         }
         
@@ -37,10 +34,28 @@ const Collections: React.FC = () => {
         }
     }
 
-
     return (
         <>
-            <Header steamApiConnected={steamApiConnected} />
+            <SideMenu currentPage={currentPage} />
+            <div className="main-content">
+                <div className="create-collection-container">
+                    <div
+                        onClick={() => setIsCollectionFormOpen(true)}
+                        className="create-collection-container-btn"
+                    >
+                        <p>Criar coleção</p>
+                    </div>
+                </div>
+                <div className="collection-folders-container">
+                    {collectionsList.map(collection => (
+                        <CollectionFolder collection={collection} />
+                    ))}
+                </div>
+
+            </div>
+
+
+
             {isCollectionFormOpen && (
                 <div className="collection-title-form-container">
                     <img onClick={() => setIsCollectionFormOpen(false)} src={closeIcon}/>
@@ -58,32 +73,6 @@ const Collections: React.FC = () => {
                     </form>
                 </div>
             )}
-            <div className="main-container">
-                <SideMenu currentPage={currentPage} />
-                
-                <div className="collections-main-content">
-                    <div className="page-header">
-                        <h1 className="title">Coleções</h1>
-                        <div className="create-collection-btn-container">
-                            <div
-                                onClick={() => setIsCollectionFormOpen(true)}
-                                className="create-collection-btn"
-                            >
-                                    Criar Coleção
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="collection-folders-container">
-                        {collectionsList.map(collection => (
-                            <CollectionFolder
-                                collection={collection}
-                            />
-                        ))}
-                    </div>
-
-                </div>
-            </div>
         </>
     )
 }
