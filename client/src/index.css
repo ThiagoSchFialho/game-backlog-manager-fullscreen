@@ -31,3 +31,7 @@
   font-family: "Inter", sans-serif;
   color: var(--text-primary);
 }
+
+.main-container {
+    display: flex;
+}
