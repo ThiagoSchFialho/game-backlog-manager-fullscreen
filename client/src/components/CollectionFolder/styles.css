@@ -1,5 +1,5 @@
 .collection-folder-container {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .collection-folder-container p {
@@ -12,7 +12,7 @@
 .collection-folder {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 20px;
     padding: 20px;
     box-shadow: var(--shadow);
     background-color: var(--bg-card);

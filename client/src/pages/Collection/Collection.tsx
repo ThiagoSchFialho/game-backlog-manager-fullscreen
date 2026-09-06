@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.css';
-import Header from '../../components/Header/Header';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
 import { getGameCover } from '../../utils/getGameCover';
@@ -34,20 +33,14 @@ export interface Collection {
 const Collection: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const { fetchCollections } = useCollection();
-    const [steamApiConnected, setSteamApiConnected] = useState(false);
-    const [currentPage, setCurrentPage] = useState(`collection${id}`);
+    const [currentPage] = useState('collections');
     const [collectionsList, setCollectionsList] = useState<ICollection[]>([]);
     const collection = collectionsList.find(c => c.id === id);
-
-    useEffect(() => {
-        setCurrentPage(`collection${id}`);
-    }, [id]);
 
     const getCollections = async () => {
         const collections = await fetchCollections();
         if (collections) {
             setCollectionsList(collections);
-            setSteamApiConnected(true);
         }
     }
     useEffect(() => {
@@ -56,29 +49,23 @@ const Collection: React.FC = () => {
 
     return (
         <>
-            <Header steamApiConnected={steamApiConnected} />
-            <div className="main-container">
-                <SideMenu currentPage={currentPage} />
-                
-                <div className="collection-main-content">
-                    <div className="page-header">
-                        <h1 className="title">{collection?.title}</h1>
-                    </div>
+            <SideMenu currentPage={currentPage} />
+            
+            <div className="main-content">
+                <div className="title-collection-container">
+                    <h1 className="title">{collection?.title}</h1>
+                </div>
 
-                    <div className="collection-games-container">
-                        {collection?.games.map(game => (
-                            <GameCard
-                                key={game.id}
-                                id={game.id}
-                                steamId={game.steam_id}
-                                img={getGameCover(game.title)}
-                                name={game.title}
-                                status={game.status}
-                                playtime={game.playtime}
-                                onUpdate={getCollections}
-                            />
-                        ))}
-                    </div>
+                <div className="collection-games-container">
+                    {collection?.games.map(game => (
+                        <GameCard
+                            key={game.id}
+                            id={game.id}
+                            steamId={game.steam_id}
+                            img={getGameCover(game.title, 'square')}
+                            name={game.title}
+                        />
+                    ))}
                 </div>
             </div>
         </>

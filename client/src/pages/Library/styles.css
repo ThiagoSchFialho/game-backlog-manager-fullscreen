@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     justify-content: space-between;
-    gap: 40px;
+    gap: 44px;
 }
 
 .filters-container {
