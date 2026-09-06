@@ -1,10 +1,10 @@
 .game-card {
-    width: 285px;
-    height: 285px;
+    width: 280px;
+    height: 280px;
 }
 
 .game-card-img {
-    width: 283px;
+    width: 278px;
     border: var(--border-primary);
     border-radius: 10px;
     box-shadow: var(--shadow);

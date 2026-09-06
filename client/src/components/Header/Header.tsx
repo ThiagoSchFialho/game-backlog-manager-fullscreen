@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './styles.css';
 import logo from '../../assets/logo.svg';
+import SyncSteamBtn from '../syncSteamBtn/SyncSteamBtn';
 
 const Header: React.FC = () => {
     const [time, setTime] = useState(new Date());
@@ -22,6 +23,7 @@ const Header: React.FC = () => {
         <>
             <div className="header">
                 <img className="logo" src={logo} alt="game backlog manager logo" />
+                <SyncSteamBtn />
                 <p className="clock">{formattedTime}</p>
             </div>
         </>
