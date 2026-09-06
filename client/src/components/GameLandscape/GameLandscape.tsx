@@ -48,13 +48,13 @@ const GameLandscape: React.FC<GameCardsProps> = ({ id, steamId, img, name }) => 
     }
 
     return (
-        <div onClick={() => handleStartGame(id, steamId)} className="game-landscape">
+        <div className="game-landscape">
             <img
                 className="game-landscape-img"
                 src={img}
                 alt={name}
             />
-            <div className="play-btn-landscape">
+            <div onClick={() => handleStartGame(id, steamId)} className="play-btn-landscape">
                 <img src={play} alt="play" />
                 <p>Jogar</p>
             </div>

@@ -32,6 +32,10 @@
   color: var(--text-primary);
 }
 
+body {
+    background-color: var(--bg-secondary);
+}
+
 .main-container {
     display: flex;
 }
