@@ -58,8 +58,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const [activeSubMenu, setActiveSubMenu] = useState<SubMenuId | null>(null);
     const [subSelectedIndex, setSubSelectedIndex] = useState(0);
 
-    const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
     // --- Data loading -----------------------------------------------------
 
     const getGames = async () => {
@@ -87,20 +85,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         setSelectedIndex(0);
     }, [isOpen]);
 
-    // --- Hover-to-close (mouse) behaviour ----------------------------------
-
-    const cancelClose = () => {
-        if (closeTimeoutRef.current) {
-            clearTimeout(closeTimeoutRef.current);
-            closeTimeoutRef.current = null;
-        }
-    };
-
-    const scheduleClose = () => {
-        cancelClose();
-        closeTimeoutRef.current = setTimeout(() => setActiveSubMenu(null), 250);
-    };
-
     // --- Actions ------------------------------------------------------------
 
     const changeStatus = async (id: string, status: string) => {
@@ -120,7 +104,7 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
 
         getCollections();
         getGameCollections();
-        closeMenu?.();
+        setActiveSubMenu(null);
     };
 
     const handleStatusChange = (id: string, status: string) => {
@@ -139,7 +123,7 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         }
         getCollections();
         getGameCollections();
-        closeMenu?.();
+        setActiveSubMenu(null);
     };
 
     const handleRemoveFromCollection = async (id: string, collectionId: string) => {
@@ -153,7 +137,7 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         }
         getCollections();
         getGameCollections();
-        closeMenu?.();
+        setActiveSubMenu(null);
     };
 
     const handleHideGame = (id: string) => {
@@ -262,8 +246,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const renderSubMenu = (subMenu: SubMenuConfig) => (
         <div
             key={subMenu.id}
-            onMouseEnter={cancelClose}
-            onMouseLeave={scheduleClose}
             className="game-actions-menu sub-menu"
             style={subMenu.position}
         >
