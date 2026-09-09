@@ -52,3 +52,9 @@ body {
     margin-right: 80px;
     padding-bottom: 20px;
 }
+
+.focused {
+    outline: 3px solid #7a5cffb9;
+    outline-offset: 4px;
+    border-radius: 5px;
+}
