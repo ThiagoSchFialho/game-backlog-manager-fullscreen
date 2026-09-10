@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import './styles.css';
 import menuArrow from '../../assets/icons/menu-arrow.svg';
 import playIcon from '../../assets/icons/play.svg';
