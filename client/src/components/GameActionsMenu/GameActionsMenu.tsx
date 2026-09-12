@@ -205,7 +205,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
 
     // --- Joystick navigation -------------------------------------------
 
-    /** Move um índice para cima/baixo sem sair dos limites [0, length - 1]. */
     const moveSelection = (current: number, direction: 'cima' | 'baixo', length: number) => {
         const delta = direction === 'baixo' ? 1 : -1;
         return Math.min(Math.max(current + delta, 0), length - 1);
@@ -216,9 +215,9 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
 
         if ((command === 'cima' || command === 'baixo') && options.length > 0) {
             setSubSelectedIndex(prev => moveSelection(prev, command, options.length));
-        } else if (command === 'confirmar' && options.length > 0) {
+        } else if (command === 'A' && options.length > 0) {
             options[subSelectedIndex].onSelect();
-        } else if (command === 'voltar') {
+        } else if (command === 'B') {
             setActiveSubMenu(null);
         }
     };
@@ -226,9 +225,9 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const navigateMainMenu = (command: string) => {
         if (command === 'cima' || command === 'baixo') {
             setSelectedIndex(prev => moveSelection(prev, command, visibleMenuItems.length));
-        } else if (command === 'confirmar') {
+        } else if (command === 'A') {
             visibleMenuItems[selectedIndex]?.action();
-        } else if (command === 'voltar') {
+        } else if (command === 'B') {
             closeMenu?.();
         }
     };

@@ -7,7 +7,9 @@ interface JoystickSetupProps {
 const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [lastDir, setLastDir] = useState('');
     const [buttonPressed, setButtonPressed] = useState(false);
-    const [backButtonPressed, setBackButtonPressed] = useState(false);
+    const [bBtnPressed, setBBtnPressed] = useState(false);
+    const [yBtnPressed, setYBtnPressed] = useState(false);
+    const [xBtnPressed, setXBtnPressed] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -31,22 +33,38 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
                 setLastDir('');
             }
 
+            // A
             const confirmPressed = controller.buttons[0]?.pressed;
             if (confirmPressed && !buttonPressed) {
-                command('confirmar');
+                command('A');
             }
             setButtonPressed(!!confirmPressed);
 
-            const backPressed = controller.buttons[1]?.pressed;
-            if (backPressed && !backButtonPressed) {
-                command('voltar');
+            // B
+            const bPressed = controller.buttons[1]?.pressed;
+            if (bPressed && !bBtnPressed) {
+                command('B');
             }
-            setBackButtonPressed(!!backPressed);
+            setBBtnPressed(!!bPressed);
 
-        }, 100);
+            // Y
+            const yPressed = controller.buttons[3]?.pressed;
+            if (yPressed && !yBtnPressed) {
+                command('Y');
+            }
+            setYBtnPressed(!!yPressed);
+
+            // X
+            const xPressed = controller.buttons[2]?.pressed;
+            if (xPressed && !xBtnPressed) {
+                command('X');
+            }
+            setXBtnPressed(!!xPressed);
+
+        }, 50);
 
         return () => clearInterval(interval);
-    }, [lastDir, buttonPressed, backButtonPressed]);
+    }, [lastDir, buttonPressed, bBtnPressed, yBtnPressed, xBtnPressed]);
 
     return null;
 };

@@ -1,30 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.css';
-import { useNavigate } from 'react-router-dom';
 import GameActionsMenu from '../GameActionsMenu/GameActionsMenu';
 interface GameCardsProps {
     id: string;
     steamId: string;
     img: string;
     name: string;
+    isFocused: boolean;
+    isOpen: boolean;
+    onCloseMenu: () => void;
 }
 
-const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name }) => {
-    const navigation = useNavigate();
-    const [isGameActionsMenuOpen, setIsGameActionsMenuOpen] = useState(false);
+const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, isFocused, isOpen, onCloseMenu }) => {
+    const [isGameActionsMenuOpen, setIsGameActionsMenuOpen] = useState(isOpen);
 
+    useEffect(() => {
+        setIsGameActionsMenuOpen(isOpen);
+    }, [isOpen]);
+
+    const handleCloseMenu = () => {
+        setIsGameActionsMenuOpen(false);
+        onCloseMenu?.();
+    }
+    
     return (
         <>
             <GameActionsMenu
                 gameSteamId={steamId}
                 gameId={id}
                 isOpen={isGameActionsMenuOpen}
-                closeMenu={() => setIsGameActionsMenuOpen(false)}
+                closeMenu={() => handleCloseMenu()}
             />
-            <div className="game-card">
+            <div className={isFocused ? "game-card focused" : "game-card"}>
                 <img
-                    onClick={() => navigation(`/game-page/${id}`)}
-                    onContextMenu={(e) => {e.preventDefault(); setIsGameActionsMenuOpen(true)}}
                     className="game-card-img"
                     src={img}
                     alt={name}

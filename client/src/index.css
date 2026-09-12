@@ -54,7 +54,7 @@ body {
 }
 
 .focused {
-    outline: 3px solid #7a5cffb9;
-    outline-offset: 4px;
+    outline: 3px solid rgba(255, 255, 255, 0.8); 
+    outline-offset: 3px;
     border-radius: 5px;
 }
