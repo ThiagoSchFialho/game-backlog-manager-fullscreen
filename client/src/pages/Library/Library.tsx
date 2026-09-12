@@ -9,14 +9,28 @@ import recentlyPlayed from '../../assets/icons/recently-played.svg';
 import mostPlayed from '../../assets/icons/most-played.svg'
 import alphabet from '../../assets/icons/alphabet.svg';
 import { orderBy } from '../../utils/orderBy';
+import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+import { useNavigate } from 'react-router-dom';
+
+type ScreenItem = {
+    id: Game['id'];
+    steamId: Game['steam_id'];
+    img: string;
+    name: Game['title'];
+    action: () => void | Promise<void>;
+};
 
 const Library: React.FC = () => {
+    const navigation = useNavigate();
     const { fetchGames } = useDb();
     const [currentPage] = useState('library');
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [sortedGamesList, setSortedGamesList] = useState<Game[]>([]);
     const [sortMethod, setSortMethod] = useState('recentlyPlayed');
     const [selectedSortingMethod, setSelectedSorginMethod] = useState(sortMethod);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [commandCooldown, setCommandCooldown] = useState(false);
         
     const getGames = async () => {
         const games = await fetchGames();
@@ -45,8 +59,52 @@ const Library: React.FC = () => {
         sortGames(sortMethod, gamesList);
     }, [gamesList]);
 
+    const gameCardsItems: ScreenItem[] = sortedGamesList.map((game) => ({
+        id: game.id,
+        steamId: game.steam_id,
+        img: getGameCover(game.title, 'square'),
+        name: game.title,
+        action: () => navigation(`/game-page/${game.id}`)
+    }));
+
+    const handleCloseMenu = () => {
+        setIsMenuOpen(false);
+        setCommandCooldown(true);
+
+        setInterval(() => {
+            setCommandCooldown(false)
+        }, 50);
+    }
+
+    const joystickNavigation = (command: string) => {
+        if (!commandCooldown) {
+            if (command === 'esquerda') {
+                if (selectedIndex !== 0) {
+                    setSelectedIndex(selectedIndex - 1);
+                }
+            } else if (command === 'direita') {
+                if (selectedIndex !== gameCardsItems.length - 1) {
+                    setSelectedIndex(selectedIndex + 1);
+                }
+            } else if (command === 'cima') {
+                if (selectedIndex > 4) {
+                    setSelectedIndex(selectedIndex - 5);
+                }
+            } else if (command === 'baixo') {
+                if (selectedIndex < gameCardsItems.length - 5) {
+                    setSelectedIndex(selectedIndex + 5);
+                }
+            } else if (command === 'A') {
+                gameCardsItems[selectedIndex]?.action();
+            } else if (command === 'Y') {
+                setIsMenuOpen(true);
+            }
+        }
+    };
+    
     return (
         <>
+            {!isMenuOpen && <JoystickSetup command={joystickNavigation} />}
             <SideMenu currentPage={currentPage} />
             <div className="main-content">
                 <div className="sortings-container">
@@ -75,13 +133,16 @@ const Library: React.FC = () => {
                     </ul>
                 </div>
                 <div className="list-game-container">
-                    {sortedGamesList.map(game => (
+                    {gameCardsItems.map((item, index) => (
                         <GameCard
-                            key={game.id}
-                            id={game.id}
-                            steamId={game.steam_id}
-                            img={getGameCover(game.title, 'square')}
-                            name={game.title}
+                            key={item.id}
+                            id={item.id}
+                            steamId={item.steamId}
+                            img={item.img}
+                            name={item.name}
+                            isFocused={selectedIndex === index}
+                            isOpen={isMenuOpen && selectedIndex === index}
+                            onCloseMenu={handleCloseMenu}
                         />
                     ))}
                 </div>
