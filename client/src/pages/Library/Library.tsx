@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './styles.css';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
@@ -31,7 +31,7 @@ const Library: React.FC = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [commandCooldown, setCommandCooldown] = useState(false);
-        
+
     const getGames = async () => {
         const games = await fetchGames();
         if (games) {
@@ -42,6 +42,7 @@ const Library: React.FC = () => {
         getGames();
     }, []);
     
+    const sortGamesMethods = ['recentlyPlayed', 'mostPlayed', 'alphabet'];
     const sortGames = (method: string, list: Game[] = gamesList) => {
         setSortMethod(method);
         if (method === 'recentlyPlayed') {
@@ -54,6 +55,7 @@ const Library: React.FC = () => {
             setSelectedSorginMethod('alphabet')
             setSortedGamesList(orderBy(list, 'title', 'asc'));
         }
+        setSelectedIndex(0);
     }
     useEffect(() => {
         sortGames(sortMethod, gamesList);
@@ -76,31 +78,113 @@ const Library: React.FC = () => {
         }, 50);
     }
 
+    // --- Refs para evitar stale closure no joystickNavigation -------------
+    const selectedIndexRef = useRef(selectedIndex);
+    useEffect(() => {
+        selectedIndexRef.current = selectedIndex;
+    }, [selectedIndex]);
+
+    const itemsLengthRef = useRef(gameCardsItems.length);
+    useEffect(() => {
+        itemsLengthRef.current = gameCardsItems.length;
+    }, [gameCardsItems.length]);
+
+    const commandCooldownRef = useRef(commandCooldown);
+    useEffect(() => {
+        commandCooldownRef.current = commandCooldown;
+    }, [commandCooldown]);
+
+    const selectedSortingMethodRef = useRef(selectedSortingMethod);
+    useEffect(() => {
+        selectedSortingMethodRef.current = selectedSortingMethod;
+    }, [selectedSortingMethod]);
+
+    const gamesListRef = useRef(gamesList);
+    useEffect(() => {
+        gamesListRef.current = gamesList;
+    }, [gamesList]);
+    // ------------------------------------------------------------------
+
     const joystickNavigation = (command: string) => {
-        if (!commandCooldown) {
+        if (!commandCooldownRef.current) {
+            const currentIndex = selectedIndexRef.current;
+            const length = itemsLengthRef.current;
+
             if (command === 'esquerda') {
-                if (selectedIndex !== 0) {
-                    setSelectedIndex(selectedIndex - 1);
+                if (currentIndex !== 0) {
+                    setSelectedIndex(currentIndex - 1);
                 }
             } else if (command === 'direita') {
-                if (selectedIndex !== gameCardsItems.length - 1) {
-                    setSelectedIndex(selectedIndex + 1);
+                if (currentIndex !== length - 1) {
+                    setSelectedIndex(currentIndex + 1);
                 }
             } else if (command === 'cima') {
-                if (selectedIndex > 4) {
-                    setSelectedIndex(selectedIndex - 5);
+                if (currentIndex > 4) {
+                    setSelectedIndex(currentIndex - 5);
                 }
             } else if (command === 'baixo') {
-                if (selectedIndex < gameCardsItems.length - 5) {
-                    setSelectedIndex(selectedIndex + 5);
+                if (currentIndex < length - 5) {
+                    setSelectedIndex(currentIndex + 5);
                 }
             } else if (command === 'A') {
-                gameCardsItems[selectedIndex]?.action();
+                gameCardsItems[currentIndex]?.action();
             } else if (command === 'Y') {
                 setIsMenuOpen(true);
+            } else if (command === 'B') {
+                navigation(-1);
+            } else if (command === 'RB') {
+                if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
+                    const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);
+                    const nextIndex = (currentMethodIndex + 1) % sortGamesMethods.length;
+                    sortGames(sortGamesMethods[nextIndex], gamesListRef.current);
+                }
+            } else if (command === 'LB') {
+                if (sortMethod !== sortGamesMethods[0]) {
+                    const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);
+                    const prevIndex = (currentMethodIndex - 1 + sortGamesMethods.length) % sortGamesMethods.length;
+                    sortGames(sortGamesMethods[prevIndex], gamesListRef.current);
+                }
             }
         }
     };
+
+    // --- Scroll setup -----------------------------------------------------
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const getColumnsCount = () => {
+        const refs = cardRefs.current;
+        if (!refs[0]) return 1;
+        const firstTop = refs[0]!.offsetTop;
+        let count = 0;
+        for (const el of refs) {
+            if (!el || el.offsetTop !== firstTop) break;
+            count++;
+        }
+        return count || 1;
+    };
+
+    const getRowHeight = (columns: number) => {
+        const refs = cardRefs.current;
+        if (!refs[0] || !refs[columns]) return 0;
+        return refs[columns]!.offsetTop - refs[0]!.offsetTop;
+    };
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container || cardRefs.current.length === 0) return;
+
+        const columns = getColumnsCount();
+        const row = Math.floor(selectedIndex / columns);
+        const rowHeight = getRowHeight(columns);
+
+        if (!rowHeight) return;
+
+        const targetScrollTop = row < 2 ? 0 : (row - 1) * rowHeight;
+
+        container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+    }, [selectedIndex, gameCardsItems.length]);
+    // --- End scroll setup -------------------------------------------------
     
     return (
         <>
@@ -132,18 +216,19 @@ const Library: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="list-game-container">
+                <div className="list-game-container" ref={scrollContainerRef}>
                     {gameCardsItems.map((item, index) => (
-                        <GameCard
-                            key={item.id}
-                            id={item.id}
-                            steamId={item.steamId}
-                            img={item.img}
-                            name={item.name}
-                            isFocused={selectedIndex === index}
-                            isOpen={isMenuOpen && selectedIndex === index}
-                            onCloseMenu={handleCloseMenu}
-                        />
+                        <div key={item.id} ref={(el) => { cardRefs.current[index] = el; }}>
+                            <GameCard
+                                id={item.id}
+                                steamId={item.steamId}
+                                img={item.img}
+                                name={item.name}
+                                isFocused={selectedIndex === index}
+                                isOpen={isMenuOpen && selectedIndex === index}
+                                onCloseMenu={handleCloseMenu}
+                            />
+                        </div>
                     ))}
                 </div>
             </div>
