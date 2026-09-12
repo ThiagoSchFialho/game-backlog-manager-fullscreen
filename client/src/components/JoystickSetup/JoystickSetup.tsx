@@ -9,12 +9,19 @@ const REPEAT_INTERVAL_MS = 150;
 
 const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [lastDir, setLastDir] = useState('');
-    const [buttonPressed, setButtonPressed] = useState(false);
+
+    const [aBtnPressed, setABtnPressed] = useState(false);
     const [bBtnPressed, setBBtnPressed] = useState(false);
     const [yBtnPressed, setYBtnPressed] = useState(false);
     const [xBtnPressed, setXBtnPressed] = useState(false);
+
     const [lbBtnPressed, setLbBtnPressed] = useState(false);
     const [rbBtnPressed, setRbBtnPressed] = useState(false);
+
+    const [dpadUpPressed, setDpadUpPressed] = useState(false);
+    const [dpadDownPressed, setDpadDownPressed] = useState(false);
+    const [dpadLeftPressed, setDpadLeftPressed] = useState(false);
+    const [dpadRightPressed, setDpadRightPressed] = useState(false);
 
     const holdStartRef = useRef<number | null>(null);
     const lastRepeatRef = useRef<number>(0);
@@ -57,13 +64,14 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
                 holdStartRef.current = null;
                 lastRepeatRef.current = 0;
             }
+            // --------------------------------------------------------------------
 
             // A
             const confirmPressed = controller.buttons[0]?.pressed;
-            if (confirmPressed && !buttonPressed) {
+            if (confirmPressed && !aBtnPressed) {
                 command('A');
             }
-            setButtonPressed(!!confirmPressed);
+            setABtnPressed(!!confirmPressed);
 
             // B
             const bPressed = controller.buttons[1]?.pressed;
@@ -100,10 +108,41 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
             }
             setRbBtnPressed(!!rbPressed);
 
+            // d-pad: cima
+            const dpadUp = controller.buttons[12]?.pressed;
+            if (dpadUp && !dpadUpPressed) {
+                command('dpad_cima');
+            }
+            setDpadUpPressed(!!dpadUp);
+
+            // d-pad: baixo
+            const dpadDown = controller.buttons[13]?.pressed;
+            if (dpadDown && !dpadDownPressed) {
+                command('dpad_baixo');
+            }
+            setDpadDownPressed(!!dpadDown);
+
+            // d-pad: esquerda
+            const dpadLeft = controller.buttons[14]?.pressed;
+            if (dpadLeft && !dpadLeftPressed) {
+                command('dpad_esquerda');
+            }
+            setDpadLeftPressed(!!dpadLeft);
+
+            // d-pad: direita
+            const dpadRight = controller.buttons[15]?.pressed;
+            if (dpadRight && !dpadRightPressed) {
+                command('dpad_direita');
+            }
+            setDpadRightPressed(!!dpadRight);
+
         }, 50);
 
         return () => clearInterval(interval);
-    }, [lastDir, buttonPressed, bBtnPressed, yBtnPressed, xBtnPressed, lbBtnPressed, rbBtnPressed]);
+    }, [
+        lastDir, aBtnPressed, bBtnPressed, yBtnPressed, xBtnPressed, lbBtnPressed, rbBtnPressed,
+        dpadUpPressed, dpadDownPressed, dpadLeftPressed, dpadRightPressed,
+    ]);
 
     return null;
 };
