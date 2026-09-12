@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface JoystickSetupProps {
     command: (newCommand: string) => void;
 }
+
+const HOLD_THRESHOLD_MS = 400;
+const REPEAT_INTERVAL_MS = 150;
 
 const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [lastDir, setLastDir] = useState('');
@@ -12,6 +15,9 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [xBtnPressed, setXBtnPressed] = useState(false);
     const [lbBtnPressed, setLbBtnPressed] = useState(false);
     const [rbBtnPressed, setRbBtnPressed] = useState(false);
+
+    const holdStartRef = useRef<number | null>(null);
+    const lastRepeatRef = useRef<number>(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -28,11 +34,28 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
             else if (axisY > 0.4) newCommand = 'baixo';
             else if (axisY < -0.4) newCommand = 'cima';
 
-            if (newCommand !== lastDir && newCommand !== 'centro') {
-                command(newCommand);
-                setLastDir(newCommand);
-            } else if (newCommand === 'centro') {
+            const now = Date.now();
+
+            if (newCommand !== 'centro') {
+                if (newCommand !== lastDir) {
+                    command(newCommand);
+                    setLastDir(newCommand);
+                    holdStartRef.current = now;
+                    lastRepeatRef.current = now;
+                } else if (holdStartRef.current !== null) {
+                    const heldFor = now - holdStartRef.current;
+                    if (heldFor >= HOLD_THRESHOLD_MS) {
+                        const sinceLastRepeat = now - lastRepeatRef.current;
+                        if (sinceLastRepeat >= REPEAT_INTERVAL_MS) {
+                            command(newCommand);
+                            lastRepeatRef.current = now;
+                        }
+                    }
+                }
+            } else {
                 setLastDir('');
+                holdStartRef.current = null;
+                lastRepeatRef.current = 0;
             }
 
             // A
