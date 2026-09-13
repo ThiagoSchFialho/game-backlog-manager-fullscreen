@@ -1,3 +1,6 @@
+import type { Game } from "../types/gamesType";
+import { orderBy } from "../utils/orderBy";
+
 export const useDb = () => {
     const host = import.meta.env.VITE_BACKEND_HOST;
 
@@ -16,6 +19,32 @@ export const useDb = () => {
         } catch (error) {
             console.error("Erro ao carregar jogos.", error);
         }
+    }
+
+    const changeStatus = async (id: string, status: string) => {
+        const MAX_PLAYING_GAMES = 5;
+
+        if (status === "playing") {
+            const games = (await fetchGames()) as Game[] | undefined;
+            if (!games) return;
+
+            const playingGames = games.filter((game: Game) => game.status === "playing");
+            const orderedPlayingGames = orderBy(playingGames, "rtime_last_played", "asc");
+
+            if (orderedPlayingGames.length >= MAX_PLAYING_GAMES) {
+                const oldestGame = orderedPlayingGames[0];
+                const freedSlot = await updateStatus(oldestGame.id, "played");
+                if (!freedSlot) return;
+            }
+        }
+
+        const updated = await updateStatus(id, status);
+        if (!updated) return;
+    };
+
+    const handleStartGame = async (id: string, steamId: string) => {
+        window.location.href = `steam://rungameid/${steamId}`;
+        changeStatus(id, "playing");
     }
 
     const getGameById = async (id: string) => {
@@ -87,5 +116,5 @@ export const useDb = () => {
         }
     }
 
-    return { getGameById, fetchGames, updateStatus, syncSteam };
+    return { handleStartGame, getGameById, fetchGames, updateStatus, syncSteam };
 }

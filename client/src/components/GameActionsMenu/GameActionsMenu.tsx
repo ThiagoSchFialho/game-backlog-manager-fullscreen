@@ -234,6 +234,7 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
             playCursorSound();
             setSelectedIndex(prev => moveSelection(prev, command, visibleMenuItems.length));
         } else if (command === 'A') {
+            if (selectedIndex === 0) closeMenu?.();
             playConfirm2Sound();
             visibleMenuItems[selectedIndex]?.action();
         } else if (command === 'B') {
