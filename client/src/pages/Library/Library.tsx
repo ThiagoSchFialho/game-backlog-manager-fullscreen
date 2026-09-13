@@ -10,7 +10,7 @@ import mostPlayed from '../../assets/icons/most-played.svg'
 import alphabet from '../../assets/icons/alphabet.svg';
 import { orderBy } from '../../utils/orderBy';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 type ScreenItem = {
     id: Game['id'];
@@ -21,12 +21,13 @@ type ScreenItem = {
 };
 
 const Library: React.FC = () => {
+    const { sortingMethod } = useParams<{ sortingMethod: string }>();
     const navigation = useNavigate();
     const { fetchGames } = useDb();
     const [currentPage] = useState('library');
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [sortedGamesList, setSortedGamesList] = useState<Game[]>([]);
-    const [sortMethod, setSortMethod] = useState('recentlyPlayed');
+    const [sortMethod, setSortMethod] = useState(sortingMethod ?? 'alphabet');
     const [selectedSortingMethod, setSelectedSorginMethod] = useState(sortMethod);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,8 +59,8 @@ const Library: React.FC = () => {
         setSelectedIndex(0);
     }
     useEffect(() => {
-        sortGames(sortMethod, gamesList);
-    }, [gamesList]);
+        sortGames(sortingMethod ?? 'alphabet', gamesList);
+    }, [sortingMethod, gamesList]);
 
     const gameCardsItems: ScreenItem[] = sortedGamesList.map((game) => ({
         id: game.id,

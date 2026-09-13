@@ -13,6 +13,7 @@ const AppRoutes = () => {
         <HashRouter>
             <Routes>
                 <Route path='/' element={<Home />} />
+                <Route path='/library/:sortingMethod' element={<Library />} />
                 <Route path='/library' element={<Library />} />
                 <Route path='/completed' element={<Completed />} />
                 <Route path='/backlog' element={<Backlog />} />

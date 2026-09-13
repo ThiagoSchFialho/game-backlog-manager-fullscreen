@@ -69,7 +69,7 @@ const Home: React.FC = () => {
             action: () => handleStartGame(games[0].id, games[0].steam_id)
         },
         ...gameCardsItems,
-        { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library') }
+        { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library/recentlyPlayed') }
     ];
 
     const rowStart = 1;
@@ -162,7 +162,7 @@ const Home: React.FC = () => {
                                 onCloseMenu={handleCloseMenu}
                             />
                         ))}
-                        <div onClick={() => navigation('/library')} className={selectedIndex === 6 ? "focused continue-playing-more" : "continue-playing-more"}>
+                        <div className={selectedIndex === 6 ? "focused continue-playing-more" : "continue-playing-more"}>
                             <img src={arrow} />
                         </div>
                     </div>
