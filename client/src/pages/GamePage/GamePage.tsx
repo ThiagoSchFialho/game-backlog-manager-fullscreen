@@ -25,7 +25,6 @@ const GamePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigation = useNavigate();
     const { getGameById } = useDb();
-    const [selected] = useState('library');
     const [currentGame, setCurrentGame] = useState<Game>();
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
     
@@ -48,7 +47,7 @@ const GamePage: React.FC = () => {
     return (
         <>
             <JoystickSetup command={joystickNavigation} />
-            <SideMenu currentPage={selected} />
+            <SideMenu currentPage={''} />
             <div className="main-content">
                 {!currentGame ? (
                     <p className="error-message">Jogo não encontrado</p>

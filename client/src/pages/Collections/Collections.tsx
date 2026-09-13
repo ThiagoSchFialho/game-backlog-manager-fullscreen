@@ -48,7 +48,7 @@ const Collections: React.FC = () => {
                 </div>
                 <div className="collection-folders-container">
                     {collectionsList.map(collection => (
-                        <CollectionFolder collection={collection} />
+                        <CollectionFolder key={collection.id} collection={collection} />
                     ))}
                 </div>
 
