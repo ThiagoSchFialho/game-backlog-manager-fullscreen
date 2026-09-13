@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
+
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
-import { getGameCover } from '../../utils/getGameCover';
-import { useDb } from '../../hooks/useDb';
-import type { Game } from '../../types/gamesType';
-import { orderBy } from '../../utils/orderBy';
 import GameLandscape from '../../components/GameLandscape/GameLandscape';
-import arrow from '../../assets/icons/menu-arrow.svg';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 
+import { useDb } from '../../hooks/useDb';
+import { useSound } from '../../hooks/useSound';
+
+import { getGameCover } from '../../utils/getGameCover';
+import { orderBy } from '../../utils/orderBy';
+
+import arrow from '../../assets/icons/menu-arrow.svg';
+
+import type { Game } from '../../types/gamesType';
 type ScreenItem = {
     id: Game['id'];
     steamId: Game['steam_id'];
@@ -21,22 +26,27 @@ type ScreenItem = {
 
 const BANNER_INDEX = 0;
 
+
+
+
 const Home: React.FC = () => {
     const navigation = useNavigate();
-    const { fetchGames, updateStatus } = useDb();
+    const { handleStartGame, fetchGames } = useDb();
+    const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
     const [selected] = useState('home');
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [commandCoolDown, setCommandCoolDown] = useState(false);
     
-    const getGames = async () => {
-        const games = await fetchGames();
-        if (games) {
-            const orderdGames = orderBy(games, 'rtime_last_played', 'desc');
-            setGamesList(orderdGames.slice(0, 6));
-        }
-    }
     useEffect(() => {
+        const getGames = async () => {
+            const games = await fetchGames();
+            if (games) {
+                const orderdGames = orderBy(games, 'rtime_last_played', 'desc');
+                setGamesList(orderdGames.slice(0, 6));
+            }
+        }
         getGames();
     }, []);
 
@@ -59,7 +69,6 @@ const Home: React.FC = () => {
         name: game.title,
         action: () => navigation(`/game-page/${game.id}`)
     }));
-
     const screenItems: ScreenItem[] = [
         {
             id: games[0].id,
@@ -72,64 +81,47 @@ const Home: React.FC = () => {
         { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library/recentlyPlayed') }
     ];
 
-    const rowStart = 1;
-    const rowEnd = screenItems.length - 1;
-
-    const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
-
-    const handleCloseMenu = () => {
-        setIsMenuOpen(false);
-    }
-
     const joystickNavigation = (command: string) => {
         const onBanner = selectedIndex === BANNER_INDEX;
-
         if (onBanner) {
             if (command === 'baixo') {
-                setSelectedIndex(rowStart);
-            }
-            if (command === 'A') {
+                playSelectSound();
+                setSelectedIndex(1);
+            } else if (command === 'A') {
+                playConfirmSound();
                 screenItems[selectedIndex]?.action();
             }
             return;
         }
-
-        if (command === 'esquerda' || command === 'direita') {
-            const delta = command === 'direita' ? 1 : -1;
-            setSelectedIndex(prev => clamp(prev + delta, rowStart, rowEnd));
+        if (command === 'esquerda') {
+            if (selectedIndex > 1) {
+                playSelectSound();
+                setSelectedIndex(selectedIndex - 1);
+            }
+        } else if (command === 'direita') {
+            if (selectedIndex < screenItems.length - 1) {
+                playSelectSound();
+                setSelectedIndex(selectedIndex + 1);
+            }
         } else if (command === 'cima') {
+            playSelectSound();
             setSelectedIndex(BANNER_INDEX);
         } else if (command === 'A') {
+            if (commandCoolDown) return null;
+            playConfirmSound();
             screenItems[selectedIndex]?.action();
         } else if (selectedIndex !== 6 && command === 'Y') {
+            playPopupSound();
             setIsMenuOpen(true);
         }
     };
 
-    const changeStatus = async (id: string, status: string) => {
-        const MAX_PLAYING_GAMES = 5;
-
-        if (status === "playing") {
-            const games = (await fetchGames()) as Game[] | undefined;
-            if (!games) return;
-
-            const playingGames = games.filter((game: Game) => game.status === "playing");
-            const orderedPlayingGames = orderBy(playingGames, "rtime_last_played", "asc");
-
-            if (orderedPlayingGames.length >= MAX_PLAYING_GAMES) {
-                const oldestGame = orderedPlayingGames[0];
-                const freedSlot = await updateStatus(oldestGame.id, "played");
-                if (!freedSlot) return;
-            }
-        }
-
-        const updated = await updateStatus(id, status);
-        if (!updated) return;
-    };
-
-    const handleStartGame = async (id: string, steamId: string) => {
-        window.location.href = `steam://rungameid/${steamId}`;
-        changeStatus(id, "playing");
+    const handleCloseMenu = () => {
+        setCommandCoolDown(true);
+        setInterval(() => {
+            setCommandCoolDown(false);
+        }, 1000);
+        setIsMenuOpen(false)
     }
 
     return (
