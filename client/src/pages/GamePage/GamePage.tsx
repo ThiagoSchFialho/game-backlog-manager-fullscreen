@@ -5,13 +5,14 @@ import { getGameCover } from '../../utils/getGameCover';
 import { useDb } from '../../hooks/useDb';
 import type { Game } from '../../types/gamesType';
 import GameLandscape from '../../components/GameLandscape/GameLandscape';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import playing from '../../assets/icons/playing.svg';
 import played from '../../assets/icons/played.svg';
 import notPlayed from '../../assets/icons/not-played.svg';
 import completed from '../../assets/icons/completed.svg';
 import totalTime from '../../assets/icons/total-time.svg';
 import trophy from '../../assets/icons/trophy.svg';
+import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 
 const statusConfig = {
     playing: { icon: playing, label: 'Jogando', color: '#1FC06D' },
@@ -22,6 +23,7 @@ const statusConfig = {
 
 const GamePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const navigation = useNavigate();
     const { getGameById } = useDb();
     const [selected] = useState('library');
     const [currentGame, setCurrentGame] = useState<Game>();
@@ -37,8 +39,15 @@ const GamePage: React.FC = () => {
         getGame();
     }, []);
 
+    const joystickNavigation = (command: string) => {
+        if (command === 'B') {
+            navigation(-1);
+        }
+    };
+
     return (
         <>
+            <JoystickSetup command={joystickNavigation} />
             <SideMenu currentPage={selected} />
             <div className="main-content">
                 {!currentGame ? (
@@ -51,6 +60,7 @@ const GamePage: React.FC = () => {
                             steamId={currentGame.steam_id}
                             img={getGameCover(currentGame.title, 'landscape')}
                             name={currentGame.title}
+                            isFocused={true}
                         />
 
                         <div className="game-page-details-container">

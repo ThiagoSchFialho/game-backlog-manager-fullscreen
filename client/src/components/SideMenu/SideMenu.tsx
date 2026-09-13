@@ -11,9 +11,19 @@ import checkSelected from '../../assets/icons/check-selected.svg';
 import listSelected from '../../assets/icons/list-selected.svg';
 import folderSelected from '../../assets/icons/folder-selected.svg';
 import { useNavigate } from 'react-router-dom';
+import JoystickSetup from '../JoystickSetup/JoystickSetup';
 
 interface SideMenuProps {
     currentPage: string;
+}
+
+interface SideMenuItems {
+    url: string;
+    name: string;
+    icon: string;
+    iconSelected: string;
+    label: string;
+    alt: string;
 }
 
 const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
@@ -22,33 +32,74 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
 
     useEffect(() => {
         setSelected(currentPage);
-    }, [])
+    }, []);
+
+    const sideMenuItems: SideMenuItems[] = [
+        {
+            url: '/',
+            name: 'home',
+            icon: home,
+            iconSelected: homeSelected,
+            label: 'Inicio',
+            alt: 'casa'
+        },
+        {
+            url: '/library',
+            name: 'library',
+            icon: gamepad,
+            iconSelected: gamepadSelected,
+            label: 'Biblioteca',
+            alt: 'joystick'
+        },
+        {
+            url: '/collections',
+            name: 'collections',
+            icon: folder,
+            iconSelected: folderSelected,
+            label: 'Coleções',
+            alt: 'pasta'
+        },
+        {
+            url: '/completed',
+            name: 'completed',
+            icon: check,
+            iconSelected: checkSelected,
+            label: 'Zerados',
+            alt: 'verificado'
+        },
+        {
+            url: '/backlog',
+            name: 'backlog',
+            icon: list,
+            iconSelected: listSelected,
+            label: 'Backlog',
+            alt: 'lista'
+        }
+    ];
+
+    const joystickNavigation = (command: string) => {
+        const currentPageIndex = sideMenuItems.findIndex(item => item.name === currentPage);
+
+        if (command === 'dpad_cima' && currentPageIndex !== 0) {
+            navigation(sideMenuItems[currentPageIndex - 1].url);
+        }
+        if (command === 'dpad_baixo' && currentPageIndex !== sideMenuItems.length - 1) {
+            navigation(sideMenuItems[currentPageIndex + 1].url);
+        }
+    };
 
     return (
         <>
+            <JoystickSetup command={joystickNavigation} />
             <div className="side-menu-container">
                 <div className="pages-section">
                     <ul className="side-menu-list">
-                        <li onClick={() => navigation('/')} className={selected === 'home' ? 'selected' : ''}>
-                            <img src={selected == 'home' ? homeSelected : home} alt="casa" />
-                            <p>Inicio</p>
-                        </li>
-                        <li onClick={() => navigation('/library')} className={selected === 'library' ? 'selected' : ''}>
-                            <img src={selected == 'library' ? gamepadSelected : gamepad} alt="joystick" />
-                            <p>Biblioteca</p>
-                        </li>
-                        <li onClick={() => navigation('/collections')} className={selected === 'collections' ? 'selected' : ''}>
-                            <img src={selected == 'collections' ? folderSelected : folder} alt="pasta" />
-                            <p>Coleções</p>
-                        </li>
-                        <li onClick={() => navigation('/completed')} className={selected === 'completed' ? 'selected' : ''}>
-                            <img src={selected == 'completed' ? checkSelected : check} alt="verificado" />
-                            <p>Zerados</p>
-                        </li>
-                        <li onClick={() => navigation('/backlog')} className={selected === 'backlog' ? 'selected' : ''}>
-                            <img src={selected == 'backlog' ? listSelected : list} alt="lista" />
-                            <p>Backlog</p>
-                        </li>
+                        {sideMenuItems.map(item => (
+                            <li key={item.name} onClick={() => navigation(item.url)} className={selected === item.name ? 'selected' : ''}>
+                                <img src={selected == item.name ? item.iconSelected : item.icon} alt={item.alt} />
+                                <p>{item.label}</p>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>

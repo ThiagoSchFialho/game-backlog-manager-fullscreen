@@ -1,6 +1,7 @@
 .side-menu-container {
+    position: fixed;
     padding-top: 100px;
-    width: 170px;
+    width: 130px;
     height: calc(100vh - 133px);
 }
 
@@ -21,7 +22,7 @@
     flex-direction: column;
     align-items: center;
     gap: 1px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
 }
