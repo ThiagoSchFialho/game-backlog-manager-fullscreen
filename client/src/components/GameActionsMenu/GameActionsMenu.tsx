@@ -1,17 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import './styles.css';
+
+import JoystickSetup from "../JoystickSetup/JoystickSetup";
+
+import { useDb } from "../../hooks/useDb";
+import { useSound } from "../../hooks/useSound";
+import { useCollection } from "../../hooks/useCollection";
+
+import { orderBy } from "../../utils/orderBy";
+
 import menuArrow from '../../assets/icons/menu-arrow.svg';
 import playIcon from '../../assets/icons/play.svg';
-import { useCollection } from "../../hooks/useCollection";
-import { useDb } from "../../hooks/useDb";
+
 import type { ICollection } from "../../types/collectionsType";
 import type { Game } from "../../types/gamesType";
-import { orderBy } from "../../utils/orderBy";
-import JoystickSetup from "../JoystickSetup/JoystickSetup";
-import cursorSound from '../../assets/sounds/cursor.mp3';
-import confirmSound from '../../assets/sounds/confirm.mp3';
-import confirm2Sound from '../../assets/sounds/confirm2.mp3';
-import backSound from '../../assets/sounds/back.mp3';
+type SubMenuId = 'status' | 'addCollection' | 'removeCollection';
 
 interface GameActionsMenuProps {
     gameId: string;
@@ -32,9 +35,6 @@ interface SubMenuOption {
     label: string;
     onSelect: () => void;
 }
-
-type SubMenuId = 'status' | 'addCollection' | 'removeCollection';
-
 interface SubMenuConfig {
     id: SubMenuId;
     position: React.CSSProperties;
@@ -51,8 +51,10 @@ const STATUS_OPTIONS = [
     { label: 'Não jogado', value: 'not-played' },
 ];
 
+
 const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, isOpen, closeMenu }) => {
     const { fetchGames, updateStatus } = useDb();
+    const { playConfirmSound, playConfirm2Sound, playCursorSound, playBackSound } = useSound();
     const { fetchCollections, addToCollection, deleteFromCollection, getCollectionsFromGame } = useCollection();
 
     const [collectionsList, setCollectionsList] = useState<ICollection[]>([]);
@@ -63,7 +65,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const [subSelectedIndex, setSubSelectedIndex] = useState(0);
 
     // --- Data loading -----------------------------------------------------
-
     const getGames = async () => {
         const games = await fetchGames();
         if (!games) alert("Erro ao recuperar jogos.");
@@ -90,7 +91,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     }, [isOpen]);
 
     // --- Actions ------------------------------------------------------------
-
     const changeStatus = async (id: string, status: string) => {
         if (status === "playing") {
             const games = await getGames();
@@ -159,7 +159,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     };
 
     // --- Menu structure -------------------------------------------------
-
     const mainMenuItems: MenuItem[] = [
         { id: 0, label: 'Jogar', isSubMenu: false, action: () => handleStartGame(gameId, gameSteamId) },
         { id: 1, label: 'Alterar status', isSubMenu: true, action: () => openSubMenu('status') },
@@ -169,7 +168,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         { id: 5, label: 'Cancelar', isSubMenu: false, action: () => closeMenu?.() },
     ];
 
-    // "Remover da coleção" só existe se o jogo já estiver em alguma coleção.
     const visibleMenuItems = mainMenuItems.filter(
         item => item.label !== 'Remover da coleção' || gameCollectionsList.length > 0
     );
@@ -208,12 +206,10 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const activeSubMenuConfig = subMenus.find(subMenu => subMenu.id === activeSubMenu) ?? null;
 
     // --- Joystick navigation -------------------------------------------
-
     const moveSelection = (current: number, direction: 'cima' | 'baixo', length: number) => {
         const delta = direction === 'baixo' ? 1 : -1;
         return Math.min(Math.max(current + delta, 0), length - 1);
     };
-
     const navigateSubMenu = (command: string, subMenu: SubMenuConfig) => {
         const { options } = subMenu;
 
@@ -228,7 +224,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
             setActiveSubMenu(null);
         }
     };
-
     const navigateMainMenu = (command: string) => {
         if (command === 'cima' || command === 'baixo') {
             playCursorSound();
@@ -242,7 +237,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
             closeMenu?.();
         }
     };
-
     const joystickNavigation = (command: string) => {
         if (activeSubMenuConfig) {
             navigateSubMenu(command, activeSubMenuConfig);
@@ -252,7 +246,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     };
 
     // --- Render -----------------------------------------------------------
-
     const renderSubMenu = (subMenu: SubMenuConfig) => (
         <div
             key={subMenu.id}
@@ -277,68 +270,10 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         </div>
     );
 
-    // --- Áudio de seleção e confirmação -------------------------------------
-    const cursorAudioRef = useRef<HTMLAudioElement | null>(null);
-    const confirmAudioRef = useRef<HTMLAudioElement | null>(null);
-    const confirm2AudioRef = useRef<HTMLAudioElement | null>(null);
-    const backAudioRef = useRef<HTMLAudioElement | null>(null);
-    useEffect(() => {
-        cursorAudioRef.current = new Audio(cursorSound);
-        cursorAudioRef.current.volume = 0.2;
-
-        confirmAudioRef.current = new Audio(confirmSound);
-        confirmAudioRef.current.volume = 0.1;
-
-        confirm2AudioRef.current = new Audio(confirm2Sound);
-        confirm2AudioRef.current.volume = 0.1;
-
-        backAudioRef.current = new Audio(backSound);
-        backAudioRef.current.volume = 0.1;
-    }, []);
-
-    const playCursorSound = () => {
-        const audio = cursorAudioRef.current;
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(() => {
-            });
-        }
-    };
-
-    const playConfirmSound = () => {
-        const audio = confirmAudioRef.current;
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(() => {
-            });
-        }
-    };
-
-    const playConfirm2Sound = () => {
-        const audio = confirm2AudioRef.current;
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(() => {
-            });
-        }
-    };
-
-    const playBackSound = () => {
-        const audio = backAudioRef.current;
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(() => {
-            });
-        }
-    };
-    // ------------------------------------------------------------------
-
     return (
         <>
             {isOpen && <JoystickSetup command={joystickNavigation} />}
-
             {activeSubMenuConfig && renderSubMenu(activeSubMenuConfig)}
-
             {isOpen && (
                 <div className="game-actions-menu-background">
                     <div className="game-actions-menu">
