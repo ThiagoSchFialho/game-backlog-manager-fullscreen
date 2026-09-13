@@ -23,7 +23,10 @@
     justify-content: space-between;
     gap: 45px;
     gap: 30px;
-    padding: 0 30px;
+    padding: 6px 30px 150px 30px;
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+    scroll-behavior: smooth;
 }
 
 .collection-title-form-container {

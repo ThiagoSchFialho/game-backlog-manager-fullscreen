@@ -28,9 +28,10 @@ export interface Collection {
 
 interface ColelctionFolderProps {
     collection: Collection;
+    isFocused: boolean;
 }
 
-const CollectionFolder: React.FC<ColelctionFolderProps> = ({collection}) => {
+const CollectionFolder: React.FC<ColelctionFolderProps> = ({ collection, isFocused }) => {
     const navigation = useNavigate();
 
     return (
@@ -38,7 +39,7 @@ const CollectionFolder: React.FC<ColelctionFolderProps> = ({collection}) => {
             <div className="collection-folder-container">
                 <div
                     onClick={() => navigation(`/collection/${collection.id}`)}
-                    className="collection-folder"
+                    className={isFocused ? "collection-folder focused" : "collection-folder"}
                 >
                     {collection.games.slice(0, 4).map(game => (
                         <div className="game">
