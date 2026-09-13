@@ -13,6 +13,15 @@ import completed from '../../assets/icons/completed.svg';
 import totalTime from '../../assets/icons/total-time.svg';
 import trophy from '../../assets/icons/trophy.svg';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+import { orderBy } from '../../utils/orderBy';
+
+type ScreenItem = {
+    id: Game['id'];
+    steamId: Game['steam_id'];
+    img: string;
+    name: Game['title'];
+    action: () => void | Promise<void>;
+};
 
 const statusConfig = {
     playing: { icon: playing, label: 'Jogando', color: '#1FC06D' },
@@ -24,9 +33,11 @@ const statusConfig = {
 const GamePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigation = useNavigate();
+    const { fetchGames, updateStatus } = useDb();
     const { getGameById } = useDb();
     const [currentGame, setCurrentGame] = useState<Game>();
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
+    const [selectedIndex, setSelectedIndex] = useState(0);
     
     useEffect(() => {
         const getGame = async () => {
@@ -38,7 +49,46 @@ const GamePage: React.FC = () => {
         getGame();
     }, []);
 
+    const changeStatus = async (id: string, status: string) => {
+        const MAX_PLAYING_GAMES = 5;
+
+        if (status === "playing") {
+            const games = (await fetchGames()) as Game[] | undefined;
+            if (!games) return;
+
+            const playingGames = games.filter((game: Game) => game.status === "playing");
+            const orderedPlayingGames = orderBy(playingGames, "rtime_last_played", "asc");
+
+            if (orderedPlayingGames.length >= MAX_PLAYING_GAMES) {
+                const oldestGame = orderedPlayingGames[0];
+                const freedSlot = await updateStatus(oldestGame.id, "played");
+                if (!freedSlot) return;
+            }
+        }
+
+        const updated = await updateStatus(id, status);
+        if (!updated) return;
+    };
+
+    const handleStartGame = async (id: string, steamId: string) => {
+        window.location.href = `steam://rungameid/${steamId}`;
+        changeStatus(id, "playing");
+    }
+
+    const screenItems: ScreenItem[] = currentGame ? [
+        {
+            id: currentGame.id,
+            steamId: currentGame.steam_id,
+            img: getGameCover(currentGame.title, 'landscape'),
+            name: currentGame.title,
+            action: () => handleStartGame(currentGame.id, currentGame.steam_id)
+        }
+    ] : [];
+
     const joystickNavigation = (command: string) => {
+        if (command === 'A') {
+            screenItems[selectedIndex]?.action();
+        }
         if (command === 'B') {
             navigation(-1);
         }
@@ -54,13 +104,15 @@ const GamePage: React.FC = () => {
                 ): (
                     <>
                         <h1 className="game-page-title">{currentGame?.title}</h1>
-                        <GameLandscape
-                            id={currentGame.id}
-                            steamId={currentGame.steam_id}
-                            img={getGameCover(currentGame.title, 'landscape')}
-                            name={currentGame.title}
-                            isFocused={true}
-                        />
+                        {screenItems.slice(0, 1).map(item => (
+                            <GameLandscape
+                                id={item.id}
+                                steamId={item.steamId}
+                                img={item.img}
+                                name={item.name}
+                                isFocused={selectedIndex === 0}
+                            />
+                        ))}
 
                         <div className="game-page-details-container">
                             <div className="game-page-details-section">
