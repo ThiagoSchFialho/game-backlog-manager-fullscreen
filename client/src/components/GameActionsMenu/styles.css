@@ -1,4 +1,5 @@
 .game-actions-menu-background {
+    z-index: 100;
     position: fixed;
     width: 100vw;
     height: 100vh;
@@ -9,6 +10,7 @@
 }
 
 .game-actions-menu {
+    z-index: 200;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -61,6 +63,6 @@
 }
 
 .sub-menu {
-    z-index: 100;
+    z-index: 300;
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
 }

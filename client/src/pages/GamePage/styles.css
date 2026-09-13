@@ -3,8 +3,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--danger);
-    font-size: 50px;
+    color: var(--text-secondary);
+    font-size: 16px;
 }
 
 .game-page-title {
