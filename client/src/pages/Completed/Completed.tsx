@@ -131,8 +131,6 @@ const Completed: React.FC = () => {
                 gameCardsItems[currentIndex]?.action();
             } else if (command === 'Y') {
                 setIsMenuOpen(true);
-            } else if (command === 'B') {
-                navigation(-1);
             } else if (command === 'RB') {
                 if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
                     const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);

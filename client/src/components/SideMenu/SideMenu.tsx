@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './styles.css';
 import home from '../../assets/icons/home.svg';
 import gamepad from '../../assets/icons/gamepad.svg';
@@ -29,9 +29,19 @@ interface SideMenuItems {
 const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
     const navigation = useNavigate();
     const [selected, setSelected] = useState('');
+    const readyRef = useRef(false);
 
     useEffect(() => {
         setSelected(currentPage);
+    }, []);
+
+    useEffect(() => {
+        readyRef.current = false;
+        const timeout = setTimeout(() => {
+            readyRef.current = true;
+        }, 100);
+
+        return () => clearTimeout(timeout);
     }, []);
 
     const sideMenuItems: SideMenuItems[] = [
@@ -78,8 +88,9 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
     ];
 
     const joystickNavigation = (command: string) => {
+        if (!readyRef.current) return;
         const currentPageIndex = sideMenuItems.findIndex(item => item.name === currentPage);
-
+    
         if (command === 'dpad_cima' && currentPageIndex !== 0) {
             navigation(sideMenuItems[currentPageIndex - 1].url);
         }
