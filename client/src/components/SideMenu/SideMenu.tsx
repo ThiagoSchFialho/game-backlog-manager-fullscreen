@@ -70,6 +70,14 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
             alt: 'pasta'
         },
         {
+            url: '/backlog',
+            name: 'backlog',
+            icon: list,
+            iconSelected: listSelected,
+            label: 'Backlog',
+            alt: 'lista'
+        },
+        {
             url: '/completed',
             name: 'completed',
             icon: check,
@@ -77,14 +85,6 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
             label: 'Zerados',
             alt: 'verificado'
         },
-        {
-            url: '/backlog',
-            name: 'backlog',
-            icon: list,
-            iconSelected: listSelected,
-            label: 'Backlog',
-            alt: 'lista'
-        }
     ];
 
     const joystickNavigation = (command: string) => {

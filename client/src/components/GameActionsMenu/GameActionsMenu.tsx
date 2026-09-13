@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import './styles.css';
 import menuArrow from '../../assets/icons/menu-arrow.svg';
 import playIcon from '../../assets/icons/play.svg';
@@ -8,6 +8,10 @@ import type { ICollection } from "../../types/collectionsType";
 import type { Game } from "../../types/gamesType";
 import { orderBy } from "../../utils/orderBy";
 import JoystickSetup from "../JoystickSetup/JoystickSetup";
+import cursorSound from '../../assets/sounds/cursor.mp3';
+import confirmSound from '../../assets/sounds/confirm.mp3';
+import confirm2Sound from '../../assets/sounds/confirm2.mp3';
+import backSound from '../../assets/sounds/back.mp3';
 
 interface GameActionsMenuProps {
     gameId: string;
@@ -214,20 +218,26 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         const { options } = subMenu;
 
         if ((command === 'cima' || command === 'baixo') && options.length > 0) {
+            playCursorSound();
             setSubSelectedIndex(prev => moveSelection(prev, command, options.length));
         } else if (command === 'A' && options.length > 0) {
+            playConfirmSound();
             options[subSelectedIndex].onSelect();
         } else if (command === 'B') {
+            playBackSound();
             setActiveSubMenu(null);
         }
     };
 
     const navigateMainMenu = (command: string) => {
         if (command === 'cima' || command === 'baixo') {
+            playCursorSound();
             setSelectedIndex(prev => moveSelection(prev, command, visibleMenuItems.length));
         } else if (command === 'A') {
+            playConfirm2Sound();
             visibleMenuItems[selectedIndex]?.action();
         } else if (command === 'B') {
+            playBackSound();
             closeMenu?.();
         }
     };
@@ -265,6 +275,62 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
             </ul>
         </div>
     );
+
+    // --- Áudio de seleção e confirmação -------------------------------------
+    const cursorAudioRef = useRef<HTMLAudioElement | null>(null);
+    const confirmAudioRef = useRef<HTMLAudioElement | null>(null);
+    const confirm2AudioRef = useRef<HTMLAudioElement | null>(null);
+    const backAudioRef = useRef<HTMLAudioElement | null>(null);
+    useEffect(() => {
+        cursorAudioRef.current = new Audio(cursorSound);
+        cursorAudioRef.current.volume = 0.2;
+
+        confirmAudioRef.current = new Audio(confirmSound);
+        confirmAudioRef.current.volume = 0.1;
+
+        confirm2AudioRef.current = new Audio(confirm2Sound);
+        confirm2AudioRef.current.volume = 0.1;
+
+        backAudioRef.current = new Audio(backSound);
+        backAudioRef.current.volume = 0.1;
+    }, []);
+
+    const playCursorSound = () => {
+        const audio = cursorAudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+
+    const playConfirmSound = () => {
+        const audio = confirmAudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+
+    const playConfirm2Sound = () => {
+        const audio = confirm2AudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+
+    const playBackSound = () => {
+        const audio = backAudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+    // ------------------------------------------------------------------
 
     return (
         <>

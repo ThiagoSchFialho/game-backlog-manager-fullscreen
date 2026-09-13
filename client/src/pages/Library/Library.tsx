@@ -11,6 +11,9 @@ import alphabet from '../../assets/icons/alphabet.svg';
 import { orderBy } from '../../utils/orderBy';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 import { useNavigate, useParams } from 'react-router-dom';
+import selectSound from '../../assets/sounds/select.mp3';
+import confirmSound from '../../assets/sounds/confirm.mp3';
+import popupSound from '../../assets/sounds/popup.mp3';
 
 type ScreenItem = {
     id: Game['id'];
@@ -18,6 +21,32 @@ type ScreenItem = {
     img: string;
     name: Game['title'];
     action: () => void | Promise<void>;
+};
+
+const animateScrollTo = (
+    container: HTMLDivElement,
+    targetTop: number,
+    duration: number = 200
+) => {
+    const startTop = container.scrollTop;
+    const distance = targetTop - startTop;
+    const startTime = performance.now();
+
+    const easeOutQuad = (t: number) => t * (2 - t);
+
+    const step = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutQuad(progress);
+
+        container.scrollTop = startTop + distance * eased;
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        }
+    };
+
+    requestAnimationFrame(step);
 };
 
 const Library: React.FC = () => {
@@ -79,6 +108,49 @@ const Library: React.FC = () => {
         }, 70);
     }
 
+    // --- Áudio de seleção e confirmação -------------------------------------
+    const selectAudioRef = useRef<HTMLAudioElement | null>(null);
+    const confirmAudioRef = useRef<HTMLAudioElement | null>(null);
+        const popupAudioRef = useRef<HTMLAudioElement | null>(null);
+    useEffect(() => {
+        selectAudioRef.current = new Audio(selectSound);
+        selectAudioRef.current.volume = 0.8;
+
+        confirmAudioRef.current = new Audio(confirmSound);
+        confirmAudioRef.current.volume = 0.2;
+
+        popupAudioRef.current = new Audio(popupSound);
+        popupAudioRef.current.volume = 0.1;
+    }, []);
+
+    const playSelectSound = () => {
+        const audio = selectAudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+
+    const playConfirmSound = () => {
+        const audio = confirmAudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+
+    const playPopupSound = () => {
+        const audio = popupAudioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+            });
+        }
+    };
+    // ------------------------------------------------------------------
+
     // --- Refs para evitar stale closure no joystickNavigation -------------
     const selectedIndexRef = useRef(selectedIndex);
     useEffect(() => {
@@ -114,22 +186,28 @@ const Library: React.FC = () => {
             if (command === 'esquerda') {
                 if (currentIndex !== 0) {
                     setSelectedIndex(currentIndex - 1);
+                    playSelectSound();
                 }
             } else if (command === 'direita') {
                 if (currentIndex !== length - 1) {
                     setSelectedIndex(currentIndex + 1);
+                    playSelectSound();
                 }
             } else if (command === 'cima') {
                 if (currentIndex > 4) {
                     setSelectedIndex(currentIndex - 5);
+                    playSelectSound();
                 }
             } else if (command === 'baixo') {
                 if (currentIndex < length - 5) {
                     setSelectedIndex(currentIndex + 5);
+                    playSelectSound();
                 }
             } else if (command === 'A') {
                 gameCardsItems[currentIndex]?.action();
+                playConfirmSound();
             } else if (command === 'Y') {
+                playPopupSound();
                 setIsMenuOpen(true);
             } else if (command === 'RB') {
                 if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
@@ -181,7 +259,7 @@ const Library: React.FC = () => {
 
         const targetScrollTop = row < 2 ? 0 : (row - 1) * rowHeight;
 
-        container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+        animateScrollTo(container, targetScrollTop, 200);
     }, [selectedIndex, gameCardsItems.length]);
     // --- End scroll setup -------------------------------------------------
     
