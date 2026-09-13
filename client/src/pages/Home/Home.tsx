@@ -27,8 +27,6 @@ type ScreenItem = {
 const BANNER_INDEX = 0;
 
 
-
-
 const Home: React.FC = () => {
     const navigation = useNavigate();
     const { handleStartGame, fetchGames } = useDb();
@@ -118,10 +116,10 @@ const Home: React.FC = () => {
 
     const handleCloseMenu = () => {
         setCommandCoolDown(true);
-        setInterval(() => {
+        setTimeout(() => {
             setCommandCoolDown(false);
         }, 1000);
-        setIsMenuOpen(false)
+        setIsMenuOpen(false);
     }
 
     return (
@@ -131,6 +129,7 @@ const Home: React.FC = () => {
             <div className="main-content">
                  {screenItems.slice(0, 1).map(item => (
                     <GameLandscape
+                        key={item.id}
                         id={item.id}
                         steamId={item.steamId}
                         img={item.img}
