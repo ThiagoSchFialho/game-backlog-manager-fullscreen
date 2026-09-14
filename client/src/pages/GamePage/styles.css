@@ -36,7 +36,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 62px;
+    height: 66px;
     padding: 15px;
     background-color: var(--bg-card);
     border: var(--border-primary);
@@ -59,15 +59,29 @@
     color: var(--text-secondary);
 }
 
+.game-page-options-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
 .game-page-options-item {
-    width: 300px;
+    height: 46.5px;
+    border-radius: 5px;
     cursor: pointer;
+    width: 230px;
+    margin: 0;
+}
+
+.options-item-focused {
+    background-color: var(--primary);
+    border: 1px solid var(--primary);
 }
 
 .game-page-statistics-item {
-    width: 420px;
+    width: 370px;
 }
 
 .game-page-achievements {
-    width: 710px;
+    width: 60px;
 }
