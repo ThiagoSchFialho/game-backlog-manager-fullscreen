@@ -50,21 +50,35 @@ const NAVIGATION_MAP: Record<number, Partial<Record<string, number>>> = {
 const GamePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigation = useNavigate();
-    const { getGameById, handleStartGame } = useDb();
+    const { getGameById, handleStartGame, updateHidden, updateBeatable } = useDb();
     const { playSelectSound, playConfirmSound } = useSound();
     const [currentGame, setCurrentGame] = useState<Game>();
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
     const [selectedIndex, setSelectedIndex] = useState(999);
 
-    useEffect(() => {
-        const getGame = async () => {
-            const game = await getGameById(String(id));
-            if (game) {
-                setCurrentGame(game);
-            }
+    const getGame = async () => {
+        const game = await getGameById(String(id));
+        if (game) {
+            setCurrentGame(game);
         }
+    }
+    useEffect(() => {
         getGame();
     }, []);
+
+    const handleUpdateHidden = async (id: string, hidden: boolean) => {
+        const response = await updateHidden(id, hidden);
+        if (response) {
+            getGame();
+        }
+    }
+
+    const handleUpdateBeatable = async (id: string, beatable: boolean) => {
+        const response = await updateBeatable(id, beatable);
+        if (response) {
+            getGame();
+        }
+    }
 
     const optionsItems: ScreenItems[] = [
         {
@@ -80,12 +94,20 @@ const GamePage: React.FC = () => {
         {
             label: 'Zeravel:',
             type: 'attribute',
-            action: () => console.log('action not implemented')
+            action: () => {
+                if (currentGame) {
+                    handleUpdateBeatable(currentGame.id, currentGame.beatable);
+                }
+            }
         },
         {
             label: 'Oculto:',
             type: 'attribute',
-            action: () => console.log('action not implemented')
+            action: () => {
+                if (currentGame) {
+                    handleUpdateHidden(currentGame.id, currentGame.hidden);
+                }
+            }
         }
     ];
 

@@ -99,6 +99,66 @@ export const useDb = () => {
         }
     }
 
+    const updateHidden = async (id: string, isHidden: boolean) => {
+        const game = await getGameById(id);
+        if (!game) {
+            console.error("Jogo não encontrado:", id);
+            return null;
+        }
+
+        const updatedGame = { ...game, hidden: !isHidden};
+
+        try {
+            const response = await fetch (`${host}/games/${updatedGame.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedGame)
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao atualizar jogo.", data.error);
+                return null;
+            }
+
+            return data;
+        } catch (error) {
+            console.error("Erro ao atualizar jogo.", error);
+        }
+    }
+
+    const updateBeatable = async (id: string, isBeatable: boolean) => {
+        const game = await getGameById(id);
+        if (!game) {
+            console.error("Jogo não encontrado:", id);
+            return null;
+        }
+
+        const updatedGame = { ...game, beatable: !isBeatable};
+
+        try {
+            const response = await fetch (`${host}/games/${updatedGame.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedGame)
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao atualizar jogo.", data.error);
+                return null;
+            }
+
+            return data;
+        } catch (error) {
+            console.error("Erro ao atualizar jogo.", error);
+        }
+    }
+
     const syncSteam = async () => {
         try {
             const response = await fetch (`${host}/steam-api/sync-and-update-games-from-steam`);
@@ -116,5 +176,5 @@ export const useDb = () => {
         }
     }
 
-    return { handleStartGame, getGameById, fetchGames, updateStatus, syncSteam };
+    return { handleStartGame, getGameById, fetchGames, updateStatus, updateHidden, updateBeatable, syncSteam };
 }

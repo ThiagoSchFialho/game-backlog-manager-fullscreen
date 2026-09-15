@@ -27,7 +27,7 @@ router.post('/', async function (req: Request, res: Response) {
         developer,
         release_date,
         rtime_last_played,
-        playtime,
+        playtime = 0,
         status,
         cover_square,
         cover_hero,
@@ -37,7 +37,7 @@ router.post('/', async function (req: Request, res: Response) {
         hidden
     }: CreateGameInput = req.body;
 
-    const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, playtime, status };
+    const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, status };
 
     for (const [field, value] of Object.entries(requiredFields)) {
         if (!value) {
@@ -166,7 +166,7 @@ router.put('/:id', async function (req: Request, res: Response) {
         developer,
         release_date,
         rtime_last_played,
-        playtime,
+        playtime = 0,
         status,
         cover_square,
         cover_hero,
@@ -176,7 +176,7 @@ router.put('/:id', async function (req: Request, res: Response) {
         hidden
     }: CreateGameInput = req.body;
 
-    const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, playtime, status };
+    const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, status };
 
     for (const [field, value] of Object.entries(requiredFields)) {
         if (!value) {
