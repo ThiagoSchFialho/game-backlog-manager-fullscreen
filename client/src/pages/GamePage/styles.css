@@ -36,12 +36,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 66px;
+    height: 60px;
     padding: 15px;
     background-color: var(--bg-card);
     border: var(--border-primary);
     border-radius: 10px;
-    margin-bottom: 10px;
 }
 
 .game-page-details-item div {
@@ -61,24 +60,22 @@
 
 .game-page-options-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "button1 button1"
+        "button2 button2"
+        "attr1 attr2";
     gap: 10px;
+    width: 300px;
 }
-
-.game-page-options-item {
-    height: 46.5px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 230px;
-    margin: 0;
-}
-
 .options-item-focused {
-    background-color: var(--primary);
+    background-color: var(--bg-card-secondary);
     border: 1px solid var(--primary);
 }
 
-.game-page-statistics-item {
+.game-page-statistics-container {
+    display: grid;
+    gap: 10px;
     width: 370px;
 }
 
