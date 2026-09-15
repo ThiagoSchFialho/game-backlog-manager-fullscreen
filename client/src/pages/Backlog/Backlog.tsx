@@ -37,7 +37,9 @@ const Backlog: React.FC = () => {
         if (games) {
             const filteredGames = games.filter((game: Game) => {
                 if (game.status !== 'completed' && game.beatable === true) {
-                    return game;
+                    if (!game.hidden) {
+                        return game;
+                    }
                 }
             });
             setGamesList(filteredGames);

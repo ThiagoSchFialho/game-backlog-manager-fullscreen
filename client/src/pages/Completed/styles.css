@@ -3,7 +3,7 @@
     grid-template-columns: repeat(5, 1fr);
     justify-content: space-between;
     gap: 30px;
-    padding: 6px 30px 150px 30px;
+    padding: 15px 30px 150px 30px;
     overflow-y: auto;
     max-height: calc(100vh - 160px);
 }

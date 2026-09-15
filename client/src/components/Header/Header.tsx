@@ -22,8 +22,10 @@ const Header: React.FC = () => {
     return (
         <>
             <div className="header">
-                <img className="logo" src={logo} alt="game backlog manager logo" />
-                <SyncSteamBtn />
+                <div className="logo-sync-container">
+                    <img className="logo" src={logo} alt="game backlog manager logo" />
+                    <SyncSteamBtn />
+                </div>
                 <p className="clock">{formattedTime}</p>
             </div>
         </>

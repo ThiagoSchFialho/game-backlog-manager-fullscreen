@@ -45,7 +45,7 @@ const Library: React.FC = () => {
         const getGames = async () => {
             const games = await fetchGames();
             if (games) {
-                setGamesList(games);
+                setGamesList(games.filter((game: Game) => !game.hidden));
             }
         } 
         getGames();
