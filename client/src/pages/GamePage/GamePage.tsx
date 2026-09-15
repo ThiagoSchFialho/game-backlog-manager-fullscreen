@@ -16,8 +16,10 @@ import notPlayed from '../../assets/icons/not-played.svg';
 import completed from '../../assets/icons/completed.svg';
 import totalTime from '../../assets/icons/total-time.svg';
 import trophy from '../../assets/icons/trophy.svg';
+import checked from '../../assets/icons/checked.svg';
+import notChecked from '../../assets/icons/not-checked.svg';
 
-import type { Game } from '../Collection/Collection';
+import type { Game } from '../../types/gamesType';
 import { useSound } from '../../hooks/useSound';
 
 interface ScreenItems {
@@ -35,7 +37,6 @@ const statusConfig = {
 
 const BANNER_INDEX = 999;
 
-// Índices: 0-3 = opções (grid 2x2) | 4-6 = estatísticas (coluna única)
 const NAVIGATION_MAP: Record<number, Partial<Record<string, number>>> = {
     0: { cima: BANNER_INDEX, baixo: 1, direita: 4 },
     1: { cima: 0, baixo: 2, direita: 5 },
@@ -175,7 +176,12 @@ const GamePage: React.FC = () => {
                                                 }
                                             >
                                                 <p>{item.label}</p>
-                                                {item.type === 'attribute' && <p>sim</p>}
+                                                {item.label === 'Oculto:' && (
+                                                    <img src={currentGame.hidden ? checked : notChecked} />
+                                                )}
+                                                {item.label === 'Zeravel:' && (
+                                                    <img src={currentGame.beatable ? checked : notChecked} />
+                                                )}
                                             </div>
                                         )
                                     })}

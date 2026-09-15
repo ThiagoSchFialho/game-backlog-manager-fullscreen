@@ -1,36 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './styles.css';
+
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
-import { getGameCover } from '../../utils/getGameCover';
-import type { ICollection } from '../../types/collectionsType';
-import { useCollection } from '../../hooks/useCollection';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 
-export type GameStatus = 'completed' | 'not-played' | 'played' | 'playing';
+import { useCollection } from '../../hooks/useCollection';
 
-export interface Game {
-    id: string;
-    title: string;
-    steam_id: string;
-    cover_square: string;
-    cover_hero: string;
-    cover_grid: string;
-    developer: string;
-    release_date: string;
-    beatable: boolean;
-    personal_rating: number;
-    playtime: number;
-    status: GameStatus;
-}
+import { getGameCover } from '../../utils/getGameCover';
 
-export interface Collection {
-    id: string;
-    title: string;
-    games: Game[];
-}
-
+import type { Game } from '../../types/gamesType';
+import type { ICollection } from '../../types/collectionsType';
 type ScreenItem = {
     id: Game['id'];
     steamId: Game['steam_id'];
@@ -38,6 +19,7 @@ type ScreenItem = {
     name: Game['title'];
     action: () => void | Promise<void>;
 };
+
 
 const Collection: React.FC = () => {
     const { id } = useParams<{ id: string }>();
