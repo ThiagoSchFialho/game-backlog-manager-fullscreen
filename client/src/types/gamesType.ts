@@ -14,4 +14,5 @@ export interface Game {
     playtime: number;
     status: GameStatus;
     beatable: boolean;
+    hidden: boolean;
 }

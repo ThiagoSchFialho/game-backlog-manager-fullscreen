@@ -13,6 +13,7 @@ export interface CreateGameInput {
     cover_grid?: string | undefined;
     personal_rating?: number | undefined;
     beatable?: boolean | undefined;
+    hidden?: boolean | undefined;
 }
 
 export interface GameWithGenres extends Games {
