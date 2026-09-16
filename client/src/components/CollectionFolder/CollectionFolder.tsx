@@ -42,7 +42,7 @@ const CollectionFolder: React.FC<ColelctionFolderProps> = ({ collection, isFocus
                     className={isFocused ? "collection-folder focused" : "collection-folder"}
                 >
                     {collection.games.slice(0, 4).map(game => (
-                        <div className="game">
+                        <div key={game.id} className="game">
                             <img
                                 className="collection-game-img"
                                 src={getGameCover(game.title, 'square')}

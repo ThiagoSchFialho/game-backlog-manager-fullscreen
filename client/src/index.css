@@ -56,7 +56,6 @@ body {
 .focused {
     outline: 2px solid rgba(255, 255, 255, 0.8); 
     outline-offset: 3px;
-    border-radius: 5px;
-    transform: scale(1.05);
+    transform: scale(1.03);
     transition: 0.15s;
 }
