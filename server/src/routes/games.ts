@@ -196,7 +196,7 @@ router.put('/:id', async function (req: Request, res: Response) {
             steam_id,
             developer,
             release_date,
-            rtime_last_played,
+            rtime_last_played: String(new Date(rtime_last_played).getTime() / 1000),
             playtime,
             status,
             ...(cover_square !== undefined && { cover_square }),

@@ -16,7 +16,7 @@ export class GamesModel implements IGamesModel {
                     cover_hero, cover_grid, personal_rating, beatable,
                     hidden
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+                VALUES ($1, $2, $3, $4, to_timestamp($5), $6, $7, $8, $9, $10, $11, $12, $13)
                 RETURNING *;    
                 `, [
                 input.title,
@@ -164,7 +164,7 @@ export class GamesModel implements IGamesModel {
                     steam_id = $3,
                     developer = $4,
                     release_date = $5,
-                    rtime_last_played = $6,
+                    rtime_last_played = to_timestamp($6),
                     playtime = $7,
                     status = $8,
                     cover_square = $9,
