@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import './styles.css';
 
-import SideMenu from '../../components/SideMenu/SideMenu';
 import GameLandscape from '../../components/GameLandscape/GameLandscape';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 
@@ -53,7 +51,6 @@ interface GamePageProps {
 }
 
 const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
-    const navigation = useNavigate();
     const { getGameById, handleStartGame, updateHidden, updateBeatable } = useDb();
     const { playSelectSound, playConfirmSound } = useSound();
     const [currentGame, setCurrentGame] = useState<Game>();

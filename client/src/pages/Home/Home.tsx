@@ -6,6 +6,7 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
 import GameLandscape from '../../components/GameLandscape/GameLandscape';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+import GamePage from '../../components/GamePage/GamePage';
 
 import { useDb } from '../../hooks/useDb';
 import { useSound } from '../../hooks/useSound';
@@ -36,6 +37,8 @@ const Home: React.FC = () => {
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [commandCoolDown, setCommandCoolDown] = useState(false);
+    const [isOnGamePage, setIsOnGamePage] = useState(false);
+    const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
     
     useEffect(() => {
         const getGames = async () => {
@@ -65,7 +68,7 @@ const Home: React.FC = () => {
         steamId: game.steam_id,
         img: getGameCover(game.title, 'square'),
         name: game.title,
-        action: () => navigation(`/game-page/${game.id}`)
+        action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
     }));
     const screenItems: ScreenItem[] = [
         {
@@ -124,9 +127,14 @@ const Home: React.FC = () => {
 
     return (
         <>
-            {!isMenuOpen && <JoystickSetup command={joystickNavigation} />}
             <SideMenu currentPage={selected} />
-            <div className="main-content">
+
+            {isOnGamePage && selectedGameId !== undefined && (
+                <GamePage gameId={selectedGameId} onExitGamePage={() => setIsOnGamePage(false)} />
+            )}
+
+            {!isMenuOpen && <JoystickSetup command={joystickNavigation} />}
+            <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
                  {screenItems.slice(0, 1).map(item => (
                     <GameLandscape
                         key={item.id}
