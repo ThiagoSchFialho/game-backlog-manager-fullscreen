@@ -34,7 +34,6 @@ const Library: React.FC = () => {
     const { fetchGames } = useDb();
     const [currentPage] = useState('library');
     const [sortMethod, setSortMethod] = useState(sortingMethod ?? 'alphabet');
-    const [selectedSortingMethod, setSelectedSorginMethod] = useState(sortMethod);
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [sortedGamesList, setSortedGamesList] = useState<Game[]>([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,14 +51,14 @@ const Library: React.FC = () => {
 
     const sortGames = (method: string, list: Game[] = gamesList) => {
         setSortMethod(method);
-        setSelectedSorginMethod(method);
-        if (method === 'recentlyPlayed') {
-            setSortedGamesList(orderBy(list, 'rtime_last_played', 'desc'));
+
+        if (method === 'alphabet') {
+            setSortedGamesList(orderBy(list, 'title', 'asc'));
         } else if (method === 'mostPlayed') {
             setSortedGamesList(orderBy(list, 'playtime', 'desc'));
-        } else if (method === 'alphabet') {
-            setSortedGamesList(orderBy(list, 'title', 'asc'));
-        }
+        } else if (method === 'recentlyPlayed') {
+            setSortedGamesList(orderBy(list, 'rtime_last_played', 'desc'));
+        }        
     }
 
     useEffect(() => {
@@ -73,7 +72,11 @@ const Library: React.FC = () => {
 
     useEffect(() => {
         sortGames(sortingMethod ?? 'alphabet', gamesList);
-    }, [sortingMethod, gamesList]);
+    }, [sortingMethod]);
+
+    useEffect(() => {
+        sortGames(sortMethod, gamesList);
+    }, [gamesList]);
     
     const gameCardsItems: ScreenItem[] = sortedGamesList.map((game) => ({
         id: game.id,
@@ -94,19 +97,9 @@ const Library: React.FC = () => {
     useEffect(() => {
         itemsLengthRef.current = gameCardsItems.length;
     }, [gameCardsItems.length]);
-
-    const selectedSortingMethodRef = useRef(selectedSortingMethod);
-    useEffect(() => {
-        selectedSortingMethodRef.current = selectedSortingMethod;
-    }, [selectedSortingMethod]);
-
-    const gamesListRef = useRef(gamesList);
-    useEffect(() => {
-        gamesListRef.current = gamesList;
-    }, [gamesList]);
     // ------------------------------------------------------------------
 
-    const sortGamesMethods = ['recentlyPlayed', 'mostPlayed', 'alphabet'];
+    const sortGamesMethods = ['alphabet', 'mostPlayed', 'recentlyPlayed'];
     const joystickNavigation = (command: string) => {
         const currentIndex = selectedIndexRef.current;
         const length = itemsLengthRef.current;
@@ -141,17 +134,17 @@ const Library: React.FC = () => {
         } else if (command === 'RB') {
             if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
                 playSwipeSound();
-                const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);
-                const nextIndex = (currentMethodIndex + 1) % sortGamesMethods.length;
-                sortGames(sortGamesMethods[nextIndex], gamesListRef.current);
+                const currentIndex = sortGamesMethods.indexOf(sortMethod);
+                setSortMethod(sortGamesMethods[currentIndex + 1]);
+                sortGames(sortGamesMethods[currentIndex + 1], gamesList);
                 setSelectedIndex(0);
             }
         } else if (command === 'LB') {
             if (sortMethod !== sortGamesMethods[0]) {
                 playSwipeSound();
-                const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);
-                const prevIndex = (currentMethodIndex - 1 + sortGamesMethods.length) % sortGamesMethods.length;
-                sortGames(sortGamesMethods[prevIndex], gamesListRef.current);
+                const currentIndex = sortGamesMethods.indexOf(sortMethod);
+                setSortMethod(sortGamesMethods[currentIndex - 1]);
+                sortGames(sortGamesMethods[currentIndex - 1], gamesList);
                 setSelectedIndex(0);
             }
         }
@@ -178,22 +171,22 @@ const Library: React.FC = () => {
                 <div className="sortings-container">
                     <ul>
                         <li
-                            className={selectedSortingMethod === 'recentlyPlayed' ? 'selected-method' : ''}
+                            className={sortMethod === 'alphabet' ? 'selected-method' : ''}
                         >
-                            <img src={recentlyPlayed} />
-                            <p>Jogados Recentemente</p>
+                            <img src={alphabet} />
+                            <p>Alfabeticamente</p>
                         </li>
                         <li
-                            className={selectedSortingMethod === 'mostPlayed' ? 'selected-method' : ''}
+                            className={sortMethod === 'mostPlayed' ? 'selected-method' : ''}
                         >
                             <img src={mostPlayed} />
                             <p>Mais jogados</p>
                         </li>
                         <li
-                            className={selectedSortingMethod === 'alphabet' ? 'selected-method' : ''}
+                            className={sortMethod === 'recentlyPlayed' ? 'selected-method' : ''}
                         >
-                            <img src={alphabet} />
-                            <p>Alfabeticamente</p>
+                            <img src={recentlyPlayed} />
+                            <p>Jogados Recentemente</p>
                         </li>
                     </ul>
                 </div>
