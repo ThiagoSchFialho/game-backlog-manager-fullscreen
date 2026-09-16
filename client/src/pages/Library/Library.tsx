@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './styles.css';
 
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+import GamePage from '../../components/GamePage/GamePage';
 
 import { useDb } from '../../hooks/useDb';
 import { useSound } from '../../hooks/useSound';
@@ -29,7 +30,6 @@ type ScreenItem = {
 
 const Library: React.FC = () => {
     const { sortingMethod } = useParams<{ sortingMethod: string }>();
-    const navigation = useNavigate();
     const { playSelectSound, playConfirmSound, playPopupSound, playSwipeSound } = useSound();
     const { fetchGames } = useDb();
     const [currentPage] = useState('library');
@@ -40,26 +40,16 @@ const Library: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [commandCoolDown, setCommandCoolDown] = useState(false);
+    const [isOnGamePage, setIsOnGamePage] = useState(false);
+    const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
     
-    useEffect(() => {
-        const getGames = async () => {
-            const games = await fetchGames();
-            if (games) {
-                setGamesList(games.filter((game: Game) => !game.hidden));
-            }
-        } 
-        getGames();
-    }, []);
-    
-    const gameCardsItems: ScreenItem[] = sortedGamesList.map((game) => ({
-        id: game.id,
-        steamId: game.steam_id,
-        img: getGameCover(game.title, 'square'),
-        name: game.title,
-        action: () => navigation(`/game-page/${game.id}`)
-    }));
-    const { scrollContainerRef, setCardRef } = useScroll(selectedIndex, gameCardsItems.length);
-    
+    const getGames = async () => {
+        const games = await fetchGames();
+        if (games) {
+            setGamesList(games.filter((game: Game) => !game.hidden));
+        }
+    }
+
     const sortGames = (method: string, list: Game[] = gamesList) => {
         setSortMethod(method);
         setSelectedSorginMethod(method);
@@ -70,11 +60,29 @@ const Library: React.FC = () => {
         } else if (method === 'alphabet') {
             setSortedGamesList(orderBy(list, 'title', 'asc'));
         }
-        setSelectedIndex(0);
     }
+
+    useEffect(() => {
+        const sortMethodAux = sortMethod;
+        const selectedIndexAux = selectedIndex;
+
+        getGames();
+        setSortMethod(sortMethodAux);
+        setSelectedIndex(selectedIndexAux);
+    }, [isOnGamePage]);
+
     useEffect(() => {
         sortGames(sortingMethod ?? 'alphabet', gamesList);
     }, [sortingMethod, gamesList]);
+    
+    const gameCardsItems: ScreenItem[] = sortedGamesList.map((game) => ({
+        id: game.id,
+        steamId: game.steam_id,
+        img: getGameCover(game.title, 'square'),
+        name: game.title,
+        action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
+    }));
+    const { scrollContainerRef, setCardRef } = useScroll(selectedIndex, gameCardsItems.length);
 
     // --- Refs para evitar stale closure no joystickNavigation -------------
     const selectedIndexRef = useRef(selectedIndex);
@@ -136,6 +144,7 @@ const Library: React.FC = () => {
                 const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);
                 const nextIndex = (currentMethodIndex + 1) % sortGamesMethods.length;
                 sortGames(sortGamesMethods[nextIndex], gamesListRef.current);
+                setSelectedIndex(0);
             }
         } else if (command === 'LB') {
             if (sortMethod !== sortGamesMethods[0]) {
@@ -143,6 +152,7 @@ const Library: React.FC = () => {
                 const currentMethodIndex = sortGamesMethods.indexOf(selectedSortingMethodRef.current);
                 const prevIndex = (currentMethodIndex - 1 + sortGamesMethods.length) % sortGamesMethods.length;
                 sortGames(sortGamesMethods[prevIndex], gamesListRef.current);
+                setSelectedIndex(0);
             }
         }
     };
@@ -157,28 +167,30 @@ const Library: React.FC = () => {
     
     return (
         <>
-            {!isMenuOpen && <JoystickSetup command={joystickNavigation} />}
             <SideMenu currentPage={currentPage} />
-            <div className="main-content">
+
+            {isOnGamePage && selectedGameId !== undefined && (
+                <GamePage gameId={selectedGameId} onExitGamePage={() => setIsOnGamePage(false)} />
+            )}
+
+            {!isMenuOpen && !isOnGamePage && <JoystickSetup command={joystickNavigation} />}
+            <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
                 <div className="sortings-container">
                     <ul>
                         <li
                             className={selectedSortingMethod === 'recentlyPlayed' ? 'selected-method' : ''}
-                            onClick={() => sortGames('recentlyPlayed')}
                         >
                             <img src={recentlyPlayed} />
                             <p>Jogados Recentemente</p>
                         </li>
                         <li
                             className={selectedSortingMethod === 'mostPlayed' ? 'selected-method' : ''}
-                            onClick={() => sortGames('mostPlayed')}
                         >
                             <img src={mostPlayed} />
                             <p>Mais jogados</p>
                         </li>
                         <li
                             className={selectedSortingMethod === 'alphabet' ? 'selected-method' : ''}
-                            onClick={() => sortGames('alphabet')}
                         >
                             <img src={alphabet} />
                             <p>Alfabeticamente</p>
