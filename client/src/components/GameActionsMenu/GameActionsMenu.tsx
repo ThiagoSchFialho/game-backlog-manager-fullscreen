@@ -144,10 +144,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         setActiveSubMenu(null);
     };
 
-    const handleHideGame = (id: string) => {
-        console.error("'handleHideGame' -> Funcion not implemented.");
-    };
-
     const handleStartGame = (id: string, steamId: string) => {
         window.location.href = `steam://rungameid/${steamId}`;
         changeStatus(id, "playing");
@@ -164,8 +160,7 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         { id: 1, label: 'Alterar status', isSubMenu: true, action: () => openSubMenu('status') },
         { id: 2, label: 'Adicionar à coleção', isSubMenu: true, action: () => openSubMenu('addCollection') },
         { id: 3, label: 'Remover da coleção', isSubMenu: true, action: () => openSubMenu('removeCollection') },
-        { id: 4, label: 'Ocultar', isSubMenu: false, action: () => handleHideGame(gameId) },
-        { id: 5, label: 'Cancelar', isSubMenu: false, action: () => closeMenu?.() },
+        { id: 4, label: 'Fechar', isSubMenu: false, action: () => closeMenu?.() },
     ];
 
     const visibleMenuItems = mainMenuItems.filter(
