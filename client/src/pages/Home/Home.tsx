@@ -40,16 +40,24 @@ const Home: React.FC = () => {
     const [isOnGamePage, setIsOnGamePage] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
     
-    useEffect(() => {
-        const getGames = async () => {
-            const games = await fetchGames();
-            if (games) {
-                const orderdGames = orderBy(games, 'rtime_last_played', 'desc');
-                setGamesList(orderdGames.slice(0, 6));
-            }
+    const getGames = async () => {
+        const games = await fetchGames();
+        if (games) {
+            const orderdGames = orderBy(games, 'rtime_last_played', 'desc');
+            const filteredOrderdGames = orderdGames.filter((game: Game) => !game.hidden);
+            setGamesList(filteredOrderdGames.slice(0, 6));
         }
+    }
+    useEffect(() => {
         getGames();
     }, []);
+
+    useEffect(() => {
+        const selectedIndexAux = selectedIndex;
+
+        getGames();
+        setSelectedIndex(selectedIndexAux);
+    }, [isOnGamePage]);
 
     const games = orderBy(gamesList, 'rtime_last_played', 'desc');
     if (games.length === 0) {
