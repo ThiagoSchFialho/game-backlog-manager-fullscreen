@@ -1,0 +1,47 @@
+.list-game-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: space-between;
+    gap: 30px;
+    padding: 15px 30px 150px 30px;
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+}
+
+.sortings-container {
+    margin-bottom: 40px;
+    padding: 0 30px;
+}
+
+.sortings-container ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.sortings-container li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 15px;
+    box-shadow: var(--shadow);
+    background-color: var(--bg-card-secondary);
+    border: var(--border-primary);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.sortings-container .selected-method {
+    background-color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.sortings-container li img {
+    width: 30px;
+}
+
+.sortings-container li p {
+    font-size: 16px;
+    font-weight: 400;
+}
