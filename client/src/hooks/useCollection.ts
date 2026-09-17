@@ -21,6 +21,22 @@ export const useCollection = () => {
         }
     }
 
+    const getCollectionWithGames = async (id: string) => {
+        try {
+            const response = await fetch(`${host}/collections/${id}/with-games`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao carregar coleção.", data.error);
+                return null;
+            }
+
+            return data;
+        } catch (error) {
+            console.error("Erro ao carregar coleção.", error);
+        }
+    }
+
     const fetchCollections = async () => {
         try {
             const response = await fetch (`${host}/collections/with-games`);
@@ -167,7 +183,8 @@ export const useCollection = () => {
         createCollection, 
         deleteFromCollection, 
         deleteCollection, 
-        updateCollectionTitle, 
-        getCollectionsFromGame
+        updateCollectionTitle,
+        getCollectionsFromGame,
+        getCollectionWithGames
     };
 }
