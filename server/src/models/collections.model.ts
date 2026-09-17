@@ -91,6 +91,44 @@ export class CollectionsModel implements ICollectionsModel {
         }
     }
 
+    public async getCollectionWithGames(id: number): Promise<CollectionWithGames | undefined> {
+        try {
+            const result = await pool.query(`
+                SELECT
+                    c.id,
+                    c.title,
+                    COALESCE(
+                        json_agg(
+                            json_build_object(
+                                'id', g.id,
+                                'title', g.title,
+                                'steam_id', g.steam_id,
+                                'cover_square', g.cover_square,
+                                'cover_hero', g.cover_hero,
+                                'cover_grid', g.cover_grid,
+                                'developer', g.developer,
+                                'release_date', g.release_date,
+                                'personal_rating', g.personal_rating,
+                                'playtime', g.playtime,
+                                'status', g.status
+                            ) ORDER BY g.title
+                        ) FILTER (WHERE g.id IS NOT NULL),
+                        '[]'
+                    ) AS games
+                FROM collections c
+                LEFT JOIN collection_games cg ON cg.collection_id = c.id
+                LEFT JOIN games g ON g.id = cg.game_id
+                WHERE c.id = $1
+                GROUP BY c.id, c.title;
+            `, [id]);
+
+            return result.rows[0];
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao buscar coleção com jogos.", error);
+        }
+    }
+
     public async updateCollection(id: number, title: string): Promise<Collections | undefined> {
         try {
             const result = await pool.query(`

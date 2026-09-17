@@ -9,6 +9,7 @@ export interface ICollectionsModel {
     getAllCollections(): Promise<Collections[]>;
     getAllCollectionsWithGames(): Promise<CollectionWithGames[]>;
     getCollection(id: number): Promise<Collections | undefined>;
+    getCollectionWithGames(id: number): Promise<CollectionWithGames | undefined>;
     updateCollection(id: number, title: string): Promise<Collections | undefined>;
     deleteCollection(id: number): Promise<Collections | undefined>;
 }

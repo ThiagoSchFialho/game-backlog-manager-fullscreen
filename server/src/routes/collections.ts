@@ -72,6 +72,23 @@ router.get('/:id', async function (req: Request, res: Response) {
     }
 });
 
+router.get('/:id/with-games', async function (req: Request, res: Response) {
+    const { id } = req.params;
+
+    try {
+        const collection = await collectionsModel.getCollectionWithGames(Number(id));
+
+        if (!collection) {
+            return res.status(404).json({ message: "Coleção não encontrada." });
+        }
+
+        return res.status(200).json(collection);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
 router.put('/:id', async function (req: Request, res: Response) {
     const { id } = req.params;
     const { title } = req.body;
