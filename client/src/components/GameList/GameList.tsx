@@ -5,7 +5,6 @@ import GameCard from '../GameCard/GameCard';
 import JoystickSetup from '../JoystickSetup/JoystickSetup';
 import GamePage from '../GamePage/GamePage';
 
-import { useDb } from '../../hooks/useDb';
 import { useSound } from '../../hooks/useSound';
 import { useScroll } from '../../hooks/useScroll';
 

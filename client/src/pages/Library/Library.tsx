@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameList from '../../components/GameList/GameList';
-
 import { useDb } from '../../hooks/useDb';
-
 import type { Game } from '../../types/gamesType';
 
 
@@ -32,5 +29,4 @@ const Library: React.FC = () => {
         </>
     )
 }
-
 export default Library;

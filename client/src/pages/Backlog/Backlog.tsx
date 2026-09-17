@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameList from '../../components/GameList/GameList';
-
 import { useDb } from '../../hooks/useDb';
-
 import type { Game } from '../../types/gamesType';
+
 
 const Backlog: React.FC = () => {
     const [currentPage] = useState('backlog');
@@ -36,5 +34,4 @@ const Backlog: React.FC = () => {
         </>
     )
 }
-
 export default Backlog;

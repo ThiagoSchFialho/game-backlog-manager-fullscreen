@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameList from '../../components/GameList/GameList';
-
 import { useDb } from '../../hooks/useDb';
-
 import type { Game } from '../../types/gamesType';
+
 
 const Completed: React.FC = () => {
     const [currentPage] = useState('completed');
@@ -30,5 +28,4 @@ const Completed: React.FC = () => {
         </>
     )
 }
-
 export default Completed;
