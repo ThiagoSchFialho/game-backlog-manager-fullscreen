@@ -28,11 +28,12 @@ interface GameListProps {
     list: Game[]
     onReloadList: () => void,
     sortingMethod: string | undefined,
+    title?: string,
     onBack?: () => void
 }
 
 
-const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, onBack }) => {
+const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, title, onBack }) => {
     const { playSelectSound, playConfirmSound, playPopupSound, playSwipeSound } = useSound();
     const [sortMethod, setSortMethod] = useState(sortingMethod ?? 'alphabet');
     const [gamesList, setGamesList] = useState<Game[]>(list);
@@ -177,6 +178,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
             {!isMenuOpen && !isOnGamePage && <JoystickSetup command={joystickNavigation} />}
             <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
                 <div className="sortings-container">
+                    <h1>{title ?? ''}</h1>
                     <ul>
                         <li
                             className={sortMethod === 'alphabet' ? 'selected-method' : ''}

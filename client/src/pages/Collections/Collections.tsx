@@ -8,6 +8,7 @@ import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 
 import { useCollection } from '../../hooks/useCollection';
 import closeIcon from '../../assets/icons/close.svg';
+import plus from '../../assets/icons/plus.svg';
 import type { ICollection } from '../../types/collectionsType';
 
 const BUTTON_INDEX = 0;
@@ -91,7 +92,7 @@ const Collections: React.FC = () => {
         const currentIndex = selectedIndexRef.current;
         const length = itemsLengthRef.current;
         const rowStart = 1;
-        const rowEnd = length; // último índice válido (1..length)
+        const rowEnd = length;
         const onButton = currentIndex === BUTTON_INDEX;
         const columns = getColumnsCount();
 
@@ -160,6 +161,7 @@ const Collections: React.FC = () => {
                         onClick={() => setIsCollectionFormOpen(true)}
                         className={selectedIndex === BUTTON_INDEX ? 'focused create-collection-container-btn' : 'create-collection-container-btn'}
                     >
+                        <img src={plus} />
                         <p>Criar coleção</p>
                     </div>
                 </div>

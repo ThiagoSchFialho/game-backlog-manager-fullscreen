@@ -28,7 +28,7 @@ const Collection: React.FC = () => {
     return (
         <>
             <SideMenu currentPage={currentPage} />
-            <GameList list={collection?.games ?? []} onReloadList={getCollection} sortingMethod={undefined} onBack={() => navigation(-1)}/>
+            <GameList list={collection?.games ?? []} onReloadList={getCollection} sortingMethod={undefined} title={collection?.title}  onBack={() => navigation(-1)}/>
         </>
     )
 }

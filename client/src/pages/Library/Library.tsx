@@ -25,7 +25,7 @@ const Library: React.FC = () => {
     return (
         <>
             <SideMenu currentPage={currentPage} />
-            <GameList list={gamesList} onReloadList={getGames} sortingMethod={sortingMethod}/>
+            <GameList list={gamesList} onReloadList={getGames} sortingMethod={sortingMethod} title='Biblioteca' />
         </>
     )
 }

@@ -4,16 +4,23 @@
 }
 
 .create-collection-container-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     width: fit-content;
-    padding: 15px 30px;
+    padding: 12px 20px;
     box-shadow: var(--shadow);
-    background-color: var(--primary);
+    background-color: var(--bg-card-secondary);
+    border: var(--border-primary);
     border-radius: 10px;
-    cursor: pointer;
+}
+
+.create-collection-container-btn img {
+    width: 30px;
 }
 
 .create-collection-container-btn p {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 600;
 }
 

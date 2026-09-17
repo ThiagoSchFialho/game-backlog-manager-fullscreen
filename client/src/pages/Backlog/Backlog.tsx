@@ -30,7 +30,7 @@ const Backlog: React.FC = () => {
     return (
         <>
             <SideMenu currentPage={currentPage} />
-            <GameList list={gamesList} onReloadList={getGames} sortingMethod={undefined}/>
+            <GameList list={gamesList} onReloadList={getGames} sortingMethod={undefined} title='Backlog' />
         </>
     )
 }
