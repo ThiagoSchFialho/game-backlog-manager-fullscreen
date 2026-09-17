@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
+
 import SideMenu from '../../components/SideMenu/SideMenu';
 import CollectionFolder from '../../components/CollectionFolder/CollectionFolder';
-import type { ICollection } from '../../types/collectionsType';
+import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+
 import { useCollection } from '../../hooks/useCollection';
 import closeIcon from '../../assets/icons/close.svg';
-import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+import type { ICollection } from '../../types/collectionsType';
 
 const BUTTON_INDEX = 0;
 
@@ -18,7 +20,7 @@ const Collections: React.FC = () => {
     const [collectionsList, setCollectionsList] = useState<ICollection[]>([]);
     const [collectionTitle, setCollectionTitle] = useState<string | undefined>('');
     const [selectedIndex, setSelectedIndex] = useState(1);
-    const [commandCooldown, setCommandCooldown] = useState(false);
+    const [commandCoolDown, setCommandCoolDown] = useState(false);
 
     useEffect(() => {
         const getCollections = async () => {
@@ -27,7 +29,7 @@ const Collections: React.FC = () => {
                 setCollectionsList(collections);
             }
         }
-        
+
         getCollections();
     }, []);
 
@@ -42,12 +44,11 @@ const Collections: React.FC = () => {
     }
 
     const handleCloseForm = () => {
+        setCommandCoolDown(true);
         setIsCollectionFormOpen(false);
-        setCommandCooldown(true);
-
         setTimeout(() => {
-            setCommandCooldown(false);
-        }, 70);
+            setCommandCoolDown(false);
+        }, 50);
     }
 
     // --- Refs para evitar stale closure no joystickNavigation -------------
@@ -60,56 +61,9 @@ const Collections: React.FC = () => {
     useEffect(() => {
         itemsLengthRef.current = collectionsList.length;
     }, [collectionsList.length]);
-
-    const commandCooldownRef = useRef(commandCooldown);
-    useEffect(() => {
-        commandCooldownRef.current = commandCooldown;
-    }, [commandCooldown]);
     // ------------------------------------------------------------------
 
     const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
-
-    const joystickNavigation = (command: string) => {
-        if (commandCooldownRef.current) return;
-
-        const currentIndex = selectedIndexRef.current;
-        const length = itemsLengthRef.current;
-        const rowStart = 1;
-        const rowEnd = length; // último índice válido (1..length)
-        const onButton = currentIndex === BUTTON_INDEX;
-
-        const columns = getColumnsCount();
-
-        if (onButton) {
-            if (command === 'baixo' && length > 0) {
-                setSelectedIndex(rowStart);
-            } else if (command === 'A') {
-                setIsCollectionFormOpen(true);
-            }
-            return;
-        }
-
-        if (command === 'esquerda') {
-            setSelectedIndex(prev => clamp(prev - 1, rowStart, rowEnd));
-        } else if (command === 'direita') {
-            setSelectedIndex(prev => clamp(prev + 1, rowStart, rowEnd));
-        } else if (command === 'cima') {
-            if (currentIndex - rowStart < columns) {
-                setSelectedIndex(BUTTON_INDEX);
-            } else {
-                setSelectedIndex(prev => clamp(prev - columns, rowStart, rowEnd));
-            }
-        } else if (command === 'baixo') {
-            setSelectedIndex(prev => clamp(prev + columns, rowStart, rowEnd));
-        } else if (command === 'A') {
-            const collection = collectionsList[currentIndex - rowStart];
-            if (collection) {
-                navigation(`/collection/${collection.id}`);
-            }
-        } else if (command === 'Y') {
-            setIsCollectionFormOpen(true);
-        }
-    };
 
     // --- Scroll setup -----------------------------------------------------
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -131,6 +85,48 @@ const Collections: React.FC = () => {
         const refs = cardRefs.current;
         if (!refs[0] || !refs[columns]) return 0;
         return refs[columns]!.offsetTop - refs[0]!.offsetTop;
+    };
+
+    const joystickNavigation = (command: string) => {
+        const currentIndex = selectedIndexRef.current;
+        const length = itemsLengthRef.current;
+        const rowStart = 1;
+        const rowEnd = length; // último índice válido (1..length)
+        const onButton = currentIndex === BUTTON_INDEX;
+        const columns = getColumnsCount();
+
+        if (onButton) {
+            if (command === 'baixo' && length > 0) {
+                setSelectedIndex(rowStart);
+            } else if (command === 'A') {
+                if (commandCoolDown) return;
+                setIsCollectionFormOpen(true);
+            }
+            return;
+        }
+
+        if (command === 'esquerda') {
+            setSelectedIndex(prev => clamp(prev - 1, rowStart, rowEnd));
+        } else if (command === 'direita') {
+            setSelectedIndex(prev => clamp(prev + 1, rowStart, rowEnd));
+        } else if (command === 'cima') {
+            if (currentIndex - rowStart < columns) {
+                setSelectedIndex(BUTTON_INDEX);
+            } else {
+                setSelectedIndex(prev => clamp(prev - columns, rowStart, rowEnd));
+            }
+        } else if (command === 'baixo') {
+            setSelectedIndex(prev => clamp(prev + columns, rowStart, rowEnd));
+        } else if (command === 'A') {
+            if (commandCoolDown) return;
+            const collection = collectionsList[currentIndex - rowStart];
+            if (collection) {
+                navigation(`/collection/${collection.id}`);
+            }
+        } else if (command === 'Y') {
+            if (commandCoolDown) return;
+            setIsCollectionFormOpen(true);
+        }
     };
 
     useEffect(() => {
@@ -181,7 +177,7 @@ const Collections: React.FC = () => {
 
             {isCollectionFormOpen && (
                 <div className="collection-title-form-container">
-                    <img onClick={handleCloseForm} src={closeIcon}/>
+                    <img onClick={handleCloseForm} src={closeIcon} />
                     <form onSubmit={(e) => e.preventDefault()}>
                         <label htmlFor="collection-title">Nome da Coleção</label>
                         <input
