@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './styles.css';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import GameList from '../../components/GameList/GameList';
@@ -12,6 +12,7 @@ const Collection: React.FC = () => {
     const { getCollectionWithGames } = useCollection();
     const [currentPage] = useState('collections');
     const [collection, setCollection] = useState<ICollection>();
+    const navigation = useNavigate();
 
     const getCollection = async () => {
         if (!id) return;
@@ -27,7 +28,7 @@ const Collection: React.FC = () => {
     return (
         <>
             <SideMenu currentPage={currentPage} />
-            <GameList list={collection?.games ?? []} onReloadList={getCollection} sortingMethod={undefined}/>
+            <GameList list={collection?.games ?? []} onReloadList={getCollection} sortingMethod={undefined} onBack={() => navigation(-1)}/>
         </>
     )
 }

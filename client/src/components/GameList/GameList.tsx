@@ -28,10 +28,11 @@ interface GameListProps {
     list: Game[]
     onReloadList: () => void,
     sortingMethod: string | undefined,
+    onBack?: () => void
 }
 
 
-const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod }) => {
+const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, onBack }) => {
     const { playSelectSound, playConfirmSound, playPopupSound, playSwipeSound } = useSound();
     const [sortMethod, setSortMethod] = useState(sortingMethod ?? 'alphabet');
     const [gamesList, setGamesList] = useState<Game[]>(list);
@@ -125,6 +126,9 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod }
             if (commandCoolDown) return null;
             playConfirmSound();
             gameCardsItems[currentIndex]?.action();
+        } else if (command === 'B') {
+            if (commandCoolDown) return null;
+            onBack?.();
         } else if (command === 'Y') {
             playPopupSound();
             setIsMenuOpen(true);
@@ -154,11 +158,20 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod }
         }, 50);
         setIsMenuOpen(false);
     }
+
+    const handleCloseGamePage = () => {
+        setCommandCoolDown(true);
+        setIsOnGamePage(false);
+        setTimeout(() => {
+            setCommandCoolDown(false);
+        }, 50);
+        setIsMenuOpen(false);
+    }
     
     return (
         <>
             {isOnGamePage && selectedGameId !== undefined && (
-                <GamePage gameId={selectedGameId} onExitGamePage={() => setIsOnGamePage(false)} />
+                <GamePage gameId={selectedGameId} onExitGamePage={handleCloseGamePage} />
             )}
 
             {!isMenuOpen && !isOnGamePage && <JoystickSetup command={joystickNavigation} />}
