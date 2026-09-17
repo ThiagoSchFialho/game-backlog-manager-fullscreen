@@ -27,7 +27,6 @@
 .game {
     width: 150px;
     height: 150px;
-    background-color: var(--primary);
     border-radius: 10px;
 }
 

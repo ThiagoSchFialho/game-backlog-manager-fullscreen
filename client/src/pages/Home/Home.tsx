@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
@@ -27,7 +27,6 @@ type ScreenItem = {
 
 const BANNER_INDEX = 0;
 
-
 const Home: React.FC = () => {
     const navigation = useNavigate();
     const { handleStartGame, fetchGames } = useDb();
@@ -39,7 +38,7 @@ const Home: React.FC = () => {
     const [commandCoolDown, setCommandCoolDown] = useState(false);
     const [isOnGamePage, setIsOnGamePage] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
-    
+
     const getGames = async () => {
         const games = await fetchGames();
         if (games) {
@@ -54,44 +53,56 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         const selectedIndexAux = selectedIndex;
-
         getGames();
         setSelectedIndex(selectedIndexAux);
     }, [isOnGamePage]);
 
     const games = orderBy(gamesList, 'rtime_last_played', 'desc');
-    if (games.length === 0) {
-        return (
-            <>
-                <SideMenu currentPage={selected} />
-                <div className="main-content">
-                    <h1>Carregando...</h1>
-                </div>
-            </>
-        );
-    }
+    const hasGames = games.length > 0;
 
-    const gameCardsItems = games.slice(1, games.length).map((game) => ({
-        id: game.id,
-        steamId: game.steam_id,
-        img: getGameCover(game.title, 'square'),
-        name: game.title,
-        action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
-    }));
-    const screenItems: ScreenItem[] = [
-        {
-            id: games[0].id,
-            steamId: games[0].steam_id,
-            img: getGameCover(games[0].title, 'landscape'),
-            name: games[0].title,
-            action: () => handleStartGame(games[0].id, games[0].steam_id)
-        },
-        ...gameCardsItems,
-        { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library/recentlyPlayed') }
-    ];
+    const gameCardsItems = hasGames
+        ? games.slice(1, games.length).map((game) => ({
+            id: game.id,
+            steamId: game.steam_id,
+            img: getGameCover(game.title, 'square'),
+            name: game.title,
+            action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
+        }))
+        : [];
+
+    const screenItems: ScreenItem[] = hasGames
+        ? [
+            {
+                id: games[0].id,
+                steamId: games[0].steam_id,
+                img: getGameCover(games[0].title, 'landscape'),
+                name: games[0].title,
+                action: () => handleStartGame(games[0].id, games[0].steam_id)
+            },
+            ...gameCardsItems,
+            { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library/recentlyPlayed') }
+        ]
+        : [];
+
+    // --- Refs para evitar stale closure no joystickNavigation -------------
+    const selectedIndexRef = useRef(selectedIndex);
+    useEffect(() => {
+        selectedIndexRef.current = selectedIndex;
+    }, [selectedIndex]);
+
+    const itemsLengthRef = useRef(gameCardsItems.length);
+    useEffect(() => {
+        itemsLengthRef.current = gameCardsItems.length;
+    }, [gameCardsItems.length]);
+    // ------------------------------------------------------------------
 
     const joystickNavigation = (command: string) => {
+        if (!hasGames) return;
+
         const onBanner = selectedIndex === BANNER_INDEX;
+        const currentIndex = selectedIndexRef.current;
+        const length = itemsLengthRef.current;
+
         if (onBanner) {
             if (command === 'baixo') {
                 playSelectSound();
@@ -103,20 +114,20 @@ const Home: React.FC = () => {
             return;
         }
         if (command === 'esquerda') {
-            if (selectedIndex > 1) {
+            if (currentIndex > 1) {
                 playSelectSound();
-                setSelectedIndex(selectedIndex - 1);
+                setSelectedIndex(currentIndex - 1);
             }
         } else if (command === 'direita') {
-            if (selectedIndex < screenItems.length - 1) {
+            if (currentIndex < length + 1) {
                 playSelectSound();
-                setSelectedIndex(selectedIndex + 1);
+                setSelectedIndex(currentIndex + 1);
             }
         } else if (command === 'cima') {
             playSelectSound();
             setSelectedIndex(BANNER_INDEX);
         } else if (command === 'A') {
-            if (commandCoolDown) return null;
+            if (commandCoolDown) return;
             playConfirmSound();
             screenItems[selectedIndex]?.action();
         } else if (selectedIndex !== 6 && command === 'Y') {
@@ -133,6 +144,17 @@ const Home: React.FC = () => {
         setIsMenuOpen(false);
     }
 
+    if (!hasGames) {
+        return (
+            <>
+                <SideMenu currentPage={selected} />
+                <div className="main-content">
+                    <h1>Carregando...</h1>
+                </div>
+            </>
+        );
+    }
+
     return (
         <>
             <SideMenu currentPage={selected} />
@@ -143,7 +165,7 @@ const Home: React.FC = () => {
 
             {!isMenuOpen && <JoystickSetup command={joystickNavigation} />}
             <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
-                 {screenItems.slice(0, 1).map(item => (
+                {screenItems.slice(0, 1).map(item => (
                     <GameLandscape
                         key={item.id}
                         id={item.id}
