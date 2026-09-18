@@ -187,14 +187,16 @@ const Collections: React.FC = () => {
                         </div>
                         <form onSubmit={(e) => e.preventDefault()}>
                             <label htmlFor="collection-title">Nome da Coleção</label>
-                            <input
-                                type="text"
-                                name="collection-title"
-                                id="collection-title"
-                                maxLength={35}
-                                required
-                                value={collectionTitle}
-                            />
+                            <div className="input-container">
+                                <input
+                                    type="text"
+                                    name="collection-title"
+                                    id="collection-title"
+                                    maxLength={35}
+                                    required
+                                    value={collectionTitle}
+                                />
+                            </div>
                         </form>
                     </div>
                     <Keyboard onKeyPressed={setCollectionTitle} onDone={handleCreateCollection} onClose={() => setIsCollectionFormOpen(false)}/>

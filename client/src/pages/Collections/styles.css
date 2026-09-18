@@ -65,14 +65,19 @@
     margin-bottom: 10px;
 }
 
-.collection-title-form-container input {
+.collection-title-form-container .input-container {
     background-color: var(--bg-primary);
     border: var(--border-primary);
     border-radius: 3px;
     padding: 10px 20px;
-    width: 500px;
-    width: 100%;
+}
+
+.collection-title-form-container input {
+    background-color: var(--bg-primary);
+    field-sizing: content;
     outline: none;
     font-size: 25px;
+    border: none;
+    border-right: 1px solid var(--text-placeholder);
     letter-spacing: 0.5px;
 }
