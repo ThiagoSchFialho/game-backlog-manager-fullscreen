@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import './styles.css';
 import JoystickSetup from "../JoystickSetup/JoystickSetup";
 import { useSound } from "../../hooks/useSound";
+import caps from "../../assets/icons/caps.svg";
+import space from "../../assets/icons/space.svg";
+import backspace from "../../assets/icons/backspace.svg";
 
 interface Keys {
     lowerCase: string,
@@ -184,10 +187,28 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPressed, onDone, onClose }) =>
                     </div>
                 ))}
 
-                <div className={selectedKey === 44 ? 'key-selected special-key' : 'special-key'} style={{gridArea: 'caps'}}>Capslock lt</div>
-                <div className={selectedKey === 45 ? 'key-selected special-key' : 'special-key'} style={{gridArea: 'space'}}>Espaço y</div>
-                <div className={selectedKey === 46 ? 'key-selected special-key' : 'special-key'} style={{gridArea: 'backspace'}}>Apagar x</div>
-                <div className={selectedKey === 47 ? 'key-selected special-key' : 'special-key'} style={{gridArea: 'done'}}>Confirmar rt</div>
+                <div 
+                    className={selectedKey === 44 || isCapslockOn ? 'key-selected special-key caps-key' : 'special-key caps-key'} 
+                    style={{gridArea: 'caps'}}
+                >
+                    <img src={caps} />
+                </div>
+                <div 
+                    className={selectedKey === 45 ? 'key-selected special-key space-key' : 'special-key space-key'} 
+                    style={{gridArea: 'space'}}
+                >
+                    <img src={space} />
+                </div>
+                <div 
+                    className={selectedKey === 46 ? 'key-selected special-key backspace-key' : 'special-key backspace-key'} 
+                    style={{gridArea: 'backspace'}}
+                >
+                    <img src={backspace} />
+                </div>
+                <div 
+                    className={selectedKey === 47 ? 'key-selected special-key done-key' : 'special-key done-key'} 
+                    style={{gridArea: 'done'}}
+                >Pronto</div>
             </div>
         </>
     )

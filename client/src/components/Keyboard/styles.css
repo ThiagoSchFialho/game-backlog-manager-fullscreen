@@ -34,6 +34,7 @@
 }
 
 .keyboard .special-key {
+    position: relative;
     background-color: var(--bg-card);
     border: var(--border-primary);
     display: flex;
@@ -44,7 +45,54 @@
     font-size: 20px;
 }
 
+.keyboard .special-key::after {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 3px;
+    border: var(--border-primary);
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
 .keyboard .key-selected {
     background-color: var(--bg-card-secondary);
     border: 1px solid var(--primary);
+}
+
+.keyboard .caps-key img {
+    width: 28px;
+}
+
+.keyboard .caps-key::after {
+    content: 'LT';
+}
+
+.keyboard .space-key img {
+    width: 47px;
+}
+.keyboard .space-key::after {
+    content: 'Y';
+    color: var(--warning);
+}
+
+.keyboard .backspace-key img {
+    width: 32px;
+}
+.keyboard .backspace-key::after {
+    content: 'X';
+    color: var(--info);
+}
+
+.keyboard .done-key img {
+    width: 30px;
+}
+.keyboard .done-key::after {
+    content: 'RT';
 }
