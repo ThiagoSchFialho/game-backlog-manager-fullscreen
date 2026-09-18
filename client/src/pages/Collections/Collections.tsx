@@ -5,9 +5,10 @@ import './styles.css';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import CollectionFolder from '../../components/CollectionFolder/CollectionFolder';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
+import Keyboard from '../../components/Keyboard/Keyboard';
 
 import { useCollection } from '../../hooks/useCollection';
-import closeIcon from '../../assets/icons/close.svg';
+import { useSound } from '../../hooks/useSound';
 import plus from '../../assets/icons/plus.svg';
 import type { ICollection } from '../../types/collectionsType';
 
@@ -15,6 +16,7 @@ const BUTTON_INDEX = 0;
 
 const Collections: React.FC = () => {
     const navigation = useNavigate();
+    const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
     const { fetchCollections, createCollection } = useCollection();
     const [isCollectionFormOpen, setIsCollectionFormOpen] = useState(false);
     const [currentPage] = useState('collections');
@@ -34,22 +36,17 @@ const Collections: React.FC = () => {
         getCollections();
     }, []);
 
-    const handleCreateCollection = async () => {
-        if (collectionTitle) {
+    const handleCreateCollection = async (phrase: string) => {
+        playConfirmSound();
+        setCollectionTitle(phrase);
+
+        if (collectionTitle && collectionTitle !== '') {
             const result = await createCollection(collectionTitle);
             if (!result) {
                 return;
             }
             window.location.reload();
         }
-    }
-
-    const handleCloseForm = () => {
-        setCommandCoolDown(true);
-        setIsCollectionFormOpen(false);
-        setTimeout(() => {
-            setCommandCoolDown(false);
-        }, 50);
     }
 
     // --- Refs para evitar stale closure no joystickNavigation -------------
@@ -98,35 +95,39 @@ const Collections: React.FC = () => {
 
         if (onButton) {
             if (command === 'baixo' && length > 0) {
+                playSelectSound();
                 setSelectedIndex(rowStart);
             } else if (command === 'A') {
                 if (commandCoolDown) return;
+                playPopupSound();
                 setIsCollectionFormOpen(true);
             }
             return;
         }
 
         if (command === 'esquerda') {
+            playSelectSound();
             setSelectedIndex(prev => clamp(prev - 1, rowStart, rowEnd));
         } else if (command === 'direita') {
+            playSelectSound();
             setSelectedIndex(prev => clamp(prev + 1, rowStart, rowEnd));
         } else if (command === 'cima') {
+            playSelectSound();
             if (currentIndex - rowStart < columns) {
                 setSelectedIndex(BUTTON_INDEX);
             } else {
                 setSelectedIndex(prev => clamp(prev - columns, rowStart, rowEnd));
             }
         } else if (command === 'baixo') {
+            playSelectSound();
             setSelectedIndex(prev => clamp(prev + columns, rowStart, rowEnd));
         } else if (command === 'A') {
             if (commandCoolDown) return;
+            playConfirmSound();
             const collection = collectionsList[currentIndex - rowStart];
             if (collection) {
                 navigation(`/collection/${collection.id}`);
             }
-        } else if (command === 'Y') {
-            if (commandCoolDown) return;
-            setIsCollectionFormOpen(true);
         }
     };
 
@@ -156,10 +157,11 @@ const Collections: React.FC = () => {
             {!isCollectionFormOpen && <JoystickSetup command={joystickNavigation} />}
             <SideMenu currentPage={currentPage} />
             <div className="main-content">
-                <div className="create-collection-container">
+                <div className="collections-header">
+                    <h1>Coleções</h1>
                     <div
                         onClick={() => setIsCollectionFormOpen(true)}
-                        className={selectedIndex === BUTTON_INDEX ? 'focused create-collection-container-btn' : 'create-collection-container-btn'}
+                        className={selectedIndex === BUTTON_INDEX ? 'focused create-collection-btn' : 'create-collection-btn'}
                     >
                         <img src={plus} />
                         <p>Criar coleção</p>
@@ -179,20 +181,25 @@ const Collections: React.FC = () => {
 
             {isCollectionFormOpen && (
                 <div className="collection-title-form-container">
-                    <img onClick={handleCloseForm} src={closeIcon} />
+                    <div className="collection-title-form-header">
+                        <h2>Criar Coleção</h2>
+                    </div>
                     <form onSubmit={(e) => e.preventDefault()}>
                         <label htmlFor="collection-title">Nome da Coleção</label>
                         <input
                             type="text"
                             name="collection-title"
                             id="collection-title"
+                            maxLength={35}
                             required
                             value={collectionTitle}
-                            onChange={(e) => setCollectionTitle(e.target.value)}
                         />
-                        <div onClick={() => handleCreateCollection()}>Criar Coleção</div>
                     </form>
                 </div>
+            )}
+
+            {isCollectionFormOpen && (
+                <Keyboard onKeyPressed={setCollectionTitle} onDone={handleCreateCollection} onClose={() => setIsCollectionFormOpen(false)}/>
             )}
         </>
     )

@@ -1,0 +1,48 @@
+.keyboard {
+    width: 1040px;
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    background-color: var(--bg-primary);
+    box-shadow: 0px 4px 40px 10px rgba(0, 0, 0, 0.5);
+    border: var(--border-primary);
+    border-radius: 10px;
+    padding: 20px;
+
+    display: grid;
+    grid-template-areas: 
+        "key key key key key key key key key key key"
+        "key key key key key key key key key key key"
+        "key key key key key key key key key key key"
+        "key key key key key key key key key key key"
+        "caps caps space space space space space backspace backspace done done"
+    ;
+    gap: 10px;
+}
+
+.keyboard .key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-area: 'key';
+    min-height: 60px;
+    min-width: 80px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.keyboard .key-selected {
+    background-color: var(--bg-card-secondary);
+}
+
+.keyboard .special-key {
+    border: var(--border-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    border-radius: 5px;
+    font-size: 20px;
+}

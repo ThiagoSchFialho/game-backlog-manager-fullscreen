@@ -18,20 +18,21 @@
     background-color: var(--bg-card);
     border: var(--border-primary);
     border-radius: 20px;
-    width: 360px;
-    height: 360px;
+    width: 340px;
+    height: 340px;
     cursor: pointer;
+    margin: 0 auto;
     margin-bottom: 15px;
 }
 
 .game {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 10px;
 }
 
 .collection-game-img {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 10px;
 }

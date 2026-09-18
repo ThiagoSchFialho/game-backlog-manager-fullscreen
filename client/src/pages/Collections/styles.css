@@ -1,12 +1,15 @@
-.create-collection-container {
-   margin-bottom: 30px;
-   padding: 0 30px;
+.collections-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding: 0 30px;
 }
 
-.create-collection-container-btn {
+.create-collection-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     width: fit-content;
     padding: 12px 20px;
     box-shadow: var(--shadow);
@@ -15,11 +18,11 @@
     border-radius: 10px;
 }
 
-.create-collection-container-btn img {
+.create-collection-btn img {
     width: 30px;
 }
 
-.create-collection-container-btn p {
+.create-collection-btn p {
     font-size: 19px;
     font-weight: 600;
 }
@@ -38,23 +41,22 @@
 .collection-title-form-container {
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 400px;
+    transform: translateX(-50%);
     width: fit-content;
+    width: 1040px;
     background-color: var(--bg-primary);
     box-shadow: 0px 4px 40px 10px rgba(0, 0, 0, 0.5);
     border: var(--border-primary);
     border-radius: 10px;
-    padding: 15px 50px 30px 50px;
+    padding: 30px 30px 20px 30px;
 }
 
-.collection-title-form-container img {
-    display: block;
-    width: 40px;
-    margin-left: auto;
-    margin-bottom: 20px;
-    transform: translateX(30px);
-    cursor: pointer;
+.collection-title-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
 }
 
 .collection-title-form-container label {
@@ -66,19 +68,11 @@
 .collection-title-form-container input {
     background-color: var(--bg-secondary);
     border: var(--border-primary);
-    border-radius: 10px;
+    border-radius: 3px;
     padding: 10px 20px;
-    width: 400px;
+    width: 500px;
+    width: 100%;
     outline: none;
-    font-size: 16px;
-    margin-bottom: 50px;
-}
-
-.collection-title-form-container div {
-    width: fit-content;
-    background-color: var(--primary);
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin-left: auto;
-    cursor: pointer;
+    font-size: 25px;
+    letter-spacing: 0.5px;
 }
