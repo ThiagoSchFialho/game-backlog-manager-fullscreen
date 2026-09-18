@@ -94,6 +94,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPressed, onDone, onClose }) =>
                 setSelectedKey(selectedKey - 1);
             }
         } else if (command === 'direita') {
+            if (selectedKey === 47) return;
             playSelectSound();
             if (finalRow.includes(selectedKey)){
                 setSelectedKey(selectedKey - 10);
@@ -102,8 +103,19 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPressed, onDone, onClose }) =>
             }
         } else if (command === 'cima') {
             if (selectedKey < 11) return;
+
             playSelectSound();
-            setSelectedKey(selectedKey - 11);
+            if (selectedKey === 44) {
+                setSelectedKey(34);
+            } else if (selectedKey === 45) {
+                setSelectedKey(37);
+            } else if (selectedKey === 46) {
+                setSelectedKey(40);
+            } else if (selectedKey === 47) {
+                setSelectedKey(42);
+            } else {
+                setSelectedKey(selectedKey - 11);
+            }
         } else if (command === 'baixo') {
             if (selectedKey > 43 ) return;
 
@@ -154,6 +166,11 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPressed, onDone, onClose }) =>
             setPhrase('');
             onKeyPressed('');
             onClose();
+        } else if (command === 'RT') {
+            onDone(phrase);
+        } else if (command === 'LT') {
+            playConfirm2Sound();
+            setIsCapslockOn(!isCapslockOn);
         }
     };
 

@@ -18,6 +18,9 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [lbBtnPressed, setLbBtnPressed] = useState(false);
     const [rbBtnPressed, setRbBtnPressed] = useState(false);
 
+    const [ltBtnPressed, setLtBtnPressed] = useState(false);
+    const [rtBtnPressed, setRtBtnPressed] = useState(false);
+
     const [dpadUpPressed, setDpadUpPressed] = useState(false);
     const [dpadDownPressed, setDpadDownPressed] = useState(false);
     const [dpadLeftPressed, setDpadLeftPressed] = useState(false);
@@ -36,10 +39,10 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
             const axisY = controller.axes[1];
 
             let newCommand = 'centro';
-            if (axisX > 0.4) newCommand = 'direita';
-            else if (axisX < -0.4) newCommand = 'esquerda';
-            else if (axisY > 0.4) newCommand = 'baixo';
-            else if (axisY < -0.4) newCommand = 'cima';
+            if (axisX > 0.6) newCommand = 'direita';
+            else if (axisX < -0.6) newCommand = 'esquerda';
+            else if (axisY > 0.6) newCommand = 'baixo';
+            else if (axisY < -0.6) newCommand = 'cima';
 
             const now = Date.now();
 
@@ -108,6 +111,20 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
             }
             setRbBtnPressed(!!rbPressed);
 
+            // LT
+            const ltPressed = controller.buttons[6]?.pressed;
+            if (ltPressed && !ltBtnPressed) {
+                command('LT');
+            }
+            setLtBtnPressed(!!ltPressed);
+
+            // RT
+            const rtPressed = controller.buttons[7]?.pressed;
+            if (rtPressed && !rtBtnPressed) {
+                command('RT');
+            }
+            setRtBtnPressed(!!rtPressed);
+
             // d-pad: cima
             const dpadUp = controller.buttons[12]?.pressed;
             if (dpadUp && !dpadUpPressed) {
@@ -141,6 +158,7 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
         return () => clearInterval(interval);
     }, [
         lastDir, aBtnPressed, bBtnPressed, yBtnPressed, xBtnPressed, lbBtnPressed, rbBtnPressed,
+        ltBtnPressed, rtBtnPressed,
         dpadUpPressed, dpadDownPressed, dpadLeftPressed, dpadRightPressed,
     ]);
 

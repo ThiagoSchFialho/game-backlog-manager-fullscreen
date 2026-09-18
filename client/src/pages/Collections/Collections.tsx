@@ -180,26 +180,25 @@ const Collections: React.FC = () => {
             </div>
 
             {isCollectionFormOpen && (
-                <div className="collection-title-form-container">
-                    <div className="collection-title-form-header">
-                        <h2>Criar Coleção</h2>
+                <>
+                    <div className="collection-title-form-container">
+                        <div className="collection-title-form-header">
+                            <h2>Criar Coleção</h2>
+                        </div>
+                        <form onSubmit={(e) => e.preventDefault()}>
+                            <label htmlFor="collection-title">Nome da Coleção</label>
+                            <input
+                                type="text"
+                                name="collection-title"
+                                id="collection-title"
+                                maxLength={35}
+                                required
+                                value={collectionTitle}
+                            />
+                        </form>
                     </div>
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <label htmlFor="collection-title">Nome da Coleção</label>
-                        <input
-                            type="text"
-                            name="collection-title"
-                            id="collection-title"
-                            maxLength={35}
-                            required
-                            value={collectionTitle}
-                        />
-                    </form>
-                </div>
-            )}
-
-            {isCollectionFormOpen && (
-                <Keyboard onKeyPressed={setCollectionTitle} onDone={handleCreateCollection} onClose={() => setIsCollectionFormOpen(false)}/>
+                    <Keyboard onKeyPressed={setCollectionTitle} onDone={handleCreateCollection} onClose={() => setIsCollectionFormOpen(false)}/>
+                </>
             )}
         </>
     )
