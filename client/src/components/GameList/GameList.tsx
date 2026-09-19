@@ -214,19 +214,25 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
                 </div>
 
                 <div className="list-game-container" ref={scrollContainerRef}>
-                    {gameCardsItems.map((item, index) => (
-                        <div key={item.id} ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
-                            <GameCard
-                                id={item.id}
-                                steamId={item.steamId}
-                                img={item.img}
-                                name={item.name}
-                                isFocused={selectedIndex === index}
-                                isOpen={isMenuOpen && selectedIndex === index}
-                                onCloseMenu={handleCloseMenu}
-                            />
+                    {gameCardsItems.length === 0 ? (
+                        <div className="message-container">
+                            <h3>Nenhum jogo aqui.</h3>
                         </div>
-                    ))}
+                    ) : (
+                        gameCardsItems.map((item, index) => (
+                            <div key={item.id} ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
+                                <GameCard
+                                    id={item.id}
+                                    steamId={item.steamId}
+                                    img={item.img}
+                                    name={item.name}
+                                    isFocused={selectedIndex === index}
+                                    isOpen={isMenuOpen && selectedIndex === index}
+                                    onCloseMenu={handleCloseMenu}
+                                />
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </>

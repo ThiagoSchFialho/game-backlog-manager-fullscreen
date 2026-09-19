@@ -8,6 +8,20 @@
     max-height: calc(100vh - 160px);
 }
 
+.message-container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.message-container h3 {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 23px;
+}
+
 .sortings-container {
     display: flex;
     align-items: center;
