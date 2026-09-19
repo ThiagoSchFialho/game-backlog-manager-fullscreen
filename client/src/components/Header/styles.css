@@ -58,7 +58,7 @@
     border-left: none;
     border-top: none;
     border-bottom-right-radius: 10px;
-    padding: 31px 40px 20px 40px;
+    padding: 32px 40px 30px 40px;
 }
 
 .header-menu-container ul {
@@ -70,11 +70,11 @@
 }
 
 .selected-header-menu-item {
-    background-color: rgba(255, 255, 255, 0.336);
+    background-color: var(--bg-card-secondary);
 }
 
 .header-menu-item {
-    padding: 10px 15px;
+    padding: 15px 25px;
     padding-right: 40px;
     font-size: 20px;
     border-radius: 5px;
