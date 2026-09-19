@@ -65,9 +65,9 @@ const Header: React.FC = () => {
     };
     
     const handleSyncSteam = async () => {
+        setIsHeaderMenuOpen(false);
         if (!isSynchronizing) {
             setIsSynchronizing(true);
-            setIsHeaderMenuOpen(false);
             const result = await syncSteam();
     
             if (result) {
@@ -84,15 +84,15 @@ const Header: React.FC = () => {
 
     const menuItems: MenuItems[] = [
         { label: 'Sincronizar steam', action: () => handleSyncSteam() },
-        { label: 'Sair', action: () => handleClick() },
-        { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) }
+        { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
+        { label: 'Sair', action: () => handleClick() }
     ]
 
     return (
         <>
             <JoystickSetup command={joystickNavigation} />
             <div className="header">
-                <div className="logo-sync-container">
+                <div className="logo-container">
                     <img onClick={() => setIsHeaderMenuOpen(true)} className="logo" src={logo} alt="game backlog manager logo" />
                     {isSynchronizing && (
                         <div
@@ -114,13 +114,27 @@ const Header: React.FC = () => {
             </div>
 
             {isHeaderMenuOpen && (
-                <>
+                <div className="header-menu-container">
+                    <img className="logo" src={logo} alt="game backlog manager logo" />
                     <ul>
-                        {menuItems.map((item, index) => (
-                            <li className={selectedMenuIndex === index ? "selected-header-menu-item" : "header-menu-item" } onClick={item.action}>{item.label}</li>
-                        ))}
+                        {menuItems.map((item, index) => {
+                            if (index === menuItems.length - 1) { return (
+                                <>
+                                    <hr />
+                                    <li
+                                        className={selectedMenuIndex === index ? "selected-header-menu-item header-menu-item" : "header-menu-item" }
+                                        onClick={item.action}
+                                    >{item.label}</li>
+                                </>
+                            )} else { return (
+                                <li
+                                    className={selectedMenuIndex === index ? "selected-header-menu-item header-menu-item" : "header-menu-item" }
+                                    onClick={item.action}
+                                >{item.label}</li>
+                            )}
+                        })}
                     </ul>
-                </>
+                </div>
             )}
         </>
     )
