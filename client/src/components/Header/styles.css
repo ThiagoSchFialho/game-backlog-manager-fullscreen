@@ -1,3 +1,12 @@
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .header {
     height: 113px;
     display: flex;
@@ -17,6 +26,34 @@
 .logo {
     width: 70px;
     cursor: pointer;
+}
+
+.sync-steam-btn-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--primary);
+    border-radius: 5px;
+    padding: 10px 30px;
+}
+
+.img-sync-steam-animation {
+    animation: spin 1s linear infinite;
+}
+
+.sync-steam-btn {
+    background-color: var(--primary);
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+}
+
+.selected-header-menu-item {
+    background-color: rgba(255, 255, 255, 0.336);
+}
+
+.header-menu-item {
+
 }
 
 .clock {

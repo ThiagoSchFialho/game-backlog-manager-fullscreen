@@ -43,6 +43,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
     const [commandCoolDown, setCommandCoolDown] = useState(false);
     const [isOnGamePage, setIsOnGamePage] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     useEffect(() => {
         setGamesList(list);
@@ -100,54 +101,65 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
 
     const sortGamesMethods = ['alphabet', 'mostPlayed', 'recentlyPlayed'];
     const joystickNavigation = (command: string) => {
-        const currentIndex = selectedIndexRef.current;
-        const length = itemsLengthRef.current;
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
+        }
 
-        if (command === 'esquerda') {
-            if (currentIndex !== 0) {
-                playSelectSound();
-                setSelectedIndex(currentIndex - 1);
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
             }
-        } else if (command === 'direita') {
-            if (currentIndex !== length - 1) {
-                playSelectSound();
-                setSelectedIndex(currentIndex + 1);
-            }
-        } else if (command === 'cima') {
-            if (currentIndex > 4) {
-                playSelectSound();
-                setSelectedIndex(currentIndex - 5);
-            }
-        } else if (command === 'baixo') {
-            if (currentIndex < length - 5) {
-                playSelectSound();
-                setSelectedIndex(currentIndex + 5);
-            }
-        } else if (command === 'A') {
-            if (commandCoolDown) return null;
-            playConfirmSound();
-            gameCardsItems[currentIndex]?.action();
-        } else if (command === 'B') {
-            if (commandCoolDown) return null;
-            onBack?.();
-        } else if (command === 'Y') {
-            playPopupSound();
-            setIsMenuOpen(true);
-        } else if (command === 'RB') {
-            if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
-                playSwipeSound();
-                const currentIndex = sortGamesMethods.indexOf(sortMethod);
-                setSortMethod(sortGamesMethods[currentIndex + 1]);
-                sortGames(sortGamesMethods[currentIndex + 1], gamesList);
-                setSelectedIndex(0);
-            }
-        } else if (command === 'LB') {
-            if (sortMethod !== sortGamesMethods[0]) {
-                playSwipeSound();
-                const currentIndex = sortGamesMethods.indexOf(sortMethod);
-                setSortMethod(sortGamesMethods[currentIndex - 1]);
-                sortGames(sortGamesMethods[currentIndex - 1], gamesList);
-                setSelectedIndex(0);
+        }
+        if (!isHeaderMenuOpen) {
+            const currentIndex = selectedIndexRef.current;
+            const length = itemsLengthRef.current;
+
+            if (command === 'esquerda') {
+                if (currentIndex !== 0) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 1);
+                }
+            } else if (command === 'direita') {
+                if (currentIndex !== length - 1) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex + 1);
+                }
+            } else if (command === 'cima') {
+                if (currentIndex > 4) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 5);
+                }
+            } else if (command === 'baixo') {
+                if (currentIndex < length - 5) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex + 5);
+                }
+            } else if (command === 'A') {
+                if (commandCoolDown) return null;
+                playConfirmSound();
+                gameCardsItems[currentIndex]?.action();
+            } else if (command === 'B') {
+                if (commandCoolDown) return null;
+                onBack?.();
+            } else if (command === 'Y') {
+                playPopupSound();
+                setIsMenuOpen(true);
+            } else if (command === 'RB') {
+                if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
+                    playSwipeSound();
+                    const currentIndex = sortGamesMethods.indexOf(sortMethod);
+                    setSortMethod(sortGamesMethods[currentIndex + 1]);
+                    sortGames(sortGamesMethods[currentIndex + 1], gamesList);
+                    setSelectedIndex(0);
+                }
+            } else if (command === 'LB') {
+                if (sortMethod !== sortGamesMethods[0]) {
+                    playSwipeSound();
+                    const currentIndex = sortGamesMethods.indexOf(sortMethod);
+                    setSortMethod(sortGamesMethods[currentIndex - 1]);
+                    sortGames(sortGamesMethods[currentIndex - 1], gamesList);
+                    setSelectedIndex(0);
+                }
             }
         }
     };
@@ -203,7 +215,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
 
                 <div className="list-game-container" ref={scrollContainerRef}>
                     {gameCardsItems.map((item, index) => (
-                        <div key={item.id} ref={setCardRef(index)}>
+                        <div key={item.id} ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
                             <GameCard
                                 id={item.id}
                                 steamId={item.steamId}

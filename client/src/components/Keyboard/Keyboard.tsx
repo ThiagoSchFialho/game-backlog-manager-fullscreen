@@ -78,6 +78,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPressed, onDone, onClose }) =>
     const [isCapslockOn, setIsCapslockOn] = useState(false);
     const [phrase, setPhrase] = useState('');
     const [commandCoolDown, setCommandCoolDown] = useState(true);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
@@ -86,94 +87,105 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPressed, onDone, onClose }) =>
     }, []);
 
     const joystickNavigation = (command: string) => {
-        const startRow = [0, 11, 22, 33];
-        const finalRow = [10, 21, 32, 43];
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
+        }
 
-        if (command === 'esquerda') {
-            playSelectSound();
-            if (startRow.includes(selectedKey)){
-                setSelectedKey(selectedKey + 10);
-            } else {
-                setSelectedKey(selectedKey - 1);
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
             }
-        } else if (command === 'direita') {
-            if (selectedKey === 47) return;
-            playSelectSound();
-            if (finalRow.includes(selectedKey)){
-                setSelectedKey(selectedKey - 10);
-            } else {
-                setSelectedKey(selectedKey + 1);
-            }
-        } else if (command === 'cima') {
-            if (selectedKey < 11) return;
+        }
+        if (!isHeaderMenuOpen) {
+            const startRow = [0, 11, 22, 33];
+            const finalRow = [10, 21, 32, 43];
 
-            playSelectSound();
-            if (selectedKey === 44) {
-                setSelectedKey(34);
-            } else if (selectedKey === 45) {
-                setSelectedKey(37);
-            } else if (selectedKey === 46) {
-                setSelectedKey(40);
-            } else if (selectedKey === 47) {
-                setSelectedKey(42);
-            } else {
-                setSelectedKey(selectedKey - 11);
-            }
-        } else if (command === 'baixo') {
-            if (selectedKey > 43 ) return;
+            if (command === 'esquerda') {
+                playSelectSound();
+                if (startRow.includes(selectedKey)){
+                    setSelectedKey(selectedKey + 10);
+                } else {
+                    setSelectedKey(selectedKey - 1);
+                }
+            } else if (command === 'direita') {
+                if (selectedKey === 47) return;
+                playSelectSound();
+                if (finalRow.includes(selectedKey)){
+                    setSelectedKey(selectedKey - 10);
+                } else {
+                    setSelectedKey(selectedKey + 1);
+                }
+            } else if (command === 'cima') {
+                if (selectedKey < 11) return;
 
-            playSelectSound();
-            if ([33, 34].includes(selectedKey)) {
-                setSelectedKey(44);
-            } else if ([35, 36, 37, 38, 39].includes(selectedKey)) {
-                setSelectedKey(45);
-            } else if ([40, 41].includes(selectedKey)) {
-                setSelectedKey(46);
-            } else if ([42, 43].includes(selectedKey)) {
-                setSelectedKey(47);
-            } else {
-                setSelectedKey(selectedKey + 11);
-            }
-        } else if (command === 'A') {
-            if (commandCoolDown) return;
-            if (selectedKey === 44) {
+                playSelectSound();
+                if (selectedKey === 44) {
+                    setSelectedKey(34);
+                } else if (selectedKey === 45) {
+                    setSelectedKey(37);
+                } else if (selectedKey === 46) {
+                    setSelectedKey(40);
+                } else if (selectedKey === 47) {
+                    setSelectedKey(42);
+                } else {
+                    setSelectedKey(selectedKey - 11);
+                }
+            } else if (command === 'baixo') {
+                if (selectedKey > 43 ) return;
+
+                playSelectSound();
+                if ([33, 34].includes(selectedKey)) {
+                    setSelectedKey(44);
+                } else if ([35, 36, 37, 38, 39].includes(selectedKey)) {
+                    setSelectedKey(45);
+                } else if ([40, 41].includes(selectedKey)) {
+                    setSelectedKey(46);
+                } else if ([42, 43].includes(selectedKey)) {
+                    setSelectedKey(47);
+                } else {
+                    setSelectedKey(selectedKey + 11);
+                }
+            } else if (command === 'A') {
+                if (commandCoolDown) return;
+                if (selectedKey === 44) {
+                    playConfirm2Sound();
+                    setIsCapslockOn(!isCapslockOn);
+                } else if (selectedKey === 46) {
+                    playConfirm2Sound();
+                    setPhrase(phrase.slice(0, -1));
+                    onKeyPressed(phrase.slice(0, -1));
+                } else if (selectedKey === 47) {
+                    onDone(phrase);
+                } else {
+                    playConfirm2Sound();
+                    if (isCapslockOn) {
+                        setPhrase(phrase + KEYS[selectedKey].upperCase);
+                        onKeyPressed(phrase + KEYS[selectedKey].upperCase);
+                    } else {
+                        setPhrase(phrase + KEYS[selectedKey].lowerCase);
+                        onKeyPressed(phrase + KEYS[selectedKey].lowerCase);
+                    }
+                }
+            } else if (command === 'X') {
+                if (phrase.length > 0) {
+                    playBackSound();
+                    setPhrase(phrase.slice(0, -1));
+                    onKeyPressed(phrase.slice(0, -1));
+                }
+            } else if (command === 'Y') {
+                playConfirm2Sound();
+                setPhrase(phrase + ' ');
+                onKeyPressed(phrase + ' ');
+            } else if (command === 'B') {
+                setPhrase('');
+                onKeyPressed('');
+                onClose();
+            } else if (command === 'RT') {
+                onDone(phrase);
+            } else if (command === 'LT') {
                 playConfirm2Sound();
                 setIsCapslockOn(!isCapslockOn);
-            } else if (selectedKey === 46) {
-                playConfirm2Sound();
-                setPhrase(phrase.slice(0, -1));
-                onKeyPressed(phrase.slice(0, -1));
-            } else if (selectedKey === 47) {
-                onDone(phrase);
-            } else {
-                playConfirm2Sound();
-                if (isCapslockOn) {
-                    setPhrase(phrase + KEYS[selectedKey].upperCase);
-                    onKeyPressed(phrase + KEYS[selectedKey].upperCase);
-                } else {
-                    setPhrase(phrase + KEYS[selectedKey].lowerCase);
-                    onKeyPressed(phrase + KEYS[selectedKey].lowerCase);
-                }
             }
-        } else if (command === 'X') {
-            if (phrase.length > 0) {
-                playBackSound();
-                setPhrase(phrase.slice(0, -1));
-                onKeyPressed(phrase.slice(0, -1));
-            }
-        } else if (command === 'Y') {
-            playConfirm2Sound();
-            setPhrase(phrase + ' ');
-            onKeyPressed(phrase + ' ');
-        } else if (command === 'B') {
-            setPhrase('');
-            onKeyPressed('');
-            onClose();
-        } else if (command === 'RT') {
-            onDone(phrase);
-        } else if (command === 'LT') {
-            playConfirm2Sound();
-            setIsCapslockOn(!isCapslockOn);
         }
     };
 

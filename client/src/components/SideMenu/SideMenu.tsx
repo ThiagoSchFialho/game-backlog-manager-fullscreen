@@ -30,6 +30,7 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
     const navigation = useNavigate();
     const [selected, setSelected] = useState('');
     const readyRef = useRef(false);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     useEffect(() => {
         setSelected(currentPage);
@@ -88,14 +89,25 @@ const SideMenu: React.FC<SideMenuProps> = ({currentPage}) => {
     ];
 
     const joystickNavigation = (command: string) => {
-        if (!readyRef.current) return;
-        const currentPageIndex = sideMenuItems.findIndex(item => item.name === currentPage);
-    
-        if (command === 'dpad_cima' && currentPageIndex !== 0) {
-            navigation(sideMenuItems[currentPageIndex - 1].url);
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
         }
-        if (command === 'dpad_baixo' && currentPageIndex !== sideMenuItems.length - 1) {
-            navigation(sideMenuItems[currentPageIndex + 1].url);
+
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
+            }
+        }
+        if (!isHeaderMenuOpen) {
+            if (!readyRef.current) return;
+            const currentPageIndex = sideMenuItems.findIndex(item => item.name === currentPage);
+        
+            if (command === 'dpad_cima' && currentPageIndex !== 0) {
+                navigation(sideMenuItems[currentPageIndex - 1].url);
+            }
+            if (command === 'dpad_baixo' && currentPageIndex !== sideMenuItems.length - 1) {
+                navigation(sideMenuItems[currentPageIndex + 1].url);
+            }
         }
     };
 

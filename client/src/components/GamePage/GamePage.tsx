@@ -56,6 +56,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
     const [currentGame, setCurrentGame] = useState<Game>();
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
     const [selectedIndex, setSelectedIndex] = useState(BANNER_INDEX);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     const getGame = async () => {
         const game = await getGameById(String(gameId));
@@ -131,34 +132,45 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
     ];
 
     const joystickNavigation = (command: string) => {
-        if (command === 'B') {
-            onExitGamePage();
-            return;
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
         }
 
-        if (selectedIndex === BANNER_INDEX) {
-            if (command === 'baixo') {
-                playSelectSound();
-                setSelectedIndex(0);
-            } else if (command === 'A' && currentGame) {
-                handleStartGame(currentGame.id, currentGame.steam_id);
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
             }
-            return;
         }
+        if (!isHeaderMenuOpen) {
+            if (command === 'B') {
+                onExitGamePage();
+                return;
+            }
 
-        if (command === 'A') {
-            playConfirmSound();
-            const item = selectedIndex < 4
-                ? optionsItems[selectedIndex]
-                : statisticsItems[selectedIndex - 4];
-            item.action();
-            return;
-        }
+            if (selectedIndex === BANNER_INDEX) {
+                if (command === 'baixo') {
+                    playSelectSound();
+                    setSelectedIndex(0);
+                } else if (command === 'A' && currentGame) {
+                    handleStartGame(currentGame.id, currentGame.steam_id);
+                }
+                return;
+            }
 
-        const nextIndex = NAVIGATION_MAP[selectedIndex]?.[command];
-        if (nextIndex !== undefined) {
-            playSelectSound();
-            setSelectedIndex(nextIndex);
+            if (command === 'A') {
+                playConfirmSound();
+                const item = selectedIndex < 4
+                    ? optionsItems[selectedIndex]
+                    : statisticsItems[selectedIndex - 4];
+                item.action();
+                return;
+            }
+
+            const nextIndex = NAVIGATION_MAP[selectedIndex]?.[command];
+            if (nextIndex !== undefined) {
+                playSelectSound();
+                setSelectedIndex(nextIndex);
+            }
         }
     };
 

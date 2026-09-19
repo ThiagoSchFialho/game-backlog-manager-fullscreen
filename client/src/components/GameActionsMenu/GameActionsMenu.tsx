@@ -63,6 +63,7 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [activeSubMenu, setActiveSubMenu] = useState<SubMenuId | null>(null);
     const [subSelectedIndex, setSubSelectedIndex] = useState(0);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     // --- Data loading -----------------------------------------------------
     const getGames = async () => {
@@ -233,10 +234,21 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         }
     };
     const joystickNavigation = (command: string) => {
-        if (activeSubMenuConfig) {
-            navigateSubMenu(command, activeSubMenuConfig);
-        } else {
-            navigateMainMenu(command);
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
+        }
+
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
+            }
+        }
+        if (!isHeaderMenuOpen) {
+            if (activeSubMenuConfig) {
+                navigateSubMenu(command, activeSubMenuConfig);
+            } else {
+                navigateMainMenu(command);
+            }
         }
     };
 

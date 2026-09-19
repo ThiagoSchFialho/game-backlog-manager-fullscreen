@@ -24,6 +24,7 @@ const Collections: React.FC = () => {
     const [collectionTitle, setCollectionTitle] = useState<string | undefined>('');
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [commandCoolDown, setCommandCoolDown] = useState(false);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     useEffect(() => {
         const getCollections = async () => {
@@ -86,47 +87,58 @@ const Collections: React.FC = () => {
     };
 
     const joystickNavigation = (command: string) => {
-        const currentIndex = selectedIndexRef.current;
-        const length = itemsLengthRef.current;
-        const rowStart = 1;
-        const rowEnd = length;
-        const onButton = currentIndex === BUTTON_INDEX;
-        const columns = getColumnsCount();
-
-        if (onButton) {
-            if (command === 'baixo' && length > 0) {
-                playSelectSound();
-                setSelectedIndex(rowStart);
-            } else if (command === 'A') {
-                if (commandCoolDown) return;
-                playPopupSound();
-                setIsCollectionFormOpen(true);
-            }
-            return;
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
         }
 
-        if (command === 'esquerda') {
-            playSelectSound();
-            setSelectedIndex(prev => clamp(prev - 1, rowStart, rowEnd));
-        } else if (command === 'direita') {
-            playSelectSound();
-            setSelectedIndex(prev => clamp(prev + 1, rowStart, rowEnd));
-        } else if (command === 'cima') {
-            playSelectSound();
-            if (currentIndex - rowStart < columns) {
-                setSelectedIndex(BUTTON_INDEX);
-            } else {
-                setSelectedIndex(prev => clamp(prev - columns, rowStart, rowEnd));
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
             }
-        } else if (command === 'baixo') {
-            playSelectSound();
-            setSelectedIndex(prev => clamp(prev + columns, rowStart, rowEnd));
-        } else if (command === 'A') {
-            if (commandCoolDown) return;
-            playConfirmSound();
-            const collection = collectionsList[currentIndex - rowStart];
-            if (collection) {
-                navigation(`/collection/${collection.id}`);
+        }
+        if (!isHeaderMenuOpen) {
+            const currentIndex = selectedIndexRef.current;
+            const length = itemsLengthRef.current;
+            const rowStart = 1;
+            const rowEnd = length;
+            const onButton = currentIndex === BUTTON_INDEX;
+            const columns = getColumnsCount();
+
+            if (onButton) {
+                if (command === 'baixo' && length > 0) {
+                    playSelectSound();
+                    setSelectedIndex(rowStart);
+                } else if (command === 'A') {
+                    if (commandCoolDown) return;
+                    playPopupSound();
+                    setIsCollectionFormOpen(true);
+                }
+                return;
+            }
+
+            if (command === 'esquerda') {
+                playSelectSound();
+                setSelectedIndex(prev => clamp(prev - 1, rowStart, rowEnd));
+            } else if (command === 'direita') {
+                playSelectSound();
+                setSelectedIndex(prev => clamp(prev + 1, rowStart, rowEnd));
+            } else if (command === 'cima') {
+                playSelectSound();
+                if (currentIndex - rowStart < columns) {
+                    setSelectedIndex(BUTTON_INDEX);
+                } else {
+                    setSelectedIndex(prev => clamp(prev - columns, rowStart, rowEnd));
+                }
+            } else if (command === 'baixo') {
+                playSelectSound();
+                setSelectedIndex(prev => clamp(prev + columns, rowStart, rowEnd));
+            } else if (command === 'A') {
+                if (commandCoolDown) return;
+                playConfirmSound();
+                const collection = collectionsList[currentIndex - rowStart];
+                if (collection) {
+                    navigation(`/collection/${collection.id}`);
+                }
             }
         }
     };

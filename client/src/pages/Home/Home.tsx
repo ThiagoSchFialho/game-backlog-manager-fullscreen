@@ -38,6 +38,7 @@ const Home: React.FC = () => {
     const [commandCoolDown, setCommandCoolDown] = useState(false);
     const [isOnGamePage, setIsOnGamePage] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
+    const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     const getGames = async () => {
         const games = await fetchGames();
@@ -97,42 +98,53 @@ const Home: React.FC = () => {
     // ------------------------------------------------------------------
 
     const joystickNavigation = (command: string) => {
-        if (!hasGames) return;
+        if (command === 'START') {
+            setIsHeaderMenuOpen(!isHeaderMenuOpen);
+        }
 
-        const onBanner = selectedIndex === BANNER_INDEX;
-        const currentIndex = selectedIndexRef.current;
-        const length = itemsLengthRef.current;
+        if (isHeaderMenuOpen) {
+            if (command === 'B' || command === 'A') {
+                setIsHeaderMenuOpen(false);
+            }
+        }
+        if (!isHeaderMenuOpen) {
+            if (!hasGames) return;
 
-        if (onBanner) {
-            if (command === 'baixo') {
+            const onBanner = selectedIndex === BANNER_INDEX;
+            const currentIndex = selectedIndexRef.current;
+            const length = itemsLengthRef.current;
+
+            if (onBanner) {
+                if (command === 'baixo') {
+                    playSelectSound();
+                    setSelectedIndex(1);
+                } else if (command === 'A') {
+                    playConfirmSound();
+                    screenItems[selectedIndex]?.action();
+                }
+                return;
+            }
+            if (command === 'esquerda') {
+                if (currentIndex > 1) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 1);
+                }
+            } else if (command === 'direita') {
+                if (currentIndex < length + 1) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex + 1);
+                }
+            } else if (command === 'cima') {
                 playSelectSound();
-                setSelectedIndex(1);
+                setSelectedIndex(BANNER_INDEX);
             } else if (command === 'A') {
+                if (commandCoolDown) return;
                 playConfirmSound();
                 screenItems[selectedIndex]?.action();
+            } else if (selectedIndex !== 6 && command === 'Y') {
+                playPopupSound();
+                setIsMenuOpen(true);
             }
-            return;
-        }
-        if (command === 'esquerda') {
-            if (currentIndex > 1) {
-                playSelectSound();
-                setSelectedIndex(currentIndex - 1);
-            }
-        } else if (command === 'direita') {
-            if (currentIndex < length + 1) {
-                playSelectSound();
-                setSelectedIndex(currentIndex + 1);
-            }
-        } else if (command === 'cima') {
-            playSelectSound();
-            setSelectedIndex(BANNER_INDEX);
-        } else if (command === 'A') {
-            if (commandCoolDown) return;
-            playConfirmSound();
-            screenItems[selectedIndex]?.action();
-        } else if (selectedIndex !== 6 && command === 'Y') {
-            playPopupSound();
-            setIsMenuOpen(true);
         }
     };
 
