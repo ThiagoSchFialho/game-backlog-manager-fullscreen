@@ -21,6 +21,9 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [ltBtnPressed, setLtBtnPressed] = useState(false);
     const [rtBtnPressed, setRtBtnPressed] = useState(false);
 
+    const [selectBtnPressed, setSelectBtnPressed] = useState(false);
+    const [startBtnPressed, setStartBtnPressed] = useState(false);
+
     const [dpadUpPressed, setDpadUpPressed] = useState(false);
     const [dpadDownPressed, setDpadDownPressed] = useState(false);
     const [dpadLeftPressed, setDpadLeftPressed] = useState(false);
@@ -125,6 +128,20 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
             }
             setRtBtnPressed(!!rtPressed);
 
+            // Back
+            const selectPressed = controller.buttons[8]?.pressed;
+            if (selectPressed && !selectBtnPressed) {
+                command('BACK');
+            }
+            setSelectBtnPressed(!!selectPressed);
+
+            // Start
+            const startPressed = controller.buttons[9]?.pressed;
+            if (startPressed && !startBtnPressed) {
+                command('START');
+            }
+            setStartBtnPressed(!!startPressed);
+
             // d-pad: cima
             const dpadUp = controller.buttons[12]?.pressed;
             if (dpadUp && !dpadUpPressed) {
@@ -159,6 +176,7 @@ const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     }, [
         lastDir, aBtnPressed, bBtnPressed, yBtnPressed, xBtnPressed, lbBtnPressed, rbBtnPressed,
         ltBtnPressed, rtBtnPressed,
+        selectBtnPressed, startBtnPressed,
         dpadUpPressed, dpadDownPressed, dpadLeftPressed, dpadRightPressed,
     ]);
 
