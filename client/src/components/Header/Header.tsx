@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './styles.css';
 import logo from '../../assets/logo.svg';
 import SyncSteamBtn from '../syncSteamBtn/SyncSteamBtn';
+import { ShutdownButton } from '../ShutdownButton/ShutdownButton';
 
 const Header: React.FC = () => {
     const [time, setTime] = useState(new Date());
@@ -25,6 +26,7 @@ const Header: React.FC = () => {
                 <div className="logo-sync-container">
                     <img className="logo" src={logo} alt="game backlog manager logo" />
                     <SyncSteamBtn />
+                    <ShutdownButton />
                 </div>
                 <p className="clock">{formattedTime}</p>
             </div>
