@@ -6,6 +6,7 @@ import { useDb } from '../../hooks/useDb';
 import sync from '../../assets/icons/sync.svg';
 import { useShutdown } from '../../hooks/useShutdown';
 import { useSound } from '../../hooks/useSound';
+import { useNavigate } from 'react-router-dom';
 interface MenuItems {
     label: string,
     action: () => void
@@ -13,6 +14,7 @@ interface MenuItems {
 
 
 const Header: React.FC = () => {
+    const navigation = useNavigate();
     const { syncSteam } = useDb();
     const { shutdown, loading, error } = useShutdown();
     const { playCursorSound, playConfirmSound, playBackSound } = useSound();
@@ -83,8 +85,10 @@ const Header: React.FC = () => {
     };
 
     const menuItems: MenuItems[] = [
-        { label: 'Sincronizar steam', action: () => handleSyncSteam() },
+        { label: 'Inicio', action: () => { setIsHeaderMenuOpen(false); navigation('/'); }},
+        { label: 'Jogos ocultos', action: () => { setIsHeaderMenuOpen(false); navigation('/hidden'); }},
         { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
+        { label: 'Sincronizar steam', action: () => handleSyncSteam() },
         { label: 'Sair', action: () => handleClick() }
     ]
 
@@ -118,7 +122,7 @@ const Header: React.FC = () => {
                     <img className="logo" src={logo} alt="game backlog manager logo" />
                     <ul>
                         {menuItems.map((item, index) => {
-                            if (index === menuItems.length - 1) { return (
+                            if (index >= menuItems.length - 2) { return (
                                 <>
                                     <hr />
                                     <li

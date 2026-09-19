@@ -41,14 +41,15 @@
 .collection-title-form-container {
     position: absolute;
     left: 50%;
-    bottom: 450px;
+    bottom: 580px;
     transform: translateX(-50%);
     width: fit-content;
     width: 1040px;
     background-color: var(--bg-secondary);
     box-shadow: 0px 4px 40px 10px rgba(0, 0, 0, 0.5);
     border: var(--border-primary);
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     padding: 30px 30px 20px 30px;
 }
 

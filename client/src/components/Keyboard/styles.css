@@ -2,12 +2,13 @@
     width: 1040px;
     position: absolute;
     left: 50%;
-    bottom: 60px;
+    bottom: 200px;
     transform: translateX(-50%);
     background-color: var(--bg-secondary);
-    box-shadow: 0px 35px 40px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 30px 40px 10px rgba(0, 0, 0, 0.5);
     border: var(--border-primary);
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     padding: 20px;
 
     display: grid;
