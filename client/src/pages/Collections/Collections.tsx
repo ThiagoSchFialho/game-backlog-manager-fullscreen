@@ -25,12 +25,18 @@ const Collections: React.FC = () => {
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [commandCoolDown, setCommandCoolDown] = useState(false);
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getCollections = async () => {
+            setIsLoading(true);
             const collections = await fetchCollections();
             if (collections) {
+                setIsLoading(false);
                 setCollectionsList(collections);
+            }
+            if (collections.length === 0) {
+                setSelectedIndex(0);
             }
         }
 
@@ -180,14 +186,25 @@ const Collections: React.FC = () => {
                     </div>
                 </div>
                 <div className="collection-folders-container" ref={scrollContainerRef}>
-                    {collectionsList.map((collection, index) => (
-                        <div key={collection.id} ref={(el) => { cardRefs.current[index] = el; }}>
-                            <CollectionFolder
-                                collection={collection}
-                                isFocused={selectedIndex === index + 1}
-                            />
+                    {isLoading ? (
+                        <div className="message-container">
+                            <h3>Carregando...</h3>
                         </div>
-                    ))}
+                    ) : (
+                        collectionsList.length === 0 ? (
+                            <div className="message-container">
+                                <h3>Nenhuma coleção ainda.</h3>
+                            </div>
+                        ) : (
+                            collectionsList.map((collection, index) => (
+                            <div key={collection.id} ref={(el) => { cardRefs.current[index] = el; }}>
+                                <CollectionFolder
+                                    collection={collection}
+                                    isFocused={selectedIndex === index + 1}
+                                />
+                            </div>
+                        )))
+                    )}
                 </div>
             </div>
 
