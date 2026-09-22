@@ -57,6 +57,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
     const [selectedIndex, setSelectedIndex] = useState(BANNER_INDEX);
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const getGame = async () => {
         const game = await getGameById(String(gameId));
@@ -152,7 +153,11 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                     playSelectSound();
                     setSelectedIndex(0);
                 } else if (command === 'A' && currentGame) {
+                    setIsPlaying(true);
                     handleStartGame(currentGame.id, currentGame.steam_id);
+                    setTimeout(() => {
+                        setIsPlaying(false);
+                    }, 50000);
                 }
                 return;
             }
@@ -189,6 +194,8 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                             img={getGameCover(currentGame.title, 'landscape')}
                             name={currentGame.title}
                             isFocused={selectedIndex === 999}
+                            isPlaying={isPlaying}
+                            isInstalled={true}
                         />
 
                         <div className="game-page-details-container">

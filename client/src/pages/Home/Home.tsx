@@ -39,6 +39,7 @@ const Home: React.FC = () => {
     const [isOnGamePage, setIsOnGamePage] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const getGames = async () => {
         const games = await fetchGames();
@@ -71,6 +72,13 @@ const Home: React.FC = () => {
         }))
         : [];
 
+    const startGame = (id: string, steamId: string) => {
+        setIsPlaying(true);
+        handleStartGame(id, steamId);
+        setTimeout(() => {
+            setIsPlaying(false);
+        }, 50000);
+    }
     const screenItems: ScreenItem[] = hasGames
         ? [
             {
@@ -78,7 +86,7 @@ const Home: React.FC = () => {
                 steamId: games[0].steam_id,
                 img: getGameCover(games[0].title, 'landscape'),
                 name: games[0].title,
-                action: () => handleStartGame(games[0].id, games[0].steam_id)
+                action: () => startGame(games[0].id, games[0].steam_id)
             },
             ...gameCardsItems,
             { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library/recentlyPlayed') }
@@ -110,9 +118,9 @@ const Home: React.FC = () => {
         if (!isHeaderMenuOpen) {
             if (!hasGames) return;
 
-            const onBanner = selectedIndex === BANNER_INDEX;
             const currentIndex = selectedIndexRef.current;
             const length = itemsLengthRef.current;
+            const onBanner = currentIndex === BANNER_INDEX;
 
             if (onBanner) {
                 if (command === 'baixo') {
@@ -120,7 +128,7 @@ const Home: React.FC = () => {
                     setSelectedIndex(1);
                 } else if (command === 'A') {
                     playConfirmSound();
-                    screenItems[selectedIndex]?.action();
+                    screenItems[currentIndex]?.action();
                 }
                 return;
             }
@@ -140,8 +148,8 @@ const Home: React.FC = () => {
             } else if (command === 'A') {
                 if (commandCoolDown) return;
                 playConfirmSound();
-                screenItems[selectedIndex]?.action();
-            } else if (selectedIndex !== 6 && command === 'Y') {
+                screenItems[currentIndex]?.action();
+            } else if (currentIndex !== 6 && command === 'Y') {
                 playPopupSound();
                 setIsMenuOpen(true);
             }
@@ -185,6 +193,8 @@ const Home: React.FC = () => {
                         img={item.img}
                         name={item.name}
                         isFocused={selectedIndex === 0}
+                        isPlaying={isPlaying}
+                        isInstalled={true}
                     />
                 ))}
 
