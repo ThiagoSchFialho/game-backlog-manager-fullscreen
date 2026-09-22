@@ -34,35 +34,23 @@ export const useScroll = (selectedIndex: number, itemsLength: number) => {
         cardRefs.current[index] = el;
     };
 
-    const getColumnsCount = () => {
-        const refs = cardRefs.current;
-        if (!refs[0]) return 1;
-        const firstTop = refs[0]!.offsetTop;
-        let count = 0;
-        for (const el of refs) {
-            if (!el || el.offsetTop !== firstTop) break;
-            count++;
-        }
-        return count || 1;
-    };
-
-    const getRowHeight = (columns: number) => {
-        const refs = cardRefs.current;
-        if (!refs[0] || !refs[columns]) return 0;
-        return refs[columns]!.offsetTop - refs[0]!.offsetTop;
-    };
-
     useEffect(() => {
         const container = scrollContainerRef.current;
-        if (!container || cardRefs.current.length === 0) return;
+        const target = cardRefs.current[selectedIndex];
+        if (!container || !target) return;
 
-        const columns = getColumnsCount();
-        const row = Math.floor(selectedIndex / columns);
-        const rowHeight = getRowHeight(columns);
+        const rowTops = Array.from(
+            new Set(
+                cardRefs.current
+                    .filter((el): el is HTMLDivElement => !!el)
+                    .map((el) => el.offsetTop)
+            )
+        ).sort((a, b) => a - b);
 
-        if (!rowHeight) return;
+        const currentRow = rowTops.indexOf(target.offsetTop);
+        if (currentRow === -1) return;
 
-        const targetScrollTop = row < 2 ? 0 : (row - 1) * rowHeight;
+        const targetScrollTop = currentRow < 2 ? 0 : rowTops[currentRow - 1];
 
         animateScrollTo(container, targetScrollTop, 200);
     }, [selectedIndex, itemsLength]);

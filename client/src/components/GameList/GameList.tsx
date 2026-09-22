@@ -138,13 +138,23 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
                 }
             } else if (command === 'cima') {
                 if (currentIndex > 4) {
-                    playSelectSound();
-                    setSelectedIndex(currentIndex - 5);
+                    if (currentIndex >= firstNotInstalledIndex && currentIndex - 5 < firstNotInstalledIndex) {
+                        playSelectSound();
+                        setSelectedIndex(firstNotInstalledIndex - 1);
+                    } else {
+                        playSelectSound();
+                        setSelectedIndex(currentIndex - 5);
+                    }
                 }
             } else if (command === 'baixo') {
                 if (currentIndex < length - 5) {
-                    playSelectSound();
-                    setSelectedIndex(currentIndex + 5);
+                    if (currentIndex < firstNotInstalledIndex && currentIndex + 5 > firstNotInstalledIndex) {
+                        playSelectSound();
+                        setSelectedIndex(firstNotInstalledIndex);
+                    } else {
+                        playSelectSound();
+                        setSelectedIndex(currentIndex + 5);
+                    }
                 }
             } else if (command === 'A') {
                 if (commandCoolDown) return null;
@@ -192,7 +202,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
         }, 50);
         setIsMenuOpen(false);
     }
-    
+
     return (
         <>
             {isOnGamePage && selectedGameId !== undefined && (
