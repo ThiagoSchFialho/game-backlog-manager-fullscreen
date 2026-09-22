@@ -12,6 +12,7 @@ export class Games implements IGames {
     rtime_last_played: string;
     beatable: boolean;
     hidden: boolean;
+    installed?: boolean;
     personal_rating?: number;
     playtime: number;
     status: string;
@@ -27,6 +28,7 @@ export class Games implements IGames {
         rtime_last_played: string,
         beatable: boolean,
         hidden: boolean,
+        installed: boolean,
         personal_rating: number,
         playtime: number,
         status: string
@@ -41,6 +43,7 @@ export class Games implements IGames {
         this.rtime_last_played = rtime_last_played;
         this.beatable = beatable;
         this.hidden = hidden;
+        this.installed = installed;
         this.personal_rating = personal_rating;
         this.playtime = playtime;
         this.status = status;

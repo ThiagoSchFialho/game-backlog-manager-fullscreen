@@ -10,6 +10,7 @@ export interface IGames {
     rtime_last_played: string;
     beatable: boolean;
     hidden: boolean;
+    installed?: boolean;
     personal_rating?: number;
     playtime: number;
     status: string;

@@ -145,6 +145,7 @@ async function syncGames(
                         personal_rating: gameCheck?.personal_rating ?? undefined,
                         beatable: gameCheck?.beatable ?? true,
                         hidden: gameCheck?.hidden ?? false,
+                        installed: gameCheck?.installed ?? false,
                     };
 
                     if (gameCheck?.id) {

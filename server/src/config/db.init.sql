@@ -15,9 +15,10 @@ CREATE TABLE games (
     release_date DATE,
     rtime_last_played TIMESTAMPTZ,
     beatable boolean DEFAULT true NOT NULL,
+    hidden boolean DEFAULT false NOT NULL,
+    installed boolean DEFAULT false NOT NULL,
     personal_rating INTEGER CHECK (personal_rating BETWEEN 1 AND 5),
-    playtime INTEGER NOT NULL DEFAULT 0 CHECK (playtime >= 0),
-    hidden boolean NOT NULL DEFAULT false,
+    playtime INTEGER DEFAULT 0 CHECK (playtime >= 0) NOT NULL,
     status VARCHAR(50)
 );
 

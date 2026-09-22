@@ -15,4 +15,5 @@ export interface Game {
     status: GameStatus;
     beatable: boolean;
     hidden: boolean;
+    installed: boolean;
 }

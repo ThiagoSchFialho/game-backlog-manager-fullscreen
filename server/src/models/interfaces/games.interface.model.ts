@@ -14,6 +14,7 @@ export interface CreateGameInput {
     personal_rating?: number | undefined;
     beatable?: boolean | undefined;
     hidden?: boolean | undefined;
+    installed?: boolean | undefined;
 }
 
 export interface GameWithGenres extends Games {
