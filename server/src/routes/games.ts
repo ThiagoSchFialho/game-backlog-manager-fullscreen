@@ -37,7 +37,7 @@ router.post('/', async function (req: Request, res: Response) {
         hidden
     }: CreateGameInput = req.body;
 
-    const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, status };
+    const requiredFields: Record<string, unknown> = { title, steam_id, status };
 
     for (const [field, value] of Object.entries(requiredFields)) {
         if (!value) {
@@ -49,10 +49,10 @@ router.post('/', async function (req: Request, res: Response) {
         const game = await gamesModel.createGame({
             title,
             steam_id,
-            release_date,
             rtime_last_played,
             playtime,
             status,
+            ...(release_date !== undefined && { release_date }),
             ...(developer !== undefined && { developer }),
             ...(cover_square !== undefined && { cover_square }),
             ...(cover_hero !== undefined && { cover_hero }),
@@ -176,7 +176,7 @@ router.put('/:id', async function (req: Request, res: Response) {
         hidden
     }: CreateGameInput = req.body;
 
-    const requiredFields: Record<string, unknown> = { title, steam_id, developer, release_date, status };
+    const requiredFields: Record<string, unknown> = { title, steam_id, status };
 
     for (const [field, value] of Object.entries(requiredFields)) {
         if (!value) {
@@ -194,10 +194,10 @@ router.put('/:id', async function (req: Request, res: Response) {
         const updatedGame = await gamesModel.updateGame(Number(id), {
             title,
             steam_id,
-            release_date,
             rtime_last_played: String(new Date(rtime_last_played).getTime() / 1000),
             playtime,
             status,
+            ...(release_date !== undefined && { release_date }),
             ...(developer !== undefined && { developer }),
             ...(cover_square !== undefined && { cover_square }),
             ...(cover_hero !== undefined && { cover_hero }),
