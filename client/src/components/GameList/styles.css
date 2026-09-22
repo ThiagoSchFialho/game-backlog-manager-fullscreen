@@ -22,6 +22,14 @@
     font-size: 23px;
 }
 
+.installed-divider {
+    grid-column: 1 / -1;
+    width: 99.1%;
+    border: none;
+    border-top: var(--border-primary);
+    margin: 20px 0;
+}
+
 .sortings-container {
     display: flex;
     align-items: center;

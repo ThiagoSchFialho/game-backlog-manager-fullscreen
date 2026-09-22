@@ -39,7 +39,7 @@
 .install-btn-landscape {
     padding-left: 15px;
     gap: 15px;
-    border: 1px solid rgb(62, 159, 255);
+    border: 1px solid rgb(94, 175, 255);
     background-color: rgb(8, 105, 202);
     box-shadow: inset 0px -23px 30px 0 rgba(1, 45, 90, 0.55);
 }
@@ -47,7 +47,7 @@
 .install-btn-landscape p {
     font-size: 24px;
     font-weight: 700;
-    color: rgb(62, 159, 255);
+    color: rgb(94, 175, 255);
 }
 
 .landscape-btn-icon {

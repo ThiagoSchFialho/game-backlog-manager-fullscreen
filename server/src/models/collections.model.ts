@@ -58,7 +58,8 @@ export class CollectionsModel implements ICollectionsModel {
                                 'release_date', g.release_date,
                                 'personal_rating', g.personal_rating,
                                 'playtime', g.playtime,
-                                'status', g.status
+                                'status', g.status,
+                                'installed', g.installed
                             ) ORDER BY g.title
                         ) FILTER (WHERE g.id IS NOT NULL),
                         '[]'
@@ -110,7 +111,8 @@ export class CollectionsModel implements ICollectionsModel {
                                 'release_date', g.release_date,
                                 'personal_rating', g.personal_rating,
                                 'playtime', g.playtime,
-                                'status', g.status
+                                'status', g.status,
+                                'installed', g.installed
                             ) ORDER BY g.title
                         ) FILTER (WHERE g.id IS NOT NULL),
                         '[]'

@@ -21,6 +21,7 @@ type ScreenItem = {
     steamId: Game['steam_id'];
     img: string;
     name: Game['title'];
+    installed: boolean;
     action: () => void | Promise<void>;
 };
 
@@ -47,18 +48,26 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
 
     useEffect(() => {
         setGamesList(list);
-    }, [onReloadList]);
+    }, [list]);
 
     const sortGames = (method: string, list: Game[] = gamesList) => {
         setSortMethod(method);
 
+        let sorted: Game[];
         if (method === 'alphabet') {
-            setSortedGamesList(orderBy(list, 'title', 'asc'));
+            sorted = orderBy(list, 'title', 'asc');
         } else if (method === 'mostPlayed') {
-            setSortedGamesList(orderBy(list, 'playtime', 'desc'));
+            sorted = orderBy(list, 'playtime', 'desc');
         } else if (method === 'recentlyPlayed') {
-            setSortedGamesList(orderBy(list, 'rtime_last_played', 'desc'));
-        }        
+            sorted = orderBy(list, 'rtime_last_played', 'desc');
+        } else {
+            sorted = list;
+        }
+
+        const installed = sorted.filter((game) => game.installed);
+        const notInstalled = sorted.filter((game) => !game.installed);
+
+        setSortedGamesList([...installed, ...notInstalled]);
     }
 
     useEffect(() => {
@@ -83,9 +92,12 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
         steamId: game.steam_id,
         img: getGameCover(game.title, 'square'),
         name: game.title,
+        installed: game.installed,
         action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
     }));
     const { scrollContainerRef, setCardRef } = useScroll(selectedIndex, gameCardsItems.length);
+
+    const firstNotInstalledIndex = gameCardsItems.findIndex((item) => !item.installed);
 
     // --- Refs para evitar stale closure no joystickNavigation -------------
     const selectedIndexRef = useRef(selectedIndex);
@@ -220,17 +232,22 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
                         </div>
                     ) : (
                         gameCardsItems.map((item, index) => (
-                            <div key={item.id} ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
-                                <GameCard
-                                    id={item.id}
-                                    steamId={item.steamId}
-                                    img={item.img}
-                                    name={item.name}
-                                    isFocused={selectedIndex === index}
-                                    isOpen={isMenuOpen && selectedIndex === index}
-                                    onCloseMenu={handleCloseMenu}
-                                />
-                            </div>
+                            <React.Fragment key={item.id}>
+                                {index === firstNotInstalledIndex && index !== 0 && (
+                                    <hr className="installed-divider" />
+                                )}
+                                <div ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
+                                    <GameCard
+                                        id={item.id}
+                                        steamId={item.steamId}
+                                        img={item.img}
+                                        name={item.name}
+                                        isFocused={selectedIndex === index}
+                                        isOpen={isMenuOpen && selectedIndex === index}
+                                        onCloseMenu={handleCloseMenu}
+                                    />
+                                </div>
+                            </React.Fragment>
                         ))
                     )}
                 </div>
