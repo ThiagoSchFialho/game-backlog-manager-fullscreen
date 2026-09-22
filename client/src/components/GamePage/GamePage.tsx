@@ -195,7 +195,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                             name={currentGame.title}
                             isFocused={selectedIndex === 999}
                             isPlaying={isPlaying}
-                            isInstalled={true}
+                            isInstalled={currentGame.installed}
                         />
 
                         <div className="game-page-details-container">

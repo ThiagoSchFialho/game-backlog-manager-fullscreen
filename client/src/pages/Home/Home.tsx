@@ -22,6 +22,7 @@ type ScreenItem = {
     steamId: Game['steam_id'];
     img: string;
     name: Game['title'];
+    installed: Game['installed'];
     action: () => void | Promise<void>;
 };
 
@@ -68,6 +69,7 @@ const Home: React.FC = () => {
             steamId: game.steam_id,
             img: getGameCover(game.title, 'square'),
             name: game.title,
+            installed: game.installed,
             action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
         }))
         : [];
@@ -86,10 +88,11 @@ const Home: React.FC = () => {
                 steamId: games[0].steam_id,
                 img: getGameCover(games[0].title, 'landscape'),
                 name: games[0].title,
+                installed: games[0].installed,
                 action: () => startGame(games[0].id, games[0].steam_id)
             },
             ...gameCardsItems,
-            { id: 6, steamId: '', img: '', name: '', action: () => navigation('/library/recentlyPlayed') }
+            { id: 6, steamId: '', img: '', name: '', installed: false, action: () => navigation('/library/recentlyPlayed') }
         ]
         : [];
 
@@ -194,7 +197,7 @@ const Home: React.FC = () => {
                         name={item.name}
                         isFocused={selectedIndex === 0}
                         isPlaying={isPlaying}
-                        isInstalled={true}
+                        isInstalled={item.installed}
                     />
                 ))}
 
