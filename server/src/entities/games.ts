@@ -7,7 +7,7 @@ export class Games implements IGames {
     cover_square?: string;
     cover_hero?: string;
     cover_grid?: string;
-    developer: string;
+    developer?: string;
     release_date: string;
     rtime_last_played: string;
     beatable: boolean;

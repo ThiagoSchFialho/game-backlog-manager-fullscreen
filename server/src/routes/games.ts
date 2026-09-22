@@ -7,11 +7,11 @@ const router = express.Router();
 interface CreateGameInput {
     title: string;
     steam_id: number;
-    developer: string;
     release_date: string;
     rtime_last_played: string;
     playtime: number;
     status: string;
+    developer?: string;
     cover_square?: string | undefined;
     cover_hero?: string | undefined;
     cover_grid?: string | undefined;
@@ -49,11 +49,11 @@ router.post('/', async function (req: Request, res: Response) {
         const game = await gamesModel.createGame({
             title,
             steam_id,
-            developer,
             release_date,
             rtime_last_played,
             playtime,
             status,
+            ...(developer !== undefined && { developer }),
             ...(cover_square !== undefined && { cover_square }),
             ...(cover_hero !== undefined && { cover_hero }),
             ...(cover_grid !== undefined && { cover_grid }),
@@ -194,11 +194,11 @@ router.put('/:id', async function (req: Request, res: Response) {
         const updatedGame = await gamesModel.updateGame(Number(id), {
             title,
             steam_id,
-            developer,
             release_date,
             rtime_last_played: String(new Date(rtime_last_played).getTime() / 1000),
             playtime,
             status,
+            ...(developer !== undefined && { developer }),
             ...(cover_square !== undefined && { cover_square }),
             ...(cover_hero !== undefined && { cover_hero }),
             ...(cover_grid !== undefined && { cover_grid }),

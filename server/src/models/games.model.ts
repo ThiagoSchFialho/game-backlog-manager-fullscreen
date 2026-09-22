@@ -21,7 +21,7 @@ export class GamesModel implements IGamesModel {
                 `, [
                 input.title,
                 input.steam_id,
-                input.developer,
+                input.developer ?? null,
                 input.release_date,
                 input.rtime_last_played,
                 input.playtime,
@@ -179,7 +179,7 @@ export class GamesModel implements IGamesModel {
                 id,
                 input.title,
                 input.steam_id,
-                input.developer,
+                input.developer ?? null,
                 input.release_date,
                 input.rtime_last_played,
                 input.playtime,

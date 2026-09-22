@@ -144,6 +144,7 @@ async function syncGames(
                         cover_grid: gameCheck?.cover_grid ?? undefined,
                         personal_rating: gameCheck?.personal_rating ?? undefined,
                         beatable: gameCheck?.beatable ?? true,
+                        hidden: gameCheck?.hidden ?? false,
                     };
 
                     if (gameCheck?.id) {
