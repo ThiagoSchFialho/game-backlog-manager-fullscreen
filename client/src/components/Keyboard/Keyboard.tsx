@@ -22,7 +22,7 @@ const KEYS: Keys[] = [
     { lowerCase: '8', upperCase: '8' },
     { lowerCase: '9', upperCase: '9' },
     { lowerCase: '0', upperCase: '0' },
-    { lowerCase: '@', upperCase: '@' },
+    { lowerCase: '-', upperCase: '_' },
 
     { lowerCase: 'q', upperCase: 'Q' },
     { lowerCase: 'w', upperCase: 'W' },
@@ -34,7 +34,7 @@ const KEYS: Keys[] = [
     { lowerCase: 'i', upperCase: 'I' },
     { lowerCase: 'o', upperCase: 'O' },
     { lowerCase: 'p', upperCase: 'P' },
-    { lowerCase: '#', upperCase: '#' },
+    { lowerCase: '.', upperCase: '.' },
 
     { lowerCase: 'a', upperCase: 'A' },
     { lowerCase: 's', upperCase: 'S' },
@@ -55,10 +55,10 @@ const KEYS: Keys[] = [
     { lowerCase: 'b', upperCase: 'B' },
     { lowerCase: 'n', upperCase: 'N' },
     { lowerCase: 'm', upperCase: 'M' },
-    { lowerCase: '-', upperCase: '-' },
-    { lowerCase: '_', upperCase: '_' },
-    { lowerCase: '.', upperCase: '.' },
-    { lowerCase: '?', upperCase: '?' },
+    { lowerCase: 'ã', upperCase: 'Ã' },
+    { lowerCase: 'õ', upperCase: 'Õ' },
+    { lowerCase: 'á', upperCase: 'Á' },
+    { lowerCase: 'ó', upperCase: 'Ó' },
 
     { lowerCase: '', upperCase: '' },
     { lowerCase: ' ', upperCase: ' ' },
