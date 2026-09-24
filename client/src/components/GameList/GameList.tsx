@@ -137,14 +137,17 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
                     setSelectedIndex(currentIndex + 1);
                 }
             } else if (command === 'cima') {
-                if (currentIndex > 4) {
-                    if (currentIndex >= firstNotInstalledIndex && currentIndex - 5 < firstNotInstalledIndex) {
+                if (currentIndex >= firstNotInstalledIndex) {
+                    if (currentIndex < firstNotInstalledIndex + 5) {
                         playSelectSound();
                         setSelectedIndex(firstNotInstalledIndex - 1);
                     } else {
                         playSelectSound();
                         setSelectedIndex(currentIndex - 5);
                     }
+                } else if (currentIndex > 4) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 5);
                 }
             } else if (command === 'baixo') {
                 if (currentIndex < length - 5) {
