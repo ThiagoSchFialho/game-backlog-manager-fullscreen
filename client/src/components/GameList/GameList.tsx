@@ -169,7 +169,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
             } else if (command === 'Y') {
                 playPopupSound();
                 setIsMenuOpen(true);
-            } else if (command === 'RB') {
+            } else if (command === 'dpad_direita') {
                 if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
                     playSwipeSound();
                     const currentIndex = sortGamesMethods.indexOf(sortMethod);
@@ -177,7 +177,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
                     sortGames(sortGamesMethods[currentIndex + 1], gamesList);
                     setSelectedIndex(0);
                 }
-            } else if (command === 'LB') {
+            } else if (command === 'dpad_esquerda') {
                 if (sortMethod !== sortGamesMethods[0]) {
                     playSwipeSound();
                     const currentIndex = sortGamesMethods.indexOf(sortMethod);

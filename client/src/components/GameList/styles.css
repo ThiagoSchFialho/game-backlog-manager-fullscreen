@@ -1,10 +1,14 @@
+.game-list-container {
+    padding: 30px 50px;
+}
+
 .list-game-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, 280px);
     justify-content: space-between;
-    gap: 30px;
-    padding: 15px 30px 150px 30px;
+    gap: 40px;
     overflow-y: auto;
+    overflow: visible;
     max-height: calc(100vh - 160px);
 }
 
@@ -35,7 +39,6 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 40px;
-    padding: 0 30px;
 }
 
 .sortings-container ul {
