@@ -1,8 +1,6 @@
 
 .game-landscape {
     position: relative;
-    width: calc(100% + 70px);
-    transform: translateX(-45px);
 }
 
 .game-landscape-img {

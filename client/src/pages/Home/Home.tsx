@@ -180,8 +180,6 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <SideMenu currentPage={selected} />
-
             {isOnGamePage && selectedGameId !== undefined && (
                 <GamePage gameId={selectedGameId} onExitGamePage={() => setIsOnGamePage(false)} />
             )}

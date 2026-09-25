@@ -48,9 +48,8 @@ body {
 
 .main-content {
     width: 100%;
-    margin-left: 200px;
-    margin-right: 80px;
-    padding-bottom: 20px;
+    height: calc(100vh - 130px);
+    padding: 0 90px;
 }
 
 .focused {
