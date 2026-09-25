@@ -6,15 +6,37 @@ import { useDb } from '../../hooks/useDb';
 import sync from '../../assets/icons/sync.svg';
 import { useShutdown } from '../../hooks/useShutdown';
 import { useSound } from '../../hooks/useSound';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import home from '../../assets/icons/home.svg';
+import gamepad from '../../assets/icons/gamepad.svg';
+import check from '../../assets/icons/check.svg';
+import list from '../../assets/icons/list.svg';
+import folder from '../../assets/icons/folder.svg';
+import homeSelected from '../../assets/icons/home-selected.svg';
+import gamepadSelected from '../../assets/icons/gamepad-selected.svg';
+import checkSelected from '../../assets/icons/check-selected.svg';
+import listSelected from '../../assets/icons/list-selected.svg';
+import folderSelected from '../../assets/icons/folder-selected.svg';
+
+
 interface MenuItems {
     label: string,
     action: () => void
 }
 
+interface TopMenuItems {
+    url: string;
+    name: string;
+    icon: string;
+    iconSelected: string;
+    label: string;
+    alt: string;
+}
 
 const Header: React.FC = () => {
     const navigation = useNavigate();
+    const location = useLocation();
     const { syncSteam } = useDb();
     const { shutdown, loading, error } = useShutdown();
     const { playCursorSound, playConfirmSound, playBackSound } = useSound();
@@ -22,6 +44,7 @@ const Header: React.FC = () => {
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
     const [isSynchronizing, setIsSynchronizing] = useState(false);
     const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
+    // const [selected, setSelected] = useState('');
     
     useEffect(() => {
         const interval = setInterval(() => {
@@ -35,6 +58,81 @@ const Header: React.FC = () => {
         hour: '2-digit',
         minute: '2-digit',
     });
+    
+    const handleSyncSteam = async () => {
+        setIsHeaderMenuOpen(false);
+        if (!isSynchronizing) {
+            setIsSynchronizing(true);
+            const result = await syncSteam();
+    
+            if (result) {
+                setIsSynchronizing(false);
+                window.location.reload();
+            }
+        }
+    }
+
+    const handleClick = () => {
+        setIsHeaderMenuOpen(false);
+        if (window.confirm("Fechar o app e o navegador?")) shutdown();
+    };
+
+    const menuItems: MenuItems[] = [
+        { label: 'Inicio', action: () => { setIsHeaderMenuOpen(false); navigation('/'); }},
+        { label: 'Jogos ocultos', action: () => { setIsHeaderMenuOpen(false); navigation('/hidden'); }},
+        { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
+        { label: 'Sincronizar steam', action: () => handleSyncSteam() },
+        { label: 'Sair', action: () => handleClick() }
+    ]
+
+    const topMenuItems: TopMenuItems[] = [
+        {
+            url: '/',
+            name: 'home',
+            icon: home,
+            iconSelected: homeSelected,
+            label: 'Inicio',
+            alt: 'casa'
+        },
+        {
+            url: '/library',
+            name: 'library',
+            icon: gamepad,
+            iconSelected: gamepadSelected,
+            label: 'Biblioteca',
+            alt: 'joystick'
+        },
+        {
+            url: '/collections',
+            name: 'collections',
+            icon: folder,
+            iconSelected: folderSelected,
+            label: 'Coleções',
+            alt: 'pasta'
+        },
+        {
+            url: '/backlog',
+            name: 'backlog',
+            icon: list,
+            iconSelected: listSelected,
+            label: 'Backlog',
+            alt: 'lista'
+        },
+        {
+            url: '/completed',
+            name: 'completed',
+            icon: check,
+            iconSelected: checkSelected,
+            label: 'Zerados',
+            alt: 'verificado'
+        },
+    ];
+
+     const selected = topMenuItems.find(item =>
+        item.url === '/' 
+            ? location.pathname === '/' 
+            : location.pathname.startsWith(item.url)
+    )?.name ?? '';
 
     const joystickNavigation = (command: string) => {
         if (command === 'START') {
@@ -64,33 +162,16 @@ const Header: React.FC = () => {
                 }
             }
         }
-    };
+
+        const currentPageIndex = topMenuItems.findIndex(item => item.name === selected);
     
-    const handleSyncSteam = async () => {
-        setIsHeaderMenuOpen(false);
-        if (!isSynchronizing) {
-            setIsSynchronizing(true);
-            const result = await syncSteam();
-    
-            if (result) {
-                setIsSynchronizing(false);
-                window.location.reload();
-            }
+        if (command === 'LB' && currentPageIndex !== 0) {
+            navigation(topMenuItems[currentPageIndex - 1].url);
         }
-    }
-
-    const handleClick = () => {
-        setIsHeaderMenuOpen(false);
-        if (window.confirm("Fechar o app e o navegador?")) shutdown();
+        if (command === 'RB' && currentPageIndex !== topMenuItems.length - 1) {
+            navigation(topMenuItems[currentPageIndex + 1].url);
+        }
     };
-
-    const menuItems: MenuItems[] = [
-        { label: 'Inicio', action: () => { setIsHeaderMenuOpen(false); navigation('/'); }},
-        { label: 'Jogos ocultos', action: () => { setIsHeaderMenuOpen(false); navigation('/hidden'); }},
-        { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
-        { label: 'Sincronizar steam', action: () => handleSyncSteam() },
-        { label: 'Sair', action: () => handleClick() }
-    ]
 
     return (
         <>
@@ -113,6 +194,16 @@ const Header: React.FC = () => {
                         </div>
                     )}
                     {loading && (<h2>Saindo...</h2>)}
+                </div>
+                <div className="pages-section">
+                    <ul className="top-menu-list">
+                        {topMenuItems.map(item => (
+                            <li key={item.name} onClick={() => navigation(item.url)} className={selected === item.name ? 'selected' : ''}>
+                                <img src={selected == item.name ? item.iconSelected : item.icon} alt={item.alt} />
+                                <p>{item.label}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <p className="clock">{formattedTime}</p>
             </div>

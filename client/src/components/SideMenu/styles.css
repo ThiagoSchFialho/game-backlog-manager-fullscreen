@@ -5,23 +5,18 @@
     height: calc(100vh - 133px);
 }
 
-.pages-section {
-    margin-bottom: 30px;
-}
-
 .side-menu-list {
     list-style: none;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 45px;
+    gap: 80px;
 }
 
 .side-menu-list li {
+    position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1px;
+    gap: 10px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -37,10 +32,11 @@
 
 .selected::before {
     position: absolute;
-    left: 13px;
+    bottom: -15px;
+    left: -5px;
     content: '';
-    width: 10px;
-    height: 60px;
+    width: calc(105% + 10px);
+    height: 10px;
     background-color: var(--primary);
     border-radius: 20px;
 }

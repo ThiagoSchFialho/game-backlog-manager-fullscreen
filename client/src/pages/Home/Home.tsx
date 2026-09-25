@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
-import SideMenu from '../../components/SideMenu/SideMenu';
 import GameCard from '../../components/GameCard/GameCard';
 import GameLandscape from '../../components/GameLandscape/GameLandscape';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
@@ -32,7 +31,6 @@ const Home: React.FC = () => {
     const navigation = useNavigate();
     const { handleStartGame, fetchGames } = useDb();
     const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
-    const [selected] = useState('home');
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -170,7 +168,6 @@ const Home: React.FC = () => {
     if (!hasGames) {
         return (
             <>
-                <SideMenu currentPage={selected} />
                 <div className="main-content">
                     <h1>Carregando...</h1>
                 </div>
