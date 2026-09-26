@@ -186,7 +186,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                 {!currentGame ? (
                     <p className="error-message">Jogo não encontrado</p>
                 ) : (
-                    <>
+                    <div className="game-page-container">
                         <h1 className="game-page-title">{currentGame?.title}</h1>
                         <GameLandscape
                             id={currentGame.steam_id}
@@ -274,7 +274,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                                 </div>
                             </div>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </>

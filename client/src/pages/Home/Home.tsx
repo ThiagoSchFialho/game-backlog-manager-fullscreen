@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
 import GameCard from '../../components/GameCard/GameCard';
@@ -12,8 +11,7 @@ import { useSound } from '../../hooks/useSound';
 
 import { getGameCover } from '../../utils/getGameCover';
 import { orderBy } from '../../utils/orderBy';
-
-import arrow from '../../assets/icons/menu-arrow.svg';
+import getOrPickRandomGame from '../../utils/getRandomGame';
 
 import type { Game } from '../../types/gamesType';
 type ScreenItem = {
@@ -28,7 +26,6 @@ type ScreenItem = {
 const BANNER_INDEX = 0;
 
 const Home: React.FC = () => {
-    const navigation = useNavigate();
     const { handleStartGame, fetchGames } = useDb();
     const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
     const [gamesList, setGamesList] = useState<Game[]>([]);
@@ -58,11 +55,13 @@ const Home: React.FC = () => {
         setSelectedIndex(selectedIndexAux);
     }, [isOnGamePage]);
 
+    
     const games = orderBy(gamesList, 'rtime_last_played', 'desc');
     const hasGames = games.length > 0;
+    const randomGame = hasGames ? getOrPickRandomGame(games) : undefined;
 
     const gameCardsItems = hasGames
-        ? games.slice(1, games.length).map((game) => ({
+        ? games.map((game) => ({
             id: game.id,
             steamId: game.steam_id,
             img: getGameCover(game.title, 'square'),
@@ -79,18 +78,17 @@ const Home: React.FC = () => {
             setIsPlaying(false);
         }, 50000);
     }
-    const screenItems: ScreenItem[] = hasGames
+    const screenItems: ScreenItem[] = hasGames && randomGame
         ? [
             {
-                id: games[0].id,
-                steamId: games[0].steam_id,
-                img: getGameCover(games[0].title, 'landscape'),
-                name: games[0].title,
-                installed: games[0].installed,
-                action: () => startGame(games[0].id, games[0].steam_id)
+                id: randomGame.id,
+                steamId: randomGame.steam_id,
+                img: getGameCover(randomGame.title, 'landscape'),
+                name: randomGame.title,
+                installed: randomGame.installed,
+                action: () => startGame(randomGame.id, randomGame.steam_id)
             },
-            ...gameCardsItems,
-            { id: 'more', steamId: '', img: '', name: '', installed: false, action: () => navigation('/library/recentlyPlayed') }
+            ...gameCardsItems
         ]
         : [];
 
@@ -105,6 +103,28 @@ const Home: React.FC = () => {
         itemsLengthRef.current = gameCardsItems.length;
     }, [gameCardsItems.length]);
     // ------------------------------------------------------------------
+
+    // SCROLL ==========================================================================
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+
+        if (selectedIndex < 5) {
+            container?.scrollTo({ top: -900, behavior: 'smooth' });
+            return;
+        }
+
+        const el = itemRefs.current[selectedIndex];
+        if (el) {
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }
+    }, [selectedIndex]);
+    // SCROLL ==========================================================================
 
     const joystickNavigation = (command: string) => {
         if (command === 'START') {
@@ -144,8 +164,18 @@ const Home: React.FC = () => {
                     setSelectedIndex(currentIndex + 1);
                 }
             } else if (command === 'cima') {
-                playSelectSound();
-                setSelectedIndex(BANNER_INDEX);
+                if (currentIndex < 5) {
+                    playSelectSound();
+                    setSelectedIndex(BANNER_INDEX);
+                } else {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 5);
+                }
+            } else if (command === 'baixo') {
+                if (currentIndex < length - 5) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex + 5);
+                }
             } else if (command === 'A') {
                 if (commandCoolDown) return;
                 playConfirmSound();
@@ -164,7 +194,7 @@ const Home: React.FC = () => {
         }, 1000);
         setIsMenuOpen(false);
     }
-
+    
     if (!hasGames) {
         return (
             <>
@@ -175,6 +205,7 @@ const Home: React.FC = () => {
         );
     }
 
+
     return (
         <>
             {isOnGamePage && selectedGameId !== undefined && (
@@ -183,38 +214,39 @@ const Home: React.FC = () => {
 
             {!isMenuOpen && <JoystickSetup command={joystickNavigation} />}
             <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
-                {screenItems.slice(0, 1).map(item => (
-                    <GameLandscape
-                        key={item.id}
-                        id={item.id}
-                        steamId={item.steamId}
-                        img={item.img}
-                        name={item.name}
-                        isFocused={selectedIndex === 0}
-                        isPlaying={isPlaying}
-                        isInstalled={item.installed}
-                    />
-                ))}
+                <div ref={scrollContainerRef} className="scroll-container">
+                    {screenItems.slice(0, 1).map(item => (
+                        <GameLandscape
+                            key={item.id}
+                            id={item.id}
+                            steamId={item.steamId}
+                            img={item.img}
+                            name={item.name}
+                            isFocused={selectedIndex === 0}
+                            isPlaying={isPlaying}
+                            isInstalled={item.installed}
+                        />
+                    ))}
 
-                <div className="continue-playing-container">
-                    <h1 className="continue-playing-title">Continue jogando</h1>
-                    <div className="continue-playing">
-                        {screenItems.slice(1, 6).map((item, index) => (
-                            <GameCard
-                                key={item.id}
-                                id={item.id}
-                                steamId={item.steamId}
-                                img={item.img}
-                                name={item.name}
-                                isFocused={selectedIndex === index + 1}
-                                isOpen={isMenuOpen && selectedIndex === index + 1}
-                                onCloseMenu={handleCloseMenu}
-                            />
-                        ))}
-                        <div className={selectedIndex === 6 ? "focused continue-playing-more" : "continue-playing-more"}>
-                            <img src={arrow} />
+                    <div className="continue-playing-container">
+                        <h1 className="continue-playing-title">Continue jogando</h1>
+                        <div className="continue-playing">
+                            {screenItems.slice(1, screenItems.length - 1).map((item, index) => (
+                                <div key={item.id} ref={(el) => { itemRefs.current[index + 1] = el }}>
+                                    <GameCard
+                                        id={item.id}
+                                        steamId={item.steamId}
+                                        img={item.img}
+                                        name={item.name}
+                                        isFocused={selectedIndex === index + 1}
+                                        isOpen={isMenuOpen && selectedIndex === index + 1}
+                                        onCloseMenu={handleCloseMenu}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
+
                 </div>
             </div>
         </>
