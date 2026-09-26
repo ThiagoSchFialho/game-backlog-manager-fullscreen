@@ -1,9 +1,16 @@
+.collections-scroll-container {
+    padding-top: 120px;
+    overflow-y: auto;
+    height: 100vh;
+}
+
 .collections-header {
     display: flex;
+    /* flex-direction: row-reverse; */
     align-items: baseline;
     justify-content: space-between;
     margin-bottom: 40px;
-    padding: 0 30px;
+    padding: 0 120px;
 }
 
 .create-collection-btn {
@@ -34,8 +41,6 @@
     gap: 45px;
     gap: 30px;
     padding: 15px 30px 150px 30px;
-    overflow-y: auto;
-    max-height: calc(100vh - 160px);
 }
 
 .collection-title-form-container {

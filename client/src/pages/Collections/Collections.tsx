@@ -66,31 +66,7 @@ const Collections: React.FC = () => {
     }, [collectionsList.length]);
     // ------------------------------------------------------------------
 
-    const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
-
-    // --- Scroll setup -----------------------------------------------------
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-    const getColumnsCount = () => {
-        const refs = cardRefs.current;
-        if (!refs[0]) return 1;
-        const firstTop = refs[0]!.offsetTop;
-        let count = 0;
-        for (const el of refs) {
-            if (!el || el.offsetTop !== firstTop) break;
-            count++;
-        }
-        return count || 1;
-    };
-
-    const getRowHeight = (columns: number) => {
-        const refs = cardRefs.current;
-        if (!refs[0] || !refs[columns]) return 0;
-        return refs[columns]!.offsetTop - refs[0]!.offsetTop;
-    };
-
-    const joystickNavigation = (command: string) => {
+   const joystickNavigation = (command: string) => {
         if (command === 'START') {
             setIsHeaderMenuOpen(!isHeaderMenuOpen);
         }
@@ -103,15 +79,12 @@ const Collections: React.FC = () => {
         if (!isHeaderMenuOpen) {
             const currentIndex = selectedIndexRef.current;
             const length = itemsLengthRef.current;
-            const rowStart = 1;
-            const rowEnd = length;
             const onButton = currentIndex === BUTTON_INDEX;
-            const columns = getColumnsCount();
 
             if (onButton) {
                 if (command === 'baixo' && length > 0) {
                     playSelectSound();
-                    setSelectedIndex(rowStart);
+                    setSelectedIndex(1);
                 } else if (command === 'A') {
                     if (commandCoolDown) return;
                     playPopupSound();
@@ -121,25 +94,32 @@ const Collections: React.FC = () => {
             }
 
             if (command === 'esquerda') {
-                playSelectSound();
-                setSelectedIndex(prev => clamp(prev - 1, rowStart, rowEnd));
+                if (currentIndex >= 2) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 1);
+                }
             } else if (command === 'direita') {
-                playSelectSound();
-                setSelectedIndex(prev => clamp(prev + 1, rowStart, rowEnd));
+                if (currentIndex !== length) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex + 1);
+                }
             } else if (command === 'cima') {
-                playSelectSound();
-                if (currentIndex - rowStart < columns) {
+                if (currentIndex <= 3) {
+                    playSelectSound();
                     setSelectedIndex(BUTTON_INDEX);
                 } else {
-                    setSelectedIndex(prev => clamp(prev - columns, rowStart, rowEnd));
+                    playSelectSound();
+                    setSelectedIndex(currentIndex - 4);
                 }
             } else if (command === 'baixo') {
-                playSelectSound();
-                setSelectedIndex(prev => clamp(prev + columns, rowStart, rowEnd));
+                if (currentIndex < length - 3) {
+                    playSelectSound();
+                    setSelectedIndex(currentIndex + 4);
+                }
             } else if (command === 'A') {
                 if (commandCoolDown) return;
                 playConfirmSound();
-                const collection = collectionsList[currentIndex - rowStart];
+                const collection = collectionsList[currentIndex - 1];
                 if (collection) {
                     navigation(`/collection/${collection.id}`);
                 }
@@ -147,61 +127,56 @@ const Collections: React.FC = () => {
         }
     };
 
+    // SCROLL ==========================================================================
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
     useEffect(() => {
-        const container = scrollContainerRef.current;
-        if (!container || cardRefs.current.length === 0) return;
-
-        if (selectedIndex === BUTTON_INDEX) {
-            container.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
+        const el = itemRefs.current[selectedIndex];
+        if (el) {
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
         }
-
-        const columns = getColumnsCount();
-        const row = Math.floor((selectedIndex - 1) / columns);
-        const rowHeight = getRowHeight(columns);
-
-        if (!rowHeight) return;
-
-        const targetScrollTop = row < 2 ? 0 : (row - 1) * rowHeight;
-
-        container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
-    }, [selectedIndex, collectionsList.length]);
-    // --- End scroll setup -------------------------------------------------
+    }, [selectedIndex]);
+    // SCROLL ==========================================================================
 
     return (
         <>
             {!isCollectionFormOpen && <JoystickSetup command={joystickNavigation} />}
             <div className="main-content">
-                <div className="collections-header">
-                    <h1>Coleções</h1>
-                    <div
-                        onClick={() => setIsCollectionFormOpen(true)}
-                        className={selectedIndex === BUTTON_INDEX ? 'focused create-collection-btn' : 'create-collection-btn'}
-                    >
-                        <img src={plus} />
-                        <p>Criar coleção</p>
-                    </div>
-                </div>
-                <div className="collection-folders-container" ref={scrollContainerRef}>
-                    {isLoading ? (
-                        <div className="message-container">
-                            <h3>Carregando...</h3>
+                <div ref={scrollContainerRef} className="collections-scroll-container">
+                    <div className="collections-header">
+                        <div
+                            onClick={() => setIsCollectionFormOpen(true)}
+                            className={selectedIndex === BUTTON_INDEX ? 'focused create-collection-btn' : 'create-collection-btn'}
+                        >
+                            <img src={plus} />
+                            <p>Criar coleção</p>
                         </div>
-                    ) : (
-                        collectionsList.length === 0 ? (
+                    </div>
+                    <div className="collection-folders-container" ref={scrollContainerRef}>
+                        {isLoading ? (
                             <div className="message-container">
-                                <h3>Nenhuma coleção ainda.</h3>
+                                <h3>Carregando...</h3>
                             </div>
                         ) : (
-                            collectionsList.map((collection, index) => (
-                            <div key={collection.id} ref={(el) => { cardRefs.current[index] = el; }}>
-                                <CollectionFolder
-                                    collection={collection}
-                                    isFocused={selectedIndex === index + 1}
-                                />
-                            </div>
-                        )))
-                    )}
+                            collectionsList.length === 0 ? (
+                                <div className="message-container">
+                                    <h3>Nenhuma coleção ainda.</h3>
+                                </div>
+                            ) : (
+                                collectionsList.map((collection, index) => (
+                                <div key={collection.id} ref={(el) => { itemRefs.current[index + 1] = el }}>
+                                    <CollectionFolder
+                                        collection={collection}
+                                        isFocused={selectedIndex === index + 1}
+                                    />
+                                </div>
+                            )))
+                        )}
+                    </div>
                 </div>
             </div>
 

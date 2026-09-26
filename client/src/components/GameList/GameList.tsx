@@ -6,7 +6,6 @@ import JoystickSetup from '../JoystickSetup/JoystickSetup';
 import GamePage from '../GamePage/GamePage';
 
 import { useSound } from '../../hooks/useSound';
-import { useScroll } from '../../hooks/useScroll';
 
 import { getGameCover } from '../../utils/getGameCover';
 import { orderBy } from '../../utils/orderBy';
@@ -58,7 +57,6 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
         installed: game.installed,
         action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
     }));
-    const { scrollContainerRef, setCardRef } = useScroll(selectedIndex, gameCardsItems.length);
 
     // --- Refs para evitar stale closure no joystickNavigation -------------
     const selectedIndexRef = useRef(selectedIndex);
@@ -137,6 +135,21 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
         setIsMenuOpen(false);
     }
 
+    // SCROLL ==========================================================================
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+    useEffect(() => {
+        const el = itemRefs.current[selectedIndex];
+        if (el) {
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }
+    }, [selectedIndex]);
+    // SCROLL ==========================================================================
+
     return (
         <>
             {isOnGamePage && selectedGameId !== undefined && (
@@ -153,7 +166,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                             </div>
                         ) : (
                             gameCardsItems.map((item, index) => (
-                                <div ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
+                                <div ref={(el) => { itemRefs.current[index] = el }} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
                                     <GameCard
                                         id={item.id}
                                         steamId={item.steamId}

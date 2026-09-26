@@ -111,8 +111,8 @@ const Home: React.FC = () => {
     useEffect(() => {
         const container = scrollContainerRef.current;
 
-        if (selectedIndex < 5) {
-            container?.scrollTo({ top: -900, behavior: 'smooth' });
+        if (selectedIndex < 6) {
+            container?.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
