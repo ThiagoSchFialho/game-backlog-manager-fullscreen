@@ -27,7 +27,7 @@ const Backlog: React.FC = () => {
     
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} sortingMethod={undefined} title='Backlog' />
+            <GameList list={gamesList} onReloadList={getGames} title='Backlog' />
         </>
     )
 }

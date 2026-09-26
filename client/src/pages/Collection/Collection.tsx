@@ -25,7 +25,7 @@ const Collection: React.FC = () => {
 
     return (
         <>
-            <GameList list={collection?.games ?? []} onReloadList={getCollection} sortingMethod={undefined} title={collection?.title}  onBack={() => navigation(-1)}/>
+            <GameList list={collection?.games ?? []} onReloadList={getCollection} title={collection?.title}  onBack={() => navigation(-1)}/>
         </>
     )
 }

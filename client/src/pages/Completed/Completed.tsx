@@ -21,7 +21,7 @@ const Completed: React.FC = () => {
     
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} sortingMethod={undefined} title='Zerados' />
+            <GameList list={gamesList} onReloadList={getGames} title='Zerados' />
         </>
     )
 }
