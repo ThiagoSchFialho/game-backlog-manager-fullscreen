@@ -44,8 +44,8 @@ const Home: React.FC = () => {
         const games = await fetchGames();
         if (games) {
             const orderdGames = orderBy(games, 'rtime_last_played', 'desc');
-            const filteredOrderdGames = orderdGames.filter((game: Game) => !game.hidden);
-            setGamesList(filteredOrderdGames.slice(0, 6));
+            const filteredOrderdGames = orderdGames.filter((game: Game) => { return !game.hidden && game.installed });
+            setGamesList(filteredOrderdGames);
         }
     }
     useEffect(() => {
@@ -90,7 +90,7 @@ const Home: React.FC = () => {
                 action: () => startGame(games[0].id, games[0].steam_id)
             },
             ...gameCardsItems,
-            { id: 6, steamId: '', img: '', name: '', installed: false, action: () => navigation('/library/recentlyPlayed') }
+            { id: 'more', steamId: '', img: '', name: '', installed: false, action: () => navigation('/library/recentlyPlayed') }
         ]
         : [];
 

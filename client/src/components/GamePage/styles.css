@@ -11,14 +11,13 @@
     font-size: 30px;
     font-weight: 600;
     margin-bottom: 8px;
-    transform: translateX(-30px);
+    transform: translateX(10px);
 }
 
 .game-page-details-container {
     margin-top: 40px;
     display: flex;
     justify-content: flex-start;
-    transform: translateX(-35px);
 }
 
 .game-page-details-section {
