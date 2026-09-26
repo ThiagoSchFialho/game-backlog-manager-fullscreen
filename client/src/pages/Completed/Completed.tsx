@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import SideMenu from '../../components/SideMenu/SideMenu';
 import GameList from '../../components/GameList/GameList';
 import { useDb } from '../../hooks/useDb';
 import type { Game } from '../../types/gamesType';
 
 
 const Completed: React.FC = () => {
-    const [currentPage] = useState('completed');
     const { fetchGames } = useDb();
     const [gamesList, setGamesList] = useState<Game[]>([]);
 
@@ -23,7 +21,6 @@ const Completed: React.FC = () => {
     
     return (
         <>
-            <SideMenu currentPage={currentPage} />
             <GameList list={gamesList} onReloadList={getGames} sortingMethod={undefined} title='Zerados' />
         </>
     )

@@ -169,7 +169,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
             } else if (command === 'Y') {
                 playPopupSound();
                 setIsMenuOpen(true);
-            } else if (command === 'RB') {
+            } else if (command === 'dpad_direita') {
                 if (sortMethod !== sortGamesMethods[sortGamesMethods.length - 1]) {
                     playSwipeSound();
                     const currentIndex = sortGamesMethods.indexOf(sortMethod);
@@ -177,7 +177,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
                     sortGames(sortGamesMethods[currentIndex + 1], gamesList);
                     setSelectedIndex(0);
                 }
-            } else if (command === 'LB') {
+            } else if (command === 'dpad_esquerda') {
                 if (sortMethod !== sortGamesMethods[0]) {
                     playSwipeSound();
                     const currentIndex = sortGamesMethods.indexOf(sortMethod);
@@ -214,55 +214,57 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, sortingMethod, 
 
             {!isMenuOpen && !isOnGamePage && <JoystickSetup command={joystickNavigation} />}
             <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
-                <div className="sortings-container">
-                    <h1>{title ?? ''}</h1>
-                    <ul>
-                        <li
-                            className={sortMethod === 'alphabet' ? 'selected-method' : ''}
-                        >
-                            <img src={alphabet} />
-                            <p>Alfabeticamente</p>
-                        </li>
-                        <li
-                            className={sortMethod === 'mostPlayed' ? 'selected-method' : ''}
-                        >
-                            <img src={mostPlayed} />
-                            <p>Mais jogados</p>
-                        </li>
-                        <li
-                            className={sortMethod === 'recentlyPlayed' ? 'selected-method' : ''}
-                        >
-                            <img src={recentlyPlayed} />
-                            <p>Jogados Recentemente</p>
-                        </li>
-                    </ul>
-                </div>
+                <div className="game-list-container">
+                    <div className="sortings-container">
+                        <h1>{title ?? ''}</h1>
+                        <ul>
+                            <li
+                                className={sortMethod === 'alphabet' ? 'selected-method' : ''}
+                            >
+                                <img src={alphabet} />
+                                <p>Alfabeticamente</p>
+                            </li>
+                            <li
+                                className={sortMethod === 'mostPlayed' ? 'selected-method' : ''}
+                            >
+                                <img src={mostPlayed} />
+                                <p>Mais jogados</p>
+                            </li>
+                            <li
+                                className={sortMethod === 'recentlyPlayed' ? 'selected-method' : ''}
+                            >
+                                <img src={recentlyPlayed} />
+                                <p>Jogados Recentemente</p>
+                            </li>
+                        </ul>
+                    </div>
 
-                <div className="list-game-container" ref={scrollContainerRef}>
-                    {gameCardsItems.length === 0 ? (
-                        <div className="message-container">
-                            <h3>Nenhum jogo aqui.</h3>
-                        </div>
-                    ) : (
-                        gameCardsItems.map((item, index) => (
-                            <React.Fragment key={item.id}>
-                                {index === firstNotInstalledIndex && index !== 0 && (
-                                    <hr className="installed-divider" />
-                                )}
-                                <div ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
-                                    <GameCard
-                                        id={item.id}
-                                        steamId={item.steamId}
-                                        img={item.img}
-                                        name={item.name}
-                                        isFocused={selectedIndex === index}
-                                        isOpen={isMenuOpen && selectedIndex === index}
-                                        onCloseMenu={handleCloseMenu}
-                                    />
-                                </div>
-                            </React.Fragment>
-                        ))
-                    )}
+                    <div className="list-game-container" ref={scrollContainerRef}>
+                        {gameCardsItems.length === 0 ? (
+                            <div className="message-container">
+                                <h3>Nenhum jogo aqui.</h3>
+                            </div>
+                        ) : (
+                            gameCardsItems.map((item, index) => (
+                                <React.Fragment key={item.id}>
+                                    {index === firstNotInstalledIndex && index !== 0 && (
+                                        <hr className="installed-divider" />
+                                    )}
+                                    <div ref={setCardRef(index)} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
+                                        <GameCard
+                                            id={item.id}
+                                            steamId={item.steamId}
+                                            img={item.img}
+                                            name={item.name}
+                                            isFocused={selectedIndex === index}
+                                            isOpen={isMenuOpen && selectedIndex === index}
+                                            onCloseMenu={handleCloseMenu}
+                                        />
+                                    </div>
+                                </React.Fragment>
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
         </>

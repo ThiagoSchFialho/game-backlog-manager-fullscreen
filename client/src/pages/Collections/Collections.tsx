@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
-import SideMenu from '../../components/SideMenu/SideMenu';
 import CollectionFolder from '../../components/CollectionFolder/CollectionFolder';
 import JoystickSetup from '../../components/JoystickSetup/JoystickSetup';
 import Keyboard from '../../components/Keyboard/Keyboard';
@@ -19,7 +18,6 @@ const Collections: React.FC = () => {
     const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
     const { fetchCollections, createCollection } = useCollection();
     const [isCollectionFormOpen, setIsCollectionFormOpen] = useState(false);
-    const [currentPage] = useState('collections');
     const [collectionsList, setCollectionsList] = useState<ICollection[]>([]);
     const [collectionTitle, setCollectionTitle] = useState<string | undefined>('');
     const [selectedIndex, setSelectedIndex] = useState(1);
@@ -173,7 +171,6 @@ const Collections: React.FC = () => {
     return (
         <>
             {!isCollectionFormOpen && <JoystickSetup command={joystickNavigation} />}
-            <SideMenu currentPage={currentPage} />
             <div className="main-content">
                 <div className="collections-header">
                     <h1>Coleções</h1>

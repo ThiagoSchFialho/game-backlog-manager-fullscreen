@@ -1,7 +1,11 @@
+.continue-playing-container {
+    padding: 0 40px;
+}
+
 .continue-playing-title {
     font-size: 20px;
     font-weight: 700;
-    margin-top: 40px;
+    margin-top: 30px;
     margin-bottom: 15px;
 }
 

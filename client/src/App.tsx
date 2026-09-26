@@ -6,9 +6,7 @@ function App() {
   return (
     <HashRouter>
       <Header />
-      <div className="main-container">
-        <AppRoutes />
-      </div>
+      <AppRoutes />
     </HashRouter>
   )
 }
