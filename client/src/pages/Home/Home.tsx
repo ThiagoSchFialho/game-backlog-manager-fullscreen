@@ -111,17 +111,9 @@ const Home: React.FC = () => {
     useEffect(() => {
         const container = scrollContainerRef.current;
 
-        if (selectedIndex < 6) {
+        if (selectedIndex === BANNER_INDEX) {
             container?.scrollTo({ top: 0, behavior: 'smooth' });
             return;
-        }
-
-        const el = itemRefs.current[selectedIndex];
-        if (el) {
-            el.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-            });
         }
     }, [selectedIndex]);
     // SCROLL ==========================================================================
@@ -159,7 +151,7 @@ const Home: React.FC = () => {
                     setSelectedIndex(currentIndex - 1);
                 }
             } else if (command === 'direita') {
-                if (currentIndex < length + 1) {
+                if (currentIndex < length - 1) {
                     playSelectSound();
                     setSelectedIndex(currentIndex + 1);
                 }
@@ -171,10 +163,28 @@ const Home: React.FC = () => {
                     playSelectSound();
                     setSelectedIndex(currentIndex - 5);
                 }
+                const el = itemRefs.current[currentIndex - 5];
+                if (el) {
+                    el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    });
+                }
             } else if (command === 'baixo') {
                 if (currentIndex < length - 5) {
                     playSelectSound();
                     setSelectedIndex(currentIndex + 5);
+                }
+                if (currentIndex + 5 < 5) {
+                    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const el = itemRefs.current[currentIndex + 5];
+                    if (el) {
+                        el.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                        });
+                    }
                 }
             } else if (command === 'A') {
                 if (commandCoolDown) return;
