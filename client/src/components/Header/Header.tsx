@@ -75,7 +75,7 @@ const Header: React.FC = () => {
 
     const handleClick = () => {
         setIsHeaderMenuOpen(false);
-        if (window.confirm("Fechar o app e o navegador?")) shutdown();
+        shutdown();
     };
 
     const menuItems: MenuItems[] = [

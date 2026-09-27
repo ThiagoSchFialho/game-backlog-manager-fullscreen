@@ -157,21 +157,21 @@ const Home: React.FC = () => {
                     playSelectSound();
                     setSelectedIndex(currentIndex - 1);
                 }
-                const el = itemRefs.current[currentIndex - 1];
-                if (el) {
-                    el.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center',
-                    });
+                 if (currentIndex > 5) {
+                    const el = itemRefs.current[currentIndex - 1];
+                    if (el) {
+                        el.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                        });
+                    }
                 }
             } else if (command === 'direita') {
                 if (currentIndex < length) {
                     playSelectSound();
                     setSelectedIndex(currentIndex + 1);
                 }
-                if (currentIndex + 1 <= 5) {
-                    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
+                if (currentIndex > 4) {
                     const el = itemRefs.current[currentIndex + 1];
                     if (el) {
                         el.scrollIntoView({
