@@ -161,7 +161,7 @@ const Home: React.FC = () => {
                     });
                 }
             } else if (command === 'direita') {
-                if (currentIndex < length - 1) {
+                if (currentIndex < length) {
                     playSelectSound();
                     setSelectedIndex(currentIndex + 1);
                 }
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
                     });
                 }
             } else if (command === 'baixo') {
-                if (currentIndex < length - 5) {
+                if (currentIndex < length - 4) {
                     playSelectSound();
                     setSelectedIndex(currentIndex + 5);
                 }
@@ -262,7 +262,7 @@ const Home: React.FC = () => {
                     <div className="continue-playing-container">
                         <h1 className="continue-playing-title">Continue jogando</h1>
                         <div className="continue-playing">
-                            {screenItems.slice(1, screenItems.length - 1).map((item, index) => (
+                            {screenItems.slice(1, screenItems.length).map((item, index) => (
                                 <div key={item.id} ref={(el) => { itemRefs.current[index + 1] = el }}>
                                     <GameCard
                                         id={item.id}
