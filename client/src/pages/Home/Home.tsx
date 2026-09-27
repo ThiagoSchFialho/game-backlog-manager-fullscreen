@@ -32,7 +32,7 @@ const Home: React.FC = () => {
     const [gamesList, setGamesList] = useState<Game[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [commandCoolDown, setCommandCoolDown] = useState(false);
+    const [commandCoolDown, setCommandCoolDown] = useState(true);
     const [isOnGamePage, setIsOnGamePage] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState<Game['id'] | undefined>(undefined);
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
@@ -48,6 +48,9 @@ const Home: React.FC = () => {
     }
     useEffect(() => {
         getGames();
+        setTimeout(() => {
+            setCommandCoolDown(false);
+        }, 1000);
     }, []);
 
     useEffect(() => {
@@ -143,6 +146,7 @@ const Home: React.FC = () => {
                     playSelectSound();
                     setSelectedIndex(1);
                 } else if (command === 'A') {
+                    if (commandCoolDown) return;
                     playConfirmSound();
                     screenItems[currentIndex]?.action();
                 }

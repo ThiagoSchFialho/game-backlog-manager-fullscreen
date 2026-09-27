@@ -21,5 +21,4 @@
     border: var(--border-primary);
     border-radius: 10px;
     box-shadow: var(--shadow);
-    cursor: pointer;
 }

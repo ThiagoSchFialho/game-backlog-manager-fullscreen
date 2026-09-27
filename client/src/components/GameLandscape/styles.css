@@ -17,8 +17,7 @@
     display: flex;
     gap: 10px;
     border-radius: 10px;
-    padding: 10px 25px 10px 10px;
-    cursor: pointer;
+    padding: 10px 25px 10px 10px;    
 }
 
 .play-btn-landscape {
@@ -37,9 +36,9 @@
 .install-btn-landscape {
     padding-left: 15px;
     gap: 15px;
-    border: 1px solid rgb(94, 175, 255);
-    background-color: rgb(8, 105, 202);
-    box-shadow: inset 0px -23px 30px 0 rgba(1, 45, 90, 0.55);
+    border: 1px solid rgb(93, 156, 219);
+    background-color: rgb(7, 102, 197);
+    box-shadow: inset 0px -23px 30px 0 rgba(1, 31, 59, 0.55);
 }
 
 .install-btn-landscape p {

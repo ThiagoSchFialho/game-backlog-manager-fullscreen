@@ -58,7 +58,6 @@
     background-color: var(--bg-card-secondary);
     border: var(--border-primary);
     border-radius: 10px;
-    cursor: pointer;
 }
 
 .sortings-container .selected-method {

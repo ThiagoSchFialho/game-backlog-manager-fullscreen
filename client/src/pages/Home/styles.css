@@ -33,8 +33,7 @@
     border: var(--border-primary);
     border-radius: 10px;
     box-shadow: var(--shadow);
-    box-shadow: inset 0px -135px 90px 0px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+    box-shadow: inset 0px -135px 90px 0px rgba(0, 0, 0, 0.3);    
 }
 
 .continue-playing-more img {

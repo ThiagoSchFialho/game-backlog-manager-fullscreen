@@ -42,7 +42,6 @@
     gap: 10px;
     font-size: 13px;
     font-weight: 500;
-    cursor: pointer;
 }
 
 .top-menu-list img {
@@ -79,7 +78,6 @@
 
 .logo {
     width: 70px;
-    cursor: pointer;
 }
 
 .sync-steam-btn-container {
