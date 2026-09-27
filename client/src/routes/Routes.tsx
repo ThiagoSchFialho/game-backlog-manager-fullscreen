@@ -6,6 +6,7 @@ import Backlog from '../pages/Backlog/Backlog';
 import Collections from '../pages/Collections/Collections';
 import Collection from '../pages/Collection/Collection';
 import Hidden from '../pages/Hidden/Hidden';
+import MostPlayed from '../pages/MostPlayed/MostPlayed';
 
 
 const AppRoutes = () => {
@@ -19,6 +20,7 @@ const AppRoutes = () => {
             <Route path='/collections' element={<Collections />} />
             <Route path='/collection/:id' element={<Collection />} />
             <Route path='/hidden' element={<Hidden />} />
+            <Route path='/most-played' element={<MostPlayed />} />
         </Routes>
     )
 }

@@ -18,6 +18,8 @@ import gamepadSelected from '../../assets/icons/gamepad-selected.svg';
 import checkSelected from '../../assets/icons/check-selected.svg';
 import listSelected from '../../assets/icons/list-selected.svg';
 import folderSelected from '../../assets/icons/folder-selected.svg';
+import mostPlayed from '../../assets/icons/most-played.svg';
+import mostPlayedSelected from '../../assets/icons/most-played-selected.svg';
 
 
 interface MenuItems {
@@ -44,7 +46,6 @@ const Header: React.FC = () => {
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
     const [isSynchronizing, setIsSynchronizing] = useState(false);
     const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
-    // const [selected, setSelected] = useState('');
     
     useEffect(() => {
         const interval = setInterval(() => {
@@ -95,20 +96,20 @@ const Header: React.FC = () => {
             alt: 'casa'
         },
         {
-            url: '/library',
-            name: 'library',
-            icon: gamepad,
-            iconSelected: gamepadSelected,
-            label: 'Biblioteca',
-            alt: 'joystick'
-        },
-        {
             url: '/collections',
             name: 'collections',
             icon: folder,
             iconSelected: folderSelected,
             label: 'Coleções',
             alt: 'pasta'
+        },
+        {
+            url: '/most-played',
+            name: 'mostPlayed',
+            icon: mostPlayed,
+            iconSelected: mostPlayedSelected,
+            label: 'Mais jogados',
+            alt: 'relógio'
         },
         {
             url: '/backlog',
@@ -125,6 +126,14 @@ const Header: React.FC = () => {
             iconSelected: checkSelected,
             label: 'Zerados',
             alt: 'verificado'
+        },
+        {
+            url: '/library',
+            name: 'library',
+            icon: gamepad,
+            iconSelected: gamepadSelected,
+            label: 'Biblioteca',
+            alt: 'joystick'
         },
     ];
 

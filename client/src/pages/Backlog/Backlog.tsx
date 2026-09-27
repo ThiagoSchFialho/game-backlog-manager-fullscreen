@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GameList from '../../components/GameList/GameList';
 import { useDb } from '../../hooks/useDb';
 import type { Game } from '../../types/gamesType';
+import { orderBy } from '../../utils/orderBy';
 
 
 const Backlog: React.FC = () => {
@@ -18,7 +19,9 @@ const Backlog: React.FC = () => {
                     }
                 }
             });
-            setGamesList(filteredGames);
+
+            const orderdList = orderBy(filteredGames, 'title' ,'asc');
+            setGamesList(orderdList);
         }
     }
     useEffect(() => {   

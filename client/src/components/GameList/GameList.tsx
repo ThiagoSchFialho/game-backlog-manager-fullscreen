@@ -8,7 +8,6 @@ import GamePage from '../GamePage/GamePage';
 import { useSound } from '../../hooks/useSound';
 
 import { getGameCover } from '../../utils/getGameCover';
-import { orderBy } from '../../utils/orderBy';
 
 import type { Game } from '../../types/gamesType';
 type ScreenItem = {
@@ -31,7 +30,6 @@ interface GameListProps {
 
 const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }) => {
     const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
-    const [gamesList, setGamesList] = useState<Game[]>(list);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [commandCoolDown, setCommandCoolDown] = useState(false);
@@ -40,17 +38,13 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     useEffect(() => {
-        setGamesList(orderBy(list, 'title', 'asc'));
-    }, [list]);
-
-    useEffect(() => {
         const selectedIndexAux = selectedIndex;
 
         onReloadList();
         setSelectedIndex(selectedIndexAux);
     }, [isOnGamePage]);
 
-    const gameCardsItems: ScreenItem[] = gamesList.map((game) => ({
+    const gameCardsItems: ScreenItem[] = list.map((game) => ({
         id: game.id,
         steamId: game.steam_id,
         img: getGameCover(game.title, 'square'),
