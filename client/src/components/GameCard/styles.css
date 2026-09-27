@@ -1,7 +1,19 @@
 .game-card {
+    position: relative;
     border-radius: 10px;
     width: 280px;
     height: 280px;
+}
+
+.playtime-game-card{
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    background-color: #5e3df1e7;
+    background-color: #000000ce;
+    border-radius: 15px;
+    padding: 5px 13px;
+    font-size: 17px;
 }
 
 .game-card-img {

@@ -19,6 +19,7 @@ type ScreenItem = {
     steamId: Game['steam_id'];
     img: string;
     name: Game['title'];
+    playtime: number;
     installed: Game['installed'];
     action: () => void | Promise<void>;
 };
@@ -66,6 +67,7 @@ const Home: React.FC = () => {
             steamId: game.steam_id,
             img: getGameCover(game.title, 'square'),
             name: game.title,
+            playtime: game.playtime,
             installed: game.installed,
             action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
         }))
@@ -86,6 +88,7 @@ const Home: React.FC = () => {
                 img: getGameCover(randomGame.title, 'landscape'),
                 name: randomGame.title,
                 installed: randomGame.installed,
+                playtime: randomGame.playtime,
                 action: () => startGame(randomGame.id, randomGame.steam_id)
             },
             ...gameCardsItems
@@ -150,10 +153,28 @@ const Home: React.FC = () => {
                     playSelectSound();
                     setSelectedIndex(currentIndex - 1);
                 }
+                const el = itemRefs.current[currentIndex - 1];
+                if (el) {
+                    el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    });
+                }
             } else if (command === 'direita') {
                 if (currentIndex < length - 1) {
                     playSelectSound();
                     setSelectedIndex(currentIndex + 1);
+                }
+                if (currentIndex + 1 <= 5) {
+                    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const el = itemRefs.current[currentIndex + 1];
+                    if (el) {
+                        el.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                        });
+                    }
                 }
             } else if (command === 'cima') {
                 if (currentIndex < 5) {
@@ -248,6 +269,7 @@ const Home: React.FC = () => {
                                         steamId={item.steamId}
                                         img={item.img}
                                         name={item.name}
+                                        playtime={item.playtime}
                                         isFocused={selectedIndex === index + 1}
                                         isOpen={isMenuOpen && selectedIndex === index + 1}
                                         onCloseMenu={handleCloseMenu}

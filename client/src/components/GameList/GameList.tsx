@@ -16,6 +16,7 @@ type ScreenItem = {
     steamId: Game['steam_id'];
     img: string;
     name: Game['title'];
+    playtime: number;
     installed: boolean;
     action: () => void | Promise<void>;
 };
@@ -54,6 +55,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
         steamId: game.steam_id,
         img: getGameCover(game.title, 'square'),
         name: game.title,
+        playtime: game.playtime,
         installed: game.installed,
         action: () => { setSelectedGameId(game.id); setIsOnGamePage(true) }
     }));
@@ -172,6 +174,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                                         steamId={item.steamId}
                                         img={item.img}
                                         name={item.name}
+                                        playtime={item.playtime}
                                         isFocused={selectedIndex === index}
                                         isOpen={isMenuOpen && selectedIndex === index}
                                         onCloseMenu={handleCloseMenu}
