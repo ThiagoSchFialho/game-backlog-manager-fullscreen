@@ -168,6 +168,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                                         steamId={item.steamId}
                                         img={item.img}
                                         name={item.name}
+                                        page={title ?? ''}
                                         playtime={item.playtime}
                                         isFocused={selectedIndex === index}
                                         isOpen={isMenuOpen && selectedIndex === index}
