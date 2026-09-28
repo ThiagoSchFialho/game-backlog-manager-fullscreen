@@ -57,3 +57,15 @@ body {
     transform: scale(1.03);
     transition: 0.15s;
 }
+
+.game-count {
+  position: fixed;
+  right: 20px;
+  bottom: 30px;
+  background-color: var(--bg-card);
+  padding: 10px 15px;
+  border: var(--border-primary);
+  border-radius: 7px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}

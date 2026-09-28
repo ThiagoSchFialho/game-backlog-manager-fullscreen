@@ -11,12 +11,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import home from '../../assets/icons/home.svg';
 import gamepad from '../../assets/icons/gamepad.svg';
 import check from '../../assets/icons/check.svg';
-import list from '../../assets/icons/list.svg';
 import folder from '../../assets/icons/folder.svg';
 import homeSelected from '../../assets/icons/home-selected.svg';
 import gamepadSelected from '../../assets/icons/gamepad-selected.svg';
 import checkSelected from '../../assets/icons/check-selected.svg';
-import listSelected from '../../assets/icons/list-selected.svg';
 import folderSelected from '../../assets/icons/folder-selected.svg';
 import mostPlayed from '../../assets/icons/most-played.svg';
 import mostPlayedSelected from '../../assets/icons/most-played-selected.svg';
@@ -80,6 +78,7 @@ const Header: React.FC = () => {
 
     const menuItems: MenuItems[] = [
         { label: 'Inicio', action: () => { setIsHeaderMenuOpen(false); navigation('/'); }},
+        { label: 'Backlog', action: () => { setIsHeaderMenuOpen(false); navigation('/backlog'); }},
         { label: 'Jogos ocultos', action: () => { setIsHeaderMenuOpen(false); navigation('/hidden'); }},
         { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
         { label: 'Sincronizar steam', action: () => handleSyncSteam() },
@@ -94,6 +93,14 @@ const Header: React.FC = () => {
             iconSelected: homeSelected,
             label: 'Inicio',
             alt: 'casa'
+        },
+        {
+            url: '/library',
+            name: 'library',
+            icon: gamepad,
+            iconSelected: gamepadSelected,
+            label: 'Biblioteca',
+            alt: 'joystick'
         },
         {
             url: '/collections',
@@ -112,28 +119,12 @@ const Header: React.FC = () => {
             alt: 'relógio'
         },
         {
-            url: '/backlog',
-            name: 'backlog',
-            icon: list,
-            iconSelected: listSelected,
-            label: 'Backlog',
-            alt: 'lista'
-        },
-        {
             url: '/completed',
             name: 'completed',
             icon: check,
             iconSelected: checkSelected,
             label: 'Zerados',
             alt: 'verificado'
-        },
-        {
-            url: '/library',
-            name: 'library',
-            icon: gamepad,
-            iconSelected: gamepadSelected,
-            label: 'Biblioteca',
-            alt: 'joystick'
         },
     ];
 

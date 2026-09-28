@@ -45,7 +45,7 @@ const CollectionFolder: React.FC<ColelctionFolderProps> = ({ collection, isFocus
                         <div key={game.id} className="game">
                             <img
                                 className="collection-game-img"
-                                src={getGameCover(game.title, 'square')}
+                                src={getGameCover(game.title, 'square', 'jpg')}
                             />
                         </div> 
                     ))}

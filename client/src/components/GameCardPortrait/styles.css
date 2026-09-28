@@ -1,0 +1,25 @@
+.game-card-portrait {
+    position: relative;
+    border-radius: 10px;
+    width: 350px;
+    height: 525px;
+    margin-bottom: 20px;
+}
+
+.playtime-game-card-portrait {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 5px 20px;
+    font-size: 19px;
+    font-weight: 500;
+}
+
+.game-card-portrait-img {
+    width: 100%;
+    box-shadow: var(--shadow);
+}
