@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './styles.css';
 
-import GameCard from '../GameCard/GameCard';
+import GameCardPortrait from '../GameCardPortrait/GameCardPortrait';
 import JoystickSetup from '../JoystickSetup/JoystickSetup';
 import GamePage from '../GamePage/GamePage';
 
@@ -47,7 +47,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
     const gameCardsItems: ScreenItem[] = list.map((game) => ({
         id: game.id,
         steamId: game.steam_id,
-        img: getGameCover(game.title, 'square'),
+        img: getGameCover(game.title, 'portrait', 'png'),
         name: game.title,
         playtime: game.playtime,
         installed: game.installed,
@@ -91,14 +91,14 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                     setSelectedIndex(currentIndex + 1);
                 }
             } else if (command === 'cima') {
-                if (currentIndex > 4) {
+                if (currentIndex > 3) {
                     playSelectSound();
-                    setSelectedIndex(currentIndex - 5);
+                    setSelectedIndex(currentIndex - 4);
                 }
             } else if (command === 'baixo') {
-                if (currentIndex < length - 5) {
+                if (currentIndex < length - 4) {
                     playSelectSound();
-                    setSelectedIndex(currentIndex + 5);
+                    setSelectedIndex(currentIndex + 4);
                 }
             } else if (command === 'A') {
                 if (commandCoolDown) return null;
@@ -163,7 +163,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                         ) : (
                             gameCardsItems.map((item, index) => (
                                 <div ref={(el) => { itemRefs.current[index] = el }} onClick={() => {setSelectedGameId(item.id); setIsOnGamePage(true)}}>
-                                    <GameCard
+                                    <GameCardPortrait
                                         id={item.id}
                                         steamId={item.steamId}
                                         img={item.img}

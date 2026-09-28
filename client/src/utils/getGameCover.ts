@@ -1,4 +1,4 @@
-const gameCovers = import.meta.glob('../assets/games/*/*.jpg', {
+const gameCovers = import.meta.glob('../assets/games/*/*', {
     eager: true,
     import: 'default',
 }) as Record<string, string>;
@@ -14,8 +14,8 @@ export function slugifyGameName(name: string): string {
         .replace(/\s+/g, '_');
 }
 
-export function getGameCover(name: string, format: string): string {
+export function getGameCover(name: string, format: string, extension: string): string {
     const slug = slugifyGameName(name);
-    const path = `../assets/games/${slug}/${format}.jpg`;
-    return gameCovers[path] ?? gameCovers[`../assets/games/placeholder/${format}.jpg`];
+    const path = `../assets/games/${slug}/${format}.${extension}`;
+    return gameCovers[path] ?? gameCovers[`../assets/games/placeholder/${format}.${extension}`];
 }

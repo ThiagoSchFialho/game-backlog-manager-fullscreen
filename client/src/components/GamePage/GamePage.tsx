@@ -191,7 +191,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                         <GameLandscape
                             id={currentGame.steam_id}
                             steamId={currentGame.steam_id}
-                            img={getGameCover(currentGame.title, 'landscape')}
+                            img={getGameCover(currentGame.title, 'landscape', 'jpg')}
                             name={currentGame.title}
                             isFocused={selectedIndex === 999}
                             isPlaying={isPlaying}

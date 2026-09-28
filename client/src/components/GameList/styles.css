@@ -4,11 +4,11 @@
 
 .list-game-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 280px);
+    grid-template-columns: repeat(auto-fill, 350px);
     justify-content: space-between;
-    gap: 40px;
+    gap: 35px;
     overflow-y: auto;
-    padding: 80px 50px 100px 50px;
+    padding: 100px 40px 100px 40px;
     margin: 0 -10px;
     max-height: calc(100vh - 91px);
 }
