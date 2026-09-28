@@ -23,7 +23,7 @@ interface AppDetails {
 
 interface SyncResult {
     steam_id: number;
-    status: 'created' | 'updated' | 'unchanged' | 'error';
+    status: 'created' | 'updated' | 'error';
     game?: any;
     error?: string;
 }
@@ -92,10 +92,14 @@ async function fetchSteamLibrary(user: any): Promise<SteamOwnedGame[]> {
     return data.response.games ?? [];
 }
 
-async function syncGames(
-    steamGames: SteamOwnedGame[],
-    options: { updateExisting: boolean }
-): Promise<SyncResult[]> {
+/**
+ * Sync completo: cria jogos novos e atualiza os existentes, incluindo
+ * developer/release_date/cover_hero via Steam Store API. É o caminho
+ * mais pesado (uma chamada externa por jogo que precisa de appdetails,
+ * em lotes com delay), então só deve ser chamado quando isso realmente
+ * for necessário.
+ */
+async function syncGames(steamGames: SteamOwnedGame[]): Promise<SyncResult[]> {
     const existingGames = await gamesModel.getAllGames();
     const existingBySteamId = new Map(
         existingGames.map((g: any) => [Number(g.steam_id), g])
@@ -118,10 +122,6 @@ async function syncGames(
             batch.map(async (sg): Promise<SyncResult> => {
                 try {
                     const gameCheck = existingBySteamId.get(sg.appid);
-
-                    if (gameCheck && !options.updateExisting) {
-                        return { steam_id: sg.appid, status: 'unchanged', game: gameCheck };
-                    }
 
                     const needsDetails =
                         !gameCheck ||
@@ -176,7 +176,7 @@ async function syncGames(
     return results;
 }
 
-async function handleSync(req: Request, res: Response, updateExisting: boolean) {
+router.get('/sync-and-update-games-from-steam', async (req: Request, res: Response) => {
     try {
         const user = await userModel.getUser();
 
@@ -195,7 +195,7 @@ async function handleSync(req: Request, res: Response, updateExisting: boolean) 
             return res.status(200).json([]);
         }
 
-        const results = await syncGames(steamGames, { updateExisting });
+        const results = await syncGames(steamGames);
 
         const hasErrors = results.some((r) => r.status === 'error');
 
@@ -204,14 +204,66 @@ async function handleSync(req: Request, res: Response, updateExisting: boolean) 
         console.error(error);
         return res.status(500).json({ error: "Erro interno do servidor." });
     }
+});
+
+/**
+ * Syncs "leves": atualizam só uma coluna, direto por steam_id, em uma
+ * única query em lote (ver GamesModel.bulkUpdatePlaytime /
+ * bulkUpdateRtimeLastPlayed). Não chamam a Steam Store API (appdetails)
+ * nem buscam o catálogo inteiro do banco antes — por isso são muito
+ * mais rápidos que o sync completo acima. Jogos que ainda não existem
+ * no banco são ignorados (essas rotas não criam jogos, só atualizam).
+ */
+async function handleAttributeSync(
+    req: Request,
+    res: Response,
+    attribute: 'playtime' | 'rtime_last_played'
+) {
+    try {
+        const user = await userModel.getUser();
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
+
+        let steamGames: SteamOwnedGame[];
+        try {
+            steamGames = await fetchSteamLibrary(user);
+        } catch {
+            return res.status(502).json({ error: "Erro ao consultar a API da Steam." });
+        }
+
+        if (!steamGames.length) {
+            return res.status(200).json({ updated_count: 0, updated: [] });
+        }
+
+        const updated = attribute === 'playtime'
+            ? await gamesModel.bulkUpdatePlaytime(
+                steamGames.map((sg) => ({
+                    steam_id: sg.appid,
+                    playtime: sg.playtime_forever,
+                }))
+            )
+            : await gamesModel.bulkUpdateRtimeLastPlayed(
+                steamGames.map((sg) => ({
+                    steam_id: sg.appid,
+                    rtime_last_played: sg.rtime_last_played ?? 0,
+                }))
+            );
+
+        return res.status(200).json({ updated_count: updated.length, updated });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
 }
 
-router.get('/sync-games-from-steam', (req: Request, res: Response) =>
-    handleSync(req, res, false)
+router.get('/sync-playtime-from-steam', (req: Request, res: Response) =>
+    handleAttributeSync(req, res, 'playtime')
 );
 
-router.get('/sync-and-update-games-from-steam', (req: Request, res: Response) =>
-    handleSync(req, res, true)
+router.get('/sync-rtime-last-played-from-steam', (req: Request, res: Response) =>
+    handleAttributeSync(req, res, 'rtime_last_played')
 );
 
 export default router;

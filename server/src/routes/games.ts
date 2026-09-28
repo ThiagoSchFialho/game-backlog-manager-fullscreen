@@ -223,6 +223,72 @@ router.put('/:id', async function (req: Request, res: Response) {
     }
 });
 
+router.patch('/:id/status', async function (req: Request, res: Response) {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+        return res.status(400).json({ error: "status não informado." });
+    }
+
+    try {
+        const updatedGame = await gamesModel.updateGameStatus(Number(id), status);
+
+        if (!updatedGame) {
+            return res.status(404).json({ message: "Jogo não encontrado." });
+        }
+
+        return res.status(200).json(updatedGame);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
+router.patch('/:id/hidden', async function (req: Request, res: Response) {
+    const { id } = req.params;
+    const { hidden } = req.body;
+
+    if (typeof hidden !== 'boolean') {
+        return res.status(400).json({ error: "hidden não informado ou inválido." });
+    }
+
+    try {
+        const updatedGame = await gamesModel.updateGameHidden(Number(id), hidden);
+
+        if (!updatedGame) {
+            return res.status(404).json({ message: "Jogo não encontrado." });
+        }
+
+        return res.status(200).json(updatedGame);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
+router.patch('/:id/beatable', async function (req: Request, res: Response) {
+    const { id } = req.params;
+    const { beatable } = req.body;
+
+    if (typeof beatable !== 'boolean') {
+        return res.status(400).json({ error: "beatable não informado ou inválido." });
+    }
+
+    try {
+        const updatedGame = await gamesModel.updateGameBeatable(Number(id), beatable);
+
+        if (!updatedGame) {
+            return res.status(404).json({ message: "Jogo não encontrado." });
+        }
+
+        return res.status(200).json(updatedGame);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
 router.delete('/:id', async function (req: Request, res: Response) {
     const { id } = req.params;
 

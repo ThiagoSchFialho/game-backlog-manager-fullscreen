@@ -1,5 +1,12 @@
 import { Games } from "../entities/games";
-import { CreateGameInput, GameWithGenres, IGamesModel, UpdateGameInput } from "./interfaces/games.interface.model";
+import {
+    BulkPlaytimeEntry,
+    BulkRtimeLastPlayedEntry,
+    CreateGameInput,
+    GameWithGenres,
+    IGamesModel,
+    UpdateGameInput
+} from "./interfaces/games.interface.model";
 import pool from "../config/db.config";
 
 function dbError(context: string, error: unknown): Error {
@@ -202,6 +209,105 @@ export class GamesModel implements IGamesModel {
         }
     }
 
+    public async bulkUpdatePlaytime(
+        entries: BulkPlaytimeEntry[]
+    ): Promise<{ steam_id: number }[]> {
+        if (!entries.length) return [];
+
+        try {
+            const steamIds = entries.map((e) => e.steam_id);
+            const playtimes = entries.map((e) => e.playtime);
+
+            const result = await pool.query(`
+                UPDATE games AS g
+                SET playtime = v.playtime
+                FROM (
+                    SELECT * FROM UNNEST($1::int[], $2::int[]) AS v(steam_id, playtime)
+                ) AS v
+                WHERE g.steam_id = v.steam_id
+                RETURNING g.steam_id;
+            `, [steamIds, playtimes]);
+
+            return result.rows;
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar playtime em lote.", error);
+        }
+    }
+
+    public async bulkUpdateRtimeLastPlayed(
+        entries: BulkRtimeLastPlayedEntry[]
+    ): Promise<{ steam_id: number }[]> {
+        if (!entries.length) return [];
+
+        try {
+            const steamIds = entries.map((e) => e.steam_id);
+            const rtimes = entries.map((e) => e.rtime_last_played);
+
+            const result = await pool.query(`
+                UPDATE games AS g
+                SET rtime_last_played = to_timestamp(v.rtime_last_played)
+                FROM (
+                    SELECT * FROM UNNEST($1::int[], $2::bigint[]) AS v(steam_id, rtime_last_played)
+                ) AS v
+                WHERE g.steam_id = v.steam_id
+                RETURNING g.steam_id;
+            `, [steamIds, rtimes]);
+
+            return result.rows;
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar rtime_last_played em lote.", error);
+        }
+    }
+
+    public async updateGameStatus(id: number, status: string): Promise<Games | undefined> {
+        try {
+            const result = await pool.query(`
+                UPDATE games
+                SET status = $2
+                WHERE id = $1
+                RETURNING *;
+            `, [id, status]);
+
+            return result.rows[0];
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar status do jogo.", error);
+        }
+    }
+
+    public async updateGameHidden(id: number, hidden: boolean): Promise<Games | undefined> {
+        try {
+            const result = await pool.query(`
+                UPDATE games
+                SET hidden = $2
+                WHERE id = $1
+                RETURNING *;
+            `, [id, hidden]);
+
+            return result.rows[0];
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar hidden do jogo.", error);
+        }
+    }
+
+    public async updateGameBeatable(id: number, beatable: boolean): Promise<Games | undefined> {
+        try {
+            const result = await pool.query(`
+                UPDATE games
+                SET beatable = $2
+                WHERE id = $1
+                RETURNING *;
+            `, [id, beatable]);
+
+            return result.rows[0];
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar beatable do jogo.", error);
+        }
+    }
 
     public async deleteGame(id: number): Promise<Games | undefined> {
         try {

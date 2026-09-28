@@ -23,6 +23,16 @@ export interface GameWithGenres extends Games {
 
 export interface UpdateGameInput extends Partial<CreateGameInput> {}
 
+export interface BulkPlaytimeEntry {
+    steam_id: number;
+    playtime: number;
+}
+
+export interface BulkRtimeLastPlayedEntry {
+    steam_id: number;
+    rtime_last_played: number;
+}
+
 export interface IGamesModel {
     createGame(input: CreateGameInput): Promise<Games>;
     getGameById(id: number): Promise<Games | undefined>;
@@ -32,5 +42,10 @@ export interface IGamesModel {
     getAllGames(): Promise<Games[]>;
     getAllGamesWithGenres(): Promise<GameWithGenres[]>
     updateGame(id: number, input: UpdateGameInput): Promise<Games | undefined>;
+    updateGameStatus(id: number, status: string): Promise<Games | undefined>;
+    updateGameHidden(id: number, hidden: boolean): Promise<Games | undefined>;
+    updateGameBeatable(id: number, beatable: boolean): Promise<Games | undefined>;
+    bulkUpdatePlaytime(entries: BulkPlaytimeEntry[]): Promise<{ steam_id: number }[]>;
+    bulkUpdateRtimeLastPlayed(entries: BulkRtimeLastPlayedEntry[]): Promise<{ steam_id: number }[]>;
     deleteGame(id: number): Promise<Games | undefined>;
 }

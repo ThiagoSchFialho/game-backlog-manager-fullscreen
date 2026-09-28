@@ -65,26 +65,13 @@ export const useDb = () => {
     }
 
     const updateStatus = async (id: string, status: string) => {
-        const game = await getGameById(id);
-        if (!game) {
-            console.error("Jogo não encontrado:", id);
-            return null;
-        }
-
-        const dataISO = game.rtime_last_played;
-
-        const timestampMs = new Date(dataISO).getTime();
-        const timestampSegundos = Math.floor(timestampMs / 1000);
-        
-        const updatedGame = { ...game, status, rtime_last_played: timestampSegundos };
-
         try {
-            const response = await fetch (`${host}/games/${updatedGame.id}`, {
-                method: 'PUT',
+            const response = await fetch (`${host}/games/${id}/status`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(updatedGame)
+                body: JSON.stringify({ status })
             });
             const data = await response.json();
 
@@ -100,21 +87,13 @@ export const useDb = () => {
     }
 
     const updateHidden = async (id: string, isHidden: boolean) => {
-        const game = await getGameById(id);
-        if (!game) {
-            console.error("Jogo não encontrado:", id);
-            return null;
-        }
-
-        const updatedGame = { ...game, hidden: !isHidden};
-
         try {
-            const response = await fetch (`${host}/games/${updatedGame.id}`, {
-                method: 'PUT',
+            const response = await fetch (`${host}/games/${id}/hidden`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(updatedGame)
+                body: JSON.stringify({ hidden: !isHidden })
             });
             const data = await response.json();
 
@@ -130,21 +109,13 @@ export const useDb = () => {
     }
 
     const updateBeatable = async (id: string, isBeatable: boolean) => {
-        const game = await getGameById(id);
-        if (!game) {
-            console.error("Jogo não encontrado:", id);
-            return null;
-        }
-
-        const updatedGame = { ...game, beatable: !isBeatable};
-
         try {
-            const response = await fetch (`${host}/games/${updatedGame.id}`, {
-                method: 'PUT',
+            const response = await fetch (`${host}/games/${id}/beatable`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(updatedGame)
+                body: JSON.stringify({ beatable: !isBeatable })
             });
             const data = await response.json();
 
@@ -176,5 +147,49 @@ export const useDb = () => {
         }
     }
 
-    return { handleStartGame, getGameById, fetchGames, updateStatus, updateHidden, updateBeatable, syncSteam };
+    const syncPlaytime = async () => {
+        try {
+            const response = await fetch (`${host}/steam-api/sync-playtime-from-steam`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao sincronizar playtime.", data.error);
+                return null;
+            }
+
+            return data;
+
+        } catch (error) {
+            console.error("Erro ao sincronizar playtime.", error);
+        }
+    }
+
+    const syncRtimeLastPlayed = async () => {
+        try {
+            const response = await fetch (`${host}/steam-api/sync-rtime-last-played-from-steam`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao sincronizar rtime_last_played.", data.error);
+                return null;
+            }
+
+            return data;
+
+        } catch (error) {
+            console.error("Erro ao sincronizar rtime_last_played.", error);
+        }
+    }
+
+    return {
+        handleStartGame,
+        getGameById,
+        fetchGames,
+        updateStatus,
+        updateHidden,
+        updateBeatable,
+        syncSteam,
+        syncPlaytime,
+        syncRtimeLastPlayed
+    };
 }
