@@ -1,0 +1,22 @@
+.game-card-portrait {
+    position: relative;
+    border-radius: 10px;
+    width: 350px;
+    height: 525px;
+    margin-bottom: 20px;
+}
+
+.playtime-game-card-portrait {
+    position: absolute;
+    top: 18px;
+    left: 10px;
+    background-color: #00000049;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 17px;
+}
+
+.game-card-portrait-img {
+    width: 100%;
+    box-shadow: var(--shadow);
+}
