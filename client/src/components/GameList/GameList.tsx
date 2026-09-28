@@ -178,6 +178,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                         )}
                     </div>
                 </div>
+                <div className="game-count">Jogos: {gameCardsItems.length}</div>
             </div>
         </>
     )
