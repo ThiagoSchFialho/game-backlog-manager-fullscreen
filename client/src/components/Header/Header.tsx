@@ -80,6 +80,7 @@ const Header: React.FC = () => {
 
     const menuItems: MenuItems[] = [
         { label: 'Inicio', action: () => { setIsHeaderMenuOpen(false); navigation('/'); }},
+        { label: 'Backlog', action: () => { setIsHeaderMenuOpen(false); navigation('/backlog'); }},
         { label: 'Jogos ocultos', action: () => { setIsHeaderMenuOpen(false); navigation('/hidden'); }},
         { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
         { label: 'Sincronizar steam', action: () => handleSyncSteam() },
@@ -94,6 +95,14 @@ const Header: React.FC = () => {
             iconSelected: homeSelected,
             label: 'Inicio',
             alt: 'casa'
+        },
+        {
+            url: '/library',
+            name: 'library',
+            icon: gamepad,
+            iconSelected: gamepadSelected,
+            label: 'Biblioteca',
+            alt: 'joystick'
         },
         {
             url: '/collections',
@@ -112,28 +121,12 @@ const Header: React.FC = () => {
             alt: 'relógio'
         },
         {
-            url: '/backlog',
-            name: 'backlog',
-            icon: list,
-            iconSelected: listSelected,
-            label: 'Backlog',
-            alt: 'lista'
-        },
-        {
             url: '/completed',
             name: 'completed',
             icon: check,
             iconSelected: checkSelected,
             label: 'Zerados',
             alt: 'verificado'
-        },
-        {
-            url: '/library',
-            name: 'library',
-            icon: gamepad,
-            iconSelected: gamepadSelected,
-            label: 'Biblioteca',
-            alt: 'joystick'
         },
     ];
 
