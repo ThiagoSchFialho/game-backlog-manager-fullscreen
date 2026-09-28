@@ -12,7 +12,8 @@ const MostPlayed: React.FC = () => {
     const getGames = async () => {
         const games = await fetchGames();
         if (games) {
-            const orderdList = orderBy(games, 'playtime' ,'desc');
+            const filteredGames = games.filter((game: Game) => !game.hidden);
+            const orderdList = orderBy(filteredGames, 'playtime' ,'desc');
             setGamesList(orderdList);
         }
     }
