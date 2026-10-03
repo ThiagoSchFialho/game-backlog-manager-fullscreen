@@ -1,9 +1,7 @@
 .game-card-portrait {
     position: relative;
     border-radius: 10px;
-    width: 350px;
-    height: 525px;
-    margin-bottom: 20px;
+    width: 340px;
 }
 
 .playtime-game-card-portrait {
