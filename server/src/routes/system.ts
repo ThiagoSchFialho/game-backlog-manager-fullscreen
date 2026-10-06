@@ -156,9 +156,6 @@ export interface SteamApp {
   isInstalling: boolean;
   isPaused: boolean;
   isHealthy: boolean;
-  bytesToDownload: number;
-  bytesDownloaded: number;
-  progress: number | null; // 0 a 100, ou null se não há download em andamento
 }
 
 function readNumber(content: string, key: string): number {
@@ -184,8 +181,6 @@ async function getAllSteamApps(): Promise<SteamApp[]> {
 
       const name = content.match(/"name"\s+"([^"]+)"/)?.[1] ?? "";
       const flags = readNumber(content, "StateFlags");
-      const bytesToDownload = readNumber(content, "BytesToDownload");
-      const bytesDownloaded = readNumber(content, "BytesDownloaded");
       const isInstalling = !!(flags & INSTALLING_MASK);
 
       apps.push({
@@ -199,12 +194,6 @@ async function getAllSteamApps(): Promise<SteamApp[]> {
         isInstalling,
         isPaused: !!(flags & FLAGS.UpdatePaused),
         isHealthy: !(flags & (FLAGS.FilesMissing | FLAGS.FilesCorrupt)),
-        bytesToDownload,
-        bytesDownloaded,
-        progress:
-          isInstalling && bytesToDownload > 0
-            ? Math.min(100, Math.round((bytesDownloaded / bytesToDownload) * 100))
-            : null,
       });
     }
   }
