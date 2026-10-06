@@ -9,8 +9,6 @@ export interface CreateGameInput {
     playtime: number;
     status: string;
     cover_square?: string | undefined;
-    cover_hero?: string | undefined;
-    cover_grid?: string | undefined;
     personal_rating?: number | undefined;
     beatable?: boolean | undefined;
     hidden?: boolean | undefined;

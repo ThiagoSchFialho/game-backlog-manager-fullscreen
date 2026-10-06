@@ -5,8 +5,6 @@ export class Games implements IGames {
     title: string;
     steam_id: number;
     cover_square?: string;
-    cover_hero?: string;
-    cover_grid?: string;
     developer?: string;
     release_date?: string;
     rtime_last_played: string;
@@ -21,8 +19,6 @@ export class Games implements IGames {
         title: string,
         steam_id: number,
         cover_square: string,
-        cover_hero: string,
-        cover_grid: string,
         developer: string,
         release_date: string,
         rtime_last_played: string,
@@ -36,8 +32,6 @@ export class Games implements IGames {
         this.title = title;
         this.steam_id = steam_id;
         this.cover_square = cover_square;
-        this.cover_hero = cover_hero;
-        this.cover_grid = cover_grid;
         this.developer = developer;
         this.release_date = release_date;
         this.rtime_last_played = rtime_last_played;

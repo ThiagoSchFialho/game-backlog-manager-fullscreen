@@ -20,10 +20,9 @@ export class GamesModel implements IGamesModel {
                 INSERT INTO games (
                     title, steam_id, developer, release_date,
                     rtime_last_played, playtime, status, cover_square,
-                    cover_hero, cover_grid, personal_rating, beatable,
-                    hidden, installed
+                    personal_rating, beatable, hidden, installed
                 )
-                VALUES ($1, $2, $3, $4, to_timestamp($5), $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                VALUES ($1, $2, $3, $4, to_timestamp($5), $6, $7, $8, $9, $10, $11, $12)
                 RETURNING *;    
                 `, [
                 input.title,
@@ -34,8 +33,6 @@ export class GamesModel implements IGamesModel {
                 input.playtime,
                 input.status,
                 input.cover_square ?? null,
-                input.cover_hero ?? null,
-                input.cover_grid ?? null,
                 input.personal_rating ?? null,
                 input.beatable ?? true,
                 input.hidden ?? false,
@@ -175,13 +172,11 @@ export class GamesModel implements IGamesModel {
                     rtime_last_played = to_timestamp($6),
                     playtime = $7,
                     status = $8,
-                    cover_square = $9,
-                    cover_hero = $10,
-                    cover_grid = $11,
-                    personal_rating = $12,
-                    beatable = $13,
-                    hidden = $14,
-                    installed = $15
+                    cover_grid = $9,
+                    personal_rating = $10,
+                    beatable = $11,
+                    hidden = $12,
+                    installed = $13
                 WHERE id = $1
                 RETURNING *;
             `, [
@@ -194,8 +189,6 @@ export class GamesModel implements IGamesModel {
                 input.playtime,
                 input.status,
                 input.cover_square ?? null,
-                input.cover_hero ?? null,
-                input.cover_grid ?? null,
                 input.personal_rating ?? null,
                 input.beatable ?? true,
                 input.hidden ?? false,

@@ -13,8 +13,6 @@ interface CreateGameInput {
     status: string;
     developer?: string;
     cover_square?: string | undefined;
-    cover_hero?: string | undefined;
-    cover_grid?: string | undefined;
     personal_rating?: number | undefined;
     beatable?: boolean | undefined;
     hidden?: boolean | undefined;
@@ -31,8 +29,6 @@ router.post('/', async function (req: Request, res: Response) {
         playtime = 0,
         status,
         cover_square,
-        cover_hero,
-        cover_grid,
         personal_rating,
         beatable,
         hidden,
@@ -57,8 +53,6 @@ router.post('/', async function (req: Request, res: Response) {
             ...(release_date !== undefined && { release_date }),
             ...(developer !== undefined && { developer }),
             ...(cover_square !== undefined && { cover_square }),
-            ...(cover_hero !== undefined && { cover_hero }),
-            ...(cover_grid !== undefined && { cover_grid }),
             ...(personal_rating !== undefined && { personal_rating }),
             ...(beatable !== undefined && { beatable }),
             ...(hidden !== undefined && { hidden }),
@@ -172,8 +166,6 @@ router.put('/:id', async function (req: Request, res: Response) {
         playtime = 0,
         status,
         cover_square,
-        cover_hero,
-        cover_grid,
         personal_rating,
         beatable,
         hidden,
@@ -204,8 +196,6 @@ router.put('/:id', async function (req: Request, res: Response) {
             ...(release_date !== undefined && { release_date }),
             ...(developer !== undefined && { developer }),
             ...(cover_square !== undefined && { cover_square }),
-            ...(cover_hero !== undefined && { cover_hero }),
-            ...(cover_grid !== undefined && { cover_grid }),
             ...(personal_rating !== undefined && { personal_rating }),
             ...(beatable !== undefined && { beatable }),
             ...(hidden !== undefined && { hidden }),

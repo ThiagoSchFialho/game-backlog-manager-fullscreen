@@ -10,8 +10,6 @@ export interface Game {
     title: string;
     steam_id: string;
     cover_square: string;
-    cover_hero: string;
-    cover_grid: string;
     developer: string;
     release_date: string;
     beatable: boolean;

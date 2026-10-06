@@ -18,7 +18,6 @@ interface SteamOwnedGame {
 interface AppDetails {
     developer: string | null;
     release_date: string | null;
-    cover_hero: string | null;
 }
 
 interface SyncResult {
@@ -64,7 +63,6 @@ async function fetchAppDetails(appid: number): Promise<AppDetails | null> {
         return {
             developer: entry.data.developers?.[0] ?? null,
             release_date: entry.data.release_date?.date || null,
-            cover_hero: entry.data.header_image ?? null,
         };
     } catch (error) {
         console.error(`Erro ao buscar appdetails de ${appid}:`, error);
@@ -94,7 +92,7 @@ async function fetchSteamLibrary(user: any): Promise<SteamOwnedGame[]> {
 
 /**
  * Sync completo: cria jogos novos e atualiza os existentes, incluindo
- * developer/release_date/cover_hero via Steam Store API. É o caminho
+ * developer/release_date via Steam Store API. É o caminho
  * mais pesado (uma chamada externa por jogo que precisa de appdetails,
  * em lotes com delay), então só deve ser chamado quando isso realmente
  * for necessário.
@@ -126,8 +124,7 @@ async function syncGames(steamGames: SteamOwnedGame[]): Promise<SyncResult[]> {
                     const needsDetails =
                         !gameCheck ||
                         !gameCheck.developer ||
-                        !gameCheck.release_date ||
-                        !gameCheck.cover_hero;
+                        !gameCheck.release_date;
 
                     const details = needsDetails ? await fetchAppDetails(sg.appid) : null;
 
@@ -140,7 +137,6 @@ async function syncGames(steamGames: SteamOwnedGame[]): Promise<SyncResult[]> {
                         release_date: details?.release_date ?? gameCheck?.release_date ?? null,
                         rtime_last_played: String(sg.rtime_last_played ?? 0),
                         cover_square: buildCoverSquare(sg) ?? gameCheck?.cover_square,
-                        cover_hero: details?.cover_hero ?? gameCheck?.cover_hero ?? undefined,
                         cover_grid: gameCheck?.cover_grid ?? undefined,
                         personal_rating: gameCheck?.personal_rating ?? undefined,
                         beatable: gameCheck?.beatable ?? true,

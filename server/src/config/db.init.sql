@@ -9,8 +9,6 @@ CREATE TABLE games (
     title VARCHAR(255) NOT NULL,
     steam_id BIGINT UNIQUE,
     cover_square TEXT,
-    cover_hero TEXT,
-    cover_grid TEXT,
     developer VARCHAR(255),
     release_date DATE,
     rtime_last_played TIMESTAMPTZ,
