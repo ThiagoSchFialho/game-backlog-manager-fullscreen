@@ -90,6 +90,32 @@ router.post("/shutdown", (req, res) => {
 
 
 //========== Checar jogos instalados ============
+const FLAGS = {
+  UpdateRequired: 2,
+  FullyInstalled: 4,
+  FilesMissing: 32,
+  AppRunning: 64,
+  FilesCorrupt: 128,
+  UpdateRunning: 256,
+  UpdatePaused: 512,
+  UpdateStarted: 1024,
+  AddingFiles: 262144,
+  Preallocating: 524288,
+  Downloading: 1048576,
+  Staging: 2097152,
+  Committing: 4194304,
+} as const;
+
+// qualquer um desses bits indica que a Steam está baixando/instalando algo agora
+const INSTALLING_MASK =
+  FLAGS.UpdateRunning |
+  FLAGS.UpdateStarted |
+  FLAGS.AddingFiles |
+  FLAGS.Preallocating |
+  FLAGS.Downloading |
+  FLAGS.Staging |
+  FLAGS.Committing;
+
 function getSteamPath(): string {
   if (process.env.STEAM_PATH) return process.env.STEAM_PATH;
 
@@ -116,19 +142,32 @@ async function getLibraryFolders(steamPath: string): Promise<string[]> {
   } catch {
     // sem libraryfolders.vdf, usa só a pasta principal
   }
-  console.log(...new Set(libraries));
   return [...new Set(libraries)];
 }
 
-export interface InstalledApp {
+export interface SteamApp {
   appId: number;
   name: string;
   library: string;
+  flags: number;
+  isInstalled: boolean;
+  needsUpdate: boolean;
+  isRunning: boolean;
+  isInstalling: boolean;
+  isPaused: boolean;
+  isHealthy: boolean;
+  bytesToDownload: number;
+  bytesDownloaded: number;
+  progress: number | null; // 0 a 100, ou null se não há download em andamento
 }
 
-export async function getInstalledSteamApps(): Promise<InstalledApp[]> {
+function readNumber(content: string, key: string): number {
+  return Number(content.match(new RegExp(`"${key}"\\s+"(\\d+)"`))?.[1] ?? 0);
+}
+
+async function getAllSteamApps(): Promise<SteamApp[]> {
   const libraries = await getLibraryFolders(getSteamPath());
-  const installed: InstalledApp[] = [];
+  const apps: SteamApp[] = [];
 
   for (const library of libraries) {
     const steamapps = path.join(library, "steamapps");
@@ -138,25 +177,79 @@ export async function getInstalledSteamApps(): Promise<InstalledApp[]> {
       const m = file.match(/^appmanifest_(\d+)\.acf$/);
       if (!m) continue;
 
-      const content = await fs.readFile(path.join(steamapps, file), "utf-8");
-      const name = content.match(/"name"\s+"([^"]+)"/)?.[1] ?? "";
-      const flags = Number(content.match(/"StateFlags"\s+"(\d+)"/)?.[1] ?? 0);
+      const content = await fs
+        .readFile(path.join(steamapps, file), "utf-8")
+        .catch(() => null);
+      if (!content) continue;
 
-      // bit 4 = FullyInstalled
-      if (flags & 4) {
-        installed.push({ appId: Number(m[1]), name, library });
-      }
+      const name = content.match(/"name"\s+"([^"]+)"/)?.[1] ?? "";
+      const flags = readNumber(content, "StateFlags");
+      const bytesToDownload = readNumber(content, "BytesToDownload");
+      const bytesDownloaded = readNumber(content, "BytesDownloaded");
+      const isInstalling = !!(flags & INSTALLING_MASK);
+
+      apps.push({
+        appId: Number(m[1]),
+        name,
+        library,
+        flags,
+        isInstalled: !!(flags & FLAGS.FullyInstalled),
+        needsUpdate: !!(flags & FLAGS.UpdateRequired),
+        isRunning: !!(flags & FLAGS.AppRunning),
+        isInstalling,
+        isPaused: !!(flags & FLAGS.UpdatePaused),
+        isHealthy: !(flags & (FLAGS.FilesMissing | FLAGS.FilesCorrupt)),
+        bytesToDownload,
+        bytesDownloaded,
+        progress:
+          isInstalling && bytesToDownload > 0
+            ? Math.min(100, Math.round((bytesDownloaded / bytesToDownload) * 100))
+            : null,
+      });
     }
   }
-  return installed;
+  return apps;
+}
+
+export async function getInstalledSteamApps(): Promise<SteamApp[]> {
+  return (await getAllSteamApps()).filter((a) => a.isInstalled);
 }
 
 router.get("/installed-games", async (_req, res) => {
   try {
-    const apps = await getInstalledSteamApps();
-    res.json(apps);
+    res.json(await getInstalledSteamApps());
   } catch (err) {
     res.status(500).json({ error: "Não foi possível ler os jogos instalados" });
+  }
+});
+
+router.get("/running-game", async (_req, res) => {
+  try {
+    const apps = await getAllSteamApps();
+    const game = apps.find((a) => a.isRunning) ?? null;
+    res.json({ running: game !== null, game });
+  } catch (err) {
+    res.status(500).json({ error: "Não foi possível verificar o jogo em execução" });
+  }
+});
+
+router.get("/installing-game", async (_req, res) => {
+  try {
+    const apps = (await getAllSteamApps()).filter((a) => a.isInstalling);
+    res.json(apps);
+  } catch (err) {
+    res.status(500).json({ error: "Não foi possível verificar as instalações em andamento" });
+  }
+});
+
+router.get("/required-updates", async (_req, res) => {
+  try {
+    const apps = (await getAllSteamApps()).filter(
+      (a) => a.isInstalled && a.needsUpdate
+    );
+    res.json(apps);
+  } catch (err) {
+    res.status(500).json({ error: "Não foi possível verificar as atualizações pendentes" });
   }
 });
 //========== Fim checar jogos instalados ============
