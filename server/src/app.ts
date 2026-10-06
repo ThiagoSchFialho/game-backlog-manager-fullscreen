@@ -28,7 +28,7 @@ app.use('/game-genres', gameGenresRouter);
 app.use('/collections', collectionsRouter);
 app.use('/collection-games', collectionGamesRouter);
 app.use('/steam-api', steamApiRouter);
-app.use("/api/system", systemRouter);
+app.use("/system", systemRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'API rodando!' });

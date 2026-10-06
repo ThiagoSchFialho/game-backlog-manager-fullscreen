@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import GameList from '../../components/GameList/GameList';
 import { useDb } from '../../hooks/useDb';
+import { useSystem } from '../../hooks/useSystem';
 import type { Game } from '../../types/gamesType';
 import { orderBy } from '../../utils/orderBy';
 
 
 const Home: React.FC = () => {
     const { fetchGames } = useDb();
+    const { fetchInstalledGames } = useSystem();
     const [gamesList, setGamesList] = useState<Game[]>([]);
 
     const getGames = async () => {
-        const games = await fetchGames();
+        const [games, installedApps] = await Promise.all([
+            fetchGames(),
+            fetchInstalledGames(),
+        ]);
+
         if (games) {
-            const orderdList = orderBy(games, 'rtime_last_played' ,'desc');
-            setGamesList(orderdList.filter((game: Game) => { return !game.hidden && game.installed } ));
+            const installedIds = new Set(installedApps.map((app) => app.appId));
+            const orderedList = orderBy(games, 'rtime_last_played', 'desc');
+
+            setGamesList(
+                orderedList.filter(
+                    (game: Game) => !game.hidden && installedIds.has(Number(game.steam_id))
+                )
+            );
         }
     }
     useEffect(() => {
