@@ -172,7 +172,7 @@ export class GamesModel implements IGamesModel {
                     rtime_last_played = to_timestamp($6),
                     playtime = $7,
                     status = $8,
-                    cover_grid = $9,
+                    cover_square = $9,
                     personal_rating = $10,
                     beatable = $11,
                     hidden = $12,

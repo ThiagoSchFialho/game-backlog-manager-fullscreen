@@ -42,11 +42,8 @@ interface SubMenuConfig {
     emptyMessage?: string;
 }
 
-const MAX_PLAYING_GAMES = 5;
-
 const STATUS_OPTIONS = [
     { label: 'Zerado', value: 'completed' },
-    { label: 'Jogando', value: 'playing' },
     { label: 'Jogado', value: 'played' },
     { label: 'Não jogado', value: 'not-played' },
 ];
@@ -93,17 +90,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
 
     // --- Actions ------------------------------------------------------------
     const changeStatus = async (id: string, status: string) => {
-        if (status === "playing") {
-            const games = await getGames();
-            const playingGames = games.filter((game: Game) => game.status === "playing");
-            const oldestFirst = orderBy(playingGames, "rtime_last_played", "asc");
-
-            if (oldestFirst.length >= MAX_PLAYING_GAMES) {
-                const freedSlot = await updateStatus(oldestFirst[0].id, "played");
-                if (!freedSlot) return;
-            }
-        }
-
         const updated = await updateStatus(id, status);
         if (!updated) return;
 
@@ -147,7 +133,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
 
     const handleStartGame = (id: string, steamId: string) => {
         window.location.href = `steam://rungameid/${steamId}`;
-        changeStatus(id, "playing");
     };
 
     const openSubMenu = (id: SubMenuId) => {

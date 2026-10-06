@@ -36,15 +36,10 @@ function delay(ms: number) {
 
 function resolveStatus(
     sg: SteamOwnedGame,
-    existingGame: any,
-    isRecentlyPlayed: boolean
+    existingGame: any
 ): string {
     if (existingGame?.status === 'completed') {
         return 'completed';
-    }
-
-    if (isRecentlyPlayed) {
-        return 'playing';
     }
 
     return sg.playtime_forever > 0 ? 'played' : 'not-played';
@@ -103,14 +98,6 @@ async function syncGames(steamGames: SteamOwnedGame[]): Promise<SyncResult[]> {
         existingGames.map((g: any) => [Number(g.steam_id), g])
     );
 
-    const recentlyPlayedIds = new Set(
-        steamGames
-            .filter((sg) => (sg.rtime_last_played ?? 0) > 0)
-            .sort((a, b) => (b.rtime_last_played ?? 0) - (a.rtime_last_played ?? 0))
-            .slice(0, 5)
-            .map((sg) => sg.appid)
-    );
-
     const results: SyncResult[] = [];
 
     for (let i = 0; i < steamGames.length; i += BATCH_SIZE) {
@@ -132,12 +119,11 @@ async function syncGames(steamGames: SteamOwnedGame[]): Promise<SyncResult[]> {
                         title: sg.name,
                         steam_id: sg.appid,
                         playtime: sg.playtime_forever,
-                        status: resolveStatus(sg, gameCheck, recentlyPlayedIds.has(sg.appid)),
+                        status: resolveStatus(sg, gameCheck),
                         developer: details?.developer ?? gameCheck?.developer ?? null,
                         release_date: details?.release_date ?? gameCheck?.release_date ?? null,
                         rtime_last_played: String(sg.rtime_last_played ?? 0),
                         cover_square: buildCoverSquare(sg) ?? gameCheck?.cover_square,
-                        cover_grid: gameCheck?.cover_grid ?? undefined,
                         personal_rating: gameCheck?.personal_rating ?? undefined,
                         beatable: gameCheck?.beatable ?? true,
                         hidden: gameCheck?.hidden ?? false,

@@ -1,4 +1,4 @@
-export type GameStatus = 'completed' | 'not-played' | 'played' | 'playing';
+export type GameStatus = 'completed' | 'not-played' | 'played';
 
 export interface Game {
     id: string;

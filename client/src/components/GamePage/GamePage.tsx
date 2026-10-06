@@ -8,7 +8,6 @@ import { useDb } from '../../hooks/useDb';
 
 import { getGameCover } from '../../utils/getGameCover';
 
-import playing from '../../assets/icons/playing.svg';
 import played from '../../assets/icons/played.svg';
 import notPlayed from '../../assets/icons/not-played.svg';
 import completed from '../../assets/icons/completed.svg';
@@ -27,7 +26,6 @@ interface ScreenItems {
 }
 
 const statusConfig = {
-    playing: { icon: playing, label: 'Jogando', color: '#1FC06D' },
     played: { icon: played, label: 'Jogado', color: '#539FE9' },
     'not-played': { icon: notPlayed, label: 'Não jogado', color: '#D4AC27' },
     completed: { icon: completed, label: 'Zerado', color: '#7B5CFF' },
