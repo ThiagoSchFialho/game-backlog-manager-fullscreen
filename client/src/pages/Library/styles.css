@@ -1,0 +1,19 @@
+.page-header {
+    position: relative;
+    padding: 0 215px 0 205px;
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+}
+
+.degrade {
+    position: absolute;
+    z-index: 10;
+    width: 1540px;
+    margin-left: 180px;
+    margin-bottom: -50px;
+    bottom: 0;
+    left: 0;
+    height: 20px;
+    background: linear-gradient(#0d121b, rgba(0, 0, 0, 0));
+}

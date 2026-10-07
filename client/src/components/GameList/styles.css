@@ -1,5 +1,5 @@
 .game-list-container {
-    padding: 90px 50px 0px 50px;
+    padding: 0px 50px 0px 50px;
 }
 
 .list-game-container {
@@ -8,9 +8,9 @@
     justify-content: space-between;
     gap: 35px;
     overflow-y: auto;
-    padding: 100px 70px 100px 70px;
+    padding: 40px 70px 100px 70px;
     margin: 0 -10px;
-    max-height: calc(100vh - 91px);
+    max-height: calc(100vh - 159px);
 }
 
 .message-container {

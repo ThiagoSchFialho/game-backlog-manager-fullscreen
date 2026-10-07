@@ -40,7 +40,6 @@
 }
 
 body {
-    /* background-color: #0B1321; */
     background-color: #0d121b;
 }
 
@@ -60,7 +59,7 @@ body {
 
 .game-count {
   position: fixed;
-  right: 20px;
+  right: 40px;
   bottom: 30px;
   background-color: var(--bg-card);
   padding: 10px 15px;
