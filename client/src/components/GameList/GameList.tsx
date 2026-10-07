@@ -371,10 +371,7 @@ const GameList: React.FC<GameListProps> = ({
                         )}
                     </div>
                 </div>
-                <div className="game-count">
-                    Jogos: {gameCardsItems.length}
-                    {gameCardsItems.length !== list.length && ` de ${list.length}`}
-                </div>
+                <div className="game-count">Jogos: {gameCardsItems.length}</div>
             </div>
         </>
     );

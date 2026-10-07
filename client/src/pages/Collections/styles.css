@@ -1,12 +1,11 @@
 .collections-scroll-container {
-    padding-top: 120px;
+    padding-top: 40px;
     overflow-y: auto;
     height: 100vh;
 }
 
 .collections-header {
     display: flex;
-    /* flex-direction: row-reverse; */
     align-items: baseline;
     justify-content: space-between;
     margin-bottom: 40px;
