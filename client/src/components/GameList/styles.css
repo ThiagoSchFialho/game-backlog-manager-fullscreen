@@ -1,3 +1,36 @@
+.page-header-container {
+    position: relative;
+}
+ 
+.page-header-container.focused {
+    outline: 2px solid #fff;
+    border-radius: 8px;
+}
+ 
+.header-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 220px;
+    margin: 8px 0 0;
+    padding: 8px;
+    list-style: none;
+    background: #1b1b1f;
+    border-radius: 8px;
+}
+ 
+.header-panel li {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+ 
+.header-panel li.active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
 .page-header {
     position: relative;
     padding: 0 130px 0 120px;
