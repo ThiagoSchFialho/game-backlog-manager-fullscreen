@@ -134,15 +134,20 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
     // SCROLL ==========================================================================
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
-
+    
     useEffect(() => {
+        const container = scrollContainerRef.current;
         const el = itemRefs.current[selectedIndex];
-        if (el) {
-            el.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-            });
-        }
+        if (!container || !el) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+
+        const elTopInContainer = elRect.top - containerRect.top + container.scrollTop;
+        const target =
+            elTopInContainer - container.clientHeight / 2 + elRect.height / 2;
+
+        container.scrollTo({ top: target, behavior: 'smooth' });
     }, [selectedIndex]);
     // SCROLL ==========================================================================
 
