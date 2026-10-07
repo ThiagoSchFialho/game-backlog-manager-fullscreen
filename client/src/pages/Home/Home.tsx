@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import GameList from '../../components/GameList/GameList';
 import { useDb } from '../../hooks/useDb';
 import { useSystem } from '../../hooks/useSystem';
 import type { Game } from '../../types/gamesType';
 import { orderBy } from '../../utils/orderBy';
+import HorizontalGameList from '../../components/HorizontalGameList/HorizontalGameList';
 
 
 const Home: React.FC = () => {
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} page='Início' />
+            <HorizontalGameList list={gamesList} onReloadList={getGames} page='Início' />
         </>
     )
 }

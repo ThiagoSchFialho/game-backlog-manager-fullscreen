@@ -1,0 +1,24 @@
+.horizontal-game-list-container {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 80px);
+    margin: 0 -90px;
+}
+
+.horizontal-list-game-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+    padding: 15px 10%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.horizontal-list-game-container > div {
+    flex: 0 0 auto;
+    width: 420px;
+}
