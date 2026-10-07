@@ -23,7 +23,7 @@ const Completed: React.FC = () => {
     
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} title='Zerados' />
+            <GameList list={gamesList} onReloadList={getGames} page='Zerados' />
         </>
     )
 }

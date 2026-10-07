@@ -20,7 +20,7 @@ const Hidden: React.FC = () => {
 
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} title='Jogos ocultos' />
+            <GameList list={gamesList} onReloadList={getGames} page='Jogos ocultos' />
         </>
     )
 }

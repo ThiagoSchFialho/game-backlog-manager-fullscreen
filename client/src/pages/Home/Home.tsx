@@ -34,7 +34,7 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} title='Início' />
+            <GameList list={gamesList} onReloadList={getGames} page='Início' />
         </>
     )
 }

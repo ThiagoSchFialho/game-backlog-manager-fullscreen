@@ -11,7 +11,7 @@
     position: relative;
     z-index: 200;
     width: 100vw;
-    height: 90px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -54,7 +54,7 @@
 
 .selected::after {
     position: absolute;
-    bottom: -24px;
+    bottom: -19px;
     left: -20px;
     content: '';
     width: calc(105% + 40px);

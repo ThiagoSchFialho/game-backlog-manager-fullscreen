@@ -23,7 +23,7 @@ const MostPlayed: React.FC = () => {
     
     return (
         <>
-            <GameList list={gamesList} onReloadList={getGames} title='Mais jogados' />
+            <GameList list={gamesList} onReloadList={getGames} page='Mais jogados' />
         </>
     )
 }

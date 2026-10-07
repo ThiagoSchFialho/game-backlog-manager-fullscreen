@@ -23,12 +23,12 @@ type ScreenItem = {
 interface GameListProps {
     list: Game[]
     onReloadList: () => void,
-    title?: string,
+    page?: string,
     onBack?: () => void
 }
 
 
-const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }) => {
+const GameList: React.FC<GameListProps> = ({ list, onReloadList, page, onBack }) => {
     const { playSelectSound, playConfirmSound, playPopupSound } = useSound();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -91,7 +91,15 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                     setSelectedIndex(currentIndex + 1);
                 }
             } else if (command === 'cima') {
-                if (currentIndex > 3) {
+                if (page === 'Biblioteca') {
+                    if ( currentIndex < 4) {
+                        playSelectSound();
+                        alert('teste');
+                    } else {
+                        playSelectSound();
+                        setSelectedIndex(currentIndex - 4);
+                    }
+                } else if (currentIndex > 3) {
                     playSelectSound();
                     setSelectedIndex(currentIndex - 4);
                 }
@@ -159,6 +167,19 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
 
             {!isMenuOpen && !isOnGamePage && <JoystickSetup command={joystickNavigation} />}
             <div className="main-content" style={{ display: isOnGamePage ? 'none' : undefined }}>
+
+                {page === 'Biblioteca' && (
+                    <div className="page-header">
+                        <div className="page-header-container">
+                            <p>Filtros</p>
+                        </div>
+                        <div className="page-header-container">
+                            <p>Ordernar: Nome A-Z</p>
+                        </div>
+                        <div className="degrade"></div>
+                    </div>
+                )}
+
                 <div className="game-list-container">
                     <div className="list-game-container" ref={scrollContainerRef}>
                         {gameCardsItems.length === 0 ? (
@@ -173,7 +194,7 @@ const GameList: React.FC<GameListProps> = ({ list, onReloadList, title, onBack }
                                         steamId={item.steamId}
                                         img={item.img}
                                         name={item.name}
-                                        page={title ?? ''}
+                                        page={page ?? ''}
                                         playtime={item.playtime}
                                         isFocused={selectedIndex === index}
                                         isOpen={isMenuOpen && selectedIndex === index}
