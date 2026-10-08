@@ -35,7 +35,7 @@ const Header: React.FC = () => {
     const location = useLocation();
     const { syncSteam } = useDb();
     const { shutdown, loading, error } = useShutdown();
-    const { playCursorSound, playConfirmSound, playBackSound } = useSound();
+    const { playCursorSound, playConfirmSound, playBackSound, playSwipeSound } = useSound();
     const [time, setTime] = useState(new Date());
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
     const [isSynchronizing, setIsSynchronizing] = useState(false);
@@ -145,9 +145,11 @@ const Header: React.FC = () => {
         const currentPageIndex = topMenuItems.findIndex(item => item.name === selected);
     
         if (command === 'LB' && currentPageIndex !== 0) {
+            playSwipeSound();
             navigation(topMenuItems[currentPageIndex - 1].url);
         }
         if (command === 'RB' && currentPageIndex !== topMenuItems.length - 1) {
+            playSwipeSound();
             navigation(topMenuItems[currentPageIndex + 1].url);
         }
     };

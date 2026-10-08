@@ -68,11 +68,12 @@
 
 .list-game-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 350px);
+    grid-template-columns: repeat(auto-fill, 280px);
     justify-content: space-between;
-    gap: 35px;
+    gap: 30px;
     overflow-y: auto;
-    padding: 40px 70px 180px 70px;
+    padding: 40px 66px;
+    padding-bottom: 180px;
     margin: 0 -10px;
     max-height: calc(100vh - 80px);
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import './styles.css';
 
-import GameCardPortrait from '../GameCardPortrait/GameCardPortrait';
 import JoystickSetup from '../JoystickSetup/JoystickSetup';
 import GamePage from '../GamePage/GamePage';
 
@@ -10,6 +9,7 @@ import { useSound } from '../../hooks/useSound';
 import { getGameCover } from '../../utils/getGameCover';
 
 import type { Game } from '../../types/gamesType';
+import GameCard from '../GameCard/GameCard';
 
 type ScreenItem = {
     id: Game['id'];
@@ -56,7 +56,7 @@ const ORDER_OPTIONS: OrderOption[] = [
     { id: 'most_played', label: 'Mais jogados', compare: (a, b) => b.playtime - a.playtime },
 ];
 
-const COLUMNS = 4;
+const COLUMNS = 5;
 
 const GameList: React.FC<GameListProps> = ({
     list,
@@ -106,7 +106,7 @@ const GameList: React.FC<GameListProps> = ({
     const gameCardsItems: ScreenItem[] = visibleList.map((game) => ({
         id: game.id,
         steamId: game.steam_id,
-        img: getGameCover(game.title, 'portrait', 'png'),
+        img: getGameCover(game.title, 'square', 'jpg'),
         name: game.title,
         playtime: game.playtime,
         installed: game.installed,
@@ -355,7 +355,7 @@ const GameList: React.FC<GameListProps> = ({
                                     ref={(el) => { itemRefs.current[index] = el; }}
                                     onClick={() => { setSelectedGameId(item.id); setIsOnGamePage(true); }}
                                 >
-                                    <GameCardPortrait
+                                    <GameCard
                                         id={item.id}
                                         steamId={item.steamId}
                                         img={item.img}

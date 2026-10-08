@@ -6,13 +6,14 @@ interface GameCardsProps {
     steamId: string;
     img: string;
     name: string;
+    page: string;
     playtime: number;
     isFocused: boolean;
     isOpen: boolean;
     onCloseMenu: () => void;
 }
 
-const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, playtime, isFocused, isOpen, onCloseMenu }) => {
+const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, page, playtime, isFocused, isOpen, onCloseMenu }) => {
     const [isGameActionsMenuOpen, setIsGameActionsMenuOpen] = useState(isOpen);
 
     useEffect(() => {
@@ -33,11 +34,13 @@ const GameCard: React.FC<GameCardsProps> = ({ id, steamId, img, name, playtime, 
                 closeMenu={() => handleCloseMenu()}
             />
             <div className={isFocused ? "game-card focused" : "game-card"}>
-                <p className="playtime-game-card">
-                    {playtime < 60
-                        ? `${playtime}m`
-                        : `${Math.floor(playtime / 60)}h${playtime % 60 > 0 ? ` ${playtime % 60}m` : ''}`}
-                </p>
+                {page === 'Mais jogados' && (
+                    <p className="playtime-game-card-portrait">
+                        {playtime < 60
+                            ? `${playtime}m`
+                            : `${Math.floor(playtime / 60)}h${playtime % 60 > 0 ? ` ${playtime % 60}m` : ''}`}
+                    </p>
+                )}
                 <img
                     className="game-card-img"
                     src={img}

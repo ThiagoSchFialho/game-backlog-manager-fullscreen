@@ -50,7 +50,7 @@ interface GamePageProps {
 
 const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
     const { getGameById, handleStartGame, updateHidden, updateBeatable } = useDb();
-    const { playSelectSound, playConfirmSound } = useSound();
+    const { playCursorSound, playConfirmSound } = useSound();
     const [currentGame, setCurrentGame] = useState<Game>();
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
     const [selectedIndex, setSelectedIndex] = useState(BANNER_INDEX);
@@ -148,7 +148,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
 
             if (selectedIndex === BANNER_INDEX) {
                 if (command === 'baixo') {
-                    playSelectSound();
+                    playCursorSound();
                     setSelectedIndex(0);
                 } else if (command === 'A' && currentGame) {
                     setIsPlaying(true);
@@ -171,7 +171,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
 
             const nextIndex = NAVIGATION_MAP[selectedIndex]?.[command];
             if (nextIndex !== undefined) {
-                playSelectSound();
+                playCursorSound();
                 setSelectedIndex(nextIndex);
             }
         }
