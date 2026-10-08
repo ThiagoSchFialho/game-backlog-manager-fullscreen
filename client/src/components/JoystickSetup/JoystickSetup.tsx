@@ -4,8 +4,8 @@ interface JoystickSetupProps {
     command: (newCommand: string) => void;
 }
 
-const HOLD_THRESHOLD_MS = 400;
-const REPEAT_INTERVAL_MS = 200;
+const HOLD_THRESHOLD_MS = 500;
+const REPEAT_INTERVAL_MS = 90;
 
 const JoystickSetup: React.FC<JoystickSetupProps> = ({ command }) => {
     const [lastDir, setLastDir] = useState('');

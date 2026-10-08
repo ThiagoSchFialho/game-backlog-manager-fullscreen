@@ -128,17 +128,49 @@ const Collections: React.FC = () => {
     };
 
     // SCROLL ==========================================================================
+    const SCROLL_DURATION = 90;
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
+    const animationRef = useRef<number | null>(null);
 
     useEffect(() => {
+        const container = scrollContainerRef.current;
         const el = itemRefs.current[selectedIndex];
-        if (el) {
-            el.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-            });
-        }
+        if (!container || !el) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+
+        const elTopInContainer = elRect.top - containerRect.top + container.scrollTop;
+        const target =
+            elTopInContainer - container.clientHeight / 2 + elRect.height / 2;
+
+        const start = container.scrollTop;
+        const distance = target - start;
+        const startTime = performance.now();
+
+        if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+
+        const easeInOut = (t: number) =>
+            t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+        const step = (now: number) => {
+            const progress = Math.min((now - startTime) / SCROLL_DURATION, 1);
+            container.scrollTop = start + distance * easeInOut(progress);
+
+            if (progress < 1) {
+                animationRef.current = requestAnimationFrame(step);
+            } else {
+                animationRef.current = null;
+            }
+        };
+
+        animationRef.current = requestAnimationFrame(step);
+
+        return () => {
+            if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+        };
     }, [selectedIndex]);
     // SCROLL ==========================================================================
 

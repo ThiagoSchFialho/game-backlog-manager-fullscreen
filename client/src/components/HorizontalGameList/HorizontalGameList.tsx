@@ -125,8 +125,11 @@ const HorizontalGameList: React.FC<HorizontalGameListProps> = ({
     };
 
     // SCROLL ==========================================================================
+    const SCROLL_DURATION = 90;
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
+    const animationRef = useRef<number | null>(null);
 
     useEffect(() => {
         const container = scrollContainerRef.current;
@@ -140,7 +143,31 @@ const HorizontalGameList: React.FC<HorizontalGameListProps> = ({
         const target =
             elLeftInContainer - container.clientWidth / 2 + elRect.width / 2;
 
-        container.scrollTo({ left: target, behavior: 'smooth' });
+        const start = container.scrollLeft;
+        const distance = target - start;
+        const startTime = performance.now();
+
+        if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+
+        const easeInOut = (t: number) =>
+            t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+        const step = (now: number) => {
+            const progress = Math.min((now - startTime) / SCROLL_DURATION, 1);
+            container.scrollLeft = start + distance * easeInOut(progress);
+
+            if (progress < 1) {
+                animationRef.current = requestAnimationFrame(step);
+            } else {
+                animationRef.current = null;
+            }
+        };
+
+        animationRef.current = requestAnimationFrame(step);
+
+        return () => {
+            if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+        };
     }, [selectedIndex]);
     // SCROLL ==========================================================================
 
