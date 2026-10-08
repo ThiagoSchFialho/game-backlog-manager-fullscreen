@@ -3,9 +3,10 @@ import { execFile } from "node:child_process";
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
-import { lookupService } from "node:dns";
+import { GamesModel } from "../models/games.model";
 
 const router = Router();
+const gamesModel = new GamesModel();
 
 const FRONT_PORT = process.env.FRONT_PORT ?? "4173";
 const DEBUG_PORT = process.env.BROWSER_DEBUG_PORT ?? "9222";
@@ -200,8 +201,23 @@ async function getAllSteamApps(): Promise<SteamApp[]> {
   return apps;
 }
 
+async function syncInstalledGames(): Promise<SteamApp[]> {
+  const allApps = await getAllSteamApps();
+  const installed = allApps.filter((a) => a.isInstalled);
+
+  if (allApps.length > 0) {
+    try {
+      await gamesModel.bulkUpdateInstalled(installed.map((a) => a.appId));
+    } catch (err) {
+      console.error("Falha ao sincronizar installed no banco:", err);
+    }
+  }
+
+  return installed;
+}
+
 export async function getInstalledSteamApps(): Promise<SteamApp[]> {
-  return (await getAllSteamApps()).filter((a) => a.isInstalled);
+  return syncInstalledGames();
 }
 
 router.get("/installed-games", async (_req, res) => {
