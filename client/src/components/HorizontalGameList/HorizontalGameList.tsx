@@ -14,6 +14,7 @@ import type { Game } from '../../types/gamesType';
 type ScreenItem = {
     id: Game['id'];
     steamId: Game['steam_id'];
+    status: Game['status'];
     img: string;
     name: Game['title'];
     playtime: number;
@@ -52,6 +53,7 @@ const HorizontalGameList: React.FC<HorizontalGameListProps> = ({
     const gameCardsItems: ScreenItem[] = list.map((game) => ({
         id: game.id,
         steamId: game.steam_id,
+        status: game.status,
         img: getGameCover(game.title, 'portrait', 'png'),
         name: game.title,
         playtime: game.playtime,
@@ -206,6 +208,15 @@ const HorizontalGameList: React.FC<HorizontalGameListProps> = ({
                                         isOpen={isMenuOpen && selectedIndex === index}
                                         onCloseMenu={handleCloseMenu}
                                     />
+                                    <div className={`game-fast-info ${selectedIndex === index ? 'open' : ''}`}>
+                                        <p style={{border: 'none'}}>{item.name}</p>
+                                        <p>
+                                            🕑 {item.playtime < 60
+                                                ? `${item.playtime}m`
+                                                : `${Math.floor(item.playtime / 60)}h${item.playtime % 60 > 0 ? ` ${item.playtime % 60}m` : ''}`}
+                                        </p>
+                                        <p>{item.status === 'completed' ? '🏆 Zerado' : ''}</p>
+                                    </div>
                                 </div>
                             ))
                         )}
