@@ -254,6 +254,24 @@ export class GamesModel implements IGamesModel {
         }
     }
 
+    public async bulkUpdateInstalled(
+        installedSteamIds: number[]
+    ): Promise<{ steam_id: number; installed: boolean }[]> {
+        try {
+            const result = await pool.query(`
+                UPDATE games
+                SET installed = (steam_id = ANY($1::int[]))
+                WHERE installed IS DISTINCT FROM (steam_id = ANY($1::int[]))
+                RETURNING steam_id, installed;
+            `, [installedSteamIds]);
+
+            return result.rows;
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar jogos instalados em lote.", error);
+        }
+    }
+
     public async updateGameStatus(id: number, status: string): Promise<Games | undefined> {
         try {
             const result = await pool.query(`

@@ -30,7 +30,6 @@ export interface BulkRtimeLastPlayedEntry {
     steam_id: number;
     rtime_last_played: number;
 }
-
 export interface IGamesModel {
     createGame(input: CreateGameInput): Promise<Games>;
     getGameById(id: number): Promise<Games | undefined>;
@@ -45,5 +44,6 @@ export interface IGamesModel {
     updateGameBeatable(id: number, beatable: boolean): Promise<Games | undefined>;
     bulkUpdatePlaytime(entries: BulkPlaytimeEntry[]): Promise<{ steam_id: number }[]>;
     bulkUpdateRtimeLastPlayed(entries: BulkRtimeLastPlayedEntry[]): Promise<{ steam_id: number }[]>;
+    bulkUpdateInstalled (installedSteamIds: number[]): Promise<{ steam_id: number; installed: boolean }[]>;
     deleteGame(id: number): Promise<Games | undefined>;
 }
