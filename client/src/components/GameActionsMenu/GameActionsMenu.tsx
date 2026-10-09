@@ -7,13 +7,10 @@ import { useDb } from "../../hooks/useDb";
 import { useSound } from "../../hooks/useSound";
 import { useCollection } from "../../hooks/useCollection";
 
-import { orderBy } from "../../utils/orderBy";
-
 import menuArrow from '../../assets/icons/menu-arrow.svg';
 import playIcon from '../../assets/icons/play.svg';
 
 import type { ICollection } from "../../types/collectionsType";
-import type { Game } from "../../types/gamesType";
 type SubMenuId = 'status' | 'addCollection' | 'removeCollection';
 
 interface GameActionsMenuProps {
@@ -50,7 +47,7 @@ const STATUS_OPTIONS = [
 
 
 const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, isOpen, closeMenu }) => {
-    const { fetchGames, updateStatus } = useDb();
+    const { updateStatus, handleStartGame } = useDb();
     const { playConfirmSound, playConfirm2Sound, playCursorSound, playBackSound } = useSound();
     const { fetchCollections, addToCollection, deleteFromCollection, getCollectionsFromGame } = useCollection();
 
@@ -63,12 +60,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
 
     // --- Data loading -----------------------------------------------------
-    const getGames = async () => {
-        const games = await fetchGames();
-        if (!games) alert("Erro ao recuperar jogos.");
-        return games;
-    };
-
     const getCollections = async () => {
         const collections = await fetchCollections();
         if (collections) setCollectionsList(collections);
@@ -129,10 +120,6 @@ const GameActionsMenu: React.FC<GameActionsMenuProps> = ({ gameId, gameSteamId, 
         getCollections();
         getGameCollections();
         setActiveSubMenu(null);
-    };
-
-    const handleStartGame = (id: string, steamId: string) => {
-        window.location.href = `steam://rungameid/${steamId}`;
     };
 
     const openSubMenu = (id: SubMenuId) => {
