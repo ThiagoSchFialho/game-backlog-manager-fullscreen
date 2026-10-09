@@ -279,6 +279,28 @@ router.patch('/:id/beatable', async function (req: Request, res: Response) {
     }
 });
 
+router.patch('/:id/rtime_last_played', async function (req: Request, res: Response) {
+    const { id } = req.params;
+    const { rtime_last_played } = req.body;
+
+    if (typeof rtime_last_played !== 'string') {
+        return res.status(400).json({ error: "rtime_last_played não informado ou inválido." });
+    }
+
+    try {
+        const updatedGame = await gamesModel.updateGameRtimeLastPlayed(Number(id), rtime_last_played);
+
+        if (!updatedGame) {
+            return res.status(404).json({ message: "Jogo não encontrado." });
+        }
+
+        return res.status(200).json(updatedGame);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
 router.delete('/:id', async function (req: Request, res: Response) {
     const { id } = req.params;
 

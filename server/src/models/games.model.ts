@@ -320,6 +320,22 @@ export class GamesModel implements IGamesModel {
         }
     }
 
+    public async updateGameRtimeLastPlayed(id: number, rtime_last_played: string): Promise<Games | undefined> {
+        try {
+            const result = await pool.query(`
+                UPDATE games
+                SET rtime_last_played = $2
+                WHERE id = $1
+                RETURNING *;
+            `, [id, rtime_last_played]);
+
+            return result.rows[0];
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar última sessão do jogo.", error);
+        }
+    }
+
     public async deleteGame(id: number): Promise<Games | undefined> {
         try {
             const result = await pool.query(`

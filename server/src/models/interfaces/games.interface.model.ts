@@ -42,6 +42,7 @@ export interface IGamesModel {
     updateGameStatus(id: number, status: string): Promise<Games | undefined>;
     updateGameHidden(id: number, hidden: boolean): Promise<Games | undefined>;
     updateGameBeatable(id: number, beatable: boolean): Promise<Games | undefined>;
+    updateGameRtimeLastPlayed(id: number, rtime_last_played: string): Promise<Games | undefined>
     bulkUpdatePlaytime(entries: BulkPlaytimeEntry[]): Promise<{ steam_id: number }[]>;
     bulkUpdateRtimeLastPlayed(entries: BulkRtimeLastPlayedEntry[]): Promise<{ steam_id: number }[]>;
     bulkUpdateInstalled (installedSteamIds: number[]): Promise<{ steam_id: number; installed: boolean }[]>;
