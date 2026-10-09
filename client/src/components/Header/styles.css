@@ -16,9 +16,9 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 60px 0 40px;
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    background-color: var(--bg-primary);
+    /* border-bottom: 1px solid var(--border); */
+    /* box-shadow: var(--shadow); */
+    /* background-color: #091221a6; */
 }
 
 .top-menu-container {
@@ -54,15 +54,15 @@
 
 .selected::after {
     position: absolute;
-    bottom: -19px;
+    top: -20px;
     left: -20px;
     content: '';
     width: calc(105% + 40px);
     height: 7px;
     background-color: var(--primary);
     border-radius: 5px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }
 
 .top-menu-list li.selected p {
@@ -82,7 +82,7 @@
 
 .sync-steam-btn-container {
     position: absolute;
-    left: 150px;
+    left: 30px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -105,9 +105,9 @@
 .header-menu-container {
     position: fixed;
     top: 0px;
-    z-index: 100;
+    z-index: 1000;
     background-color: var(--bg-secondary);
-    box-shadow: 0px 35px 40px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 8px 35px 40px 10px rgba(0, 0, 0, 0.7);
     border: var(--border-primary);
     border-left: none;
     border-top: none;

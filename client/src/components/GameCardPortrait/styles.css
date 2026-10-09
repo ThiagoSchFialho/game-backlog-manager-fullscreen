@@ -10,7 +10,6 @@
     background-color: var(--bg-card);
     border: var(--border-primary);
     border-radius: 20px;
-    box-shadow: var(--shadow);
     padding: 5px 20px;
     font-size: 19px;
     font-weight: 500;
@@ -18,5 +17,5 @@
 
 .game-card-portrait-img {
     width: 100%;
-    box-shadow: var(--shadow);
+    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.8));
 }

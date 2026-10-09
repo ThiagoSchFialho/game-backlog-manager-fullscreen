@@ -10,8 +10,8 @@
 .horizontal-list-game-container {
     display: flex;
     flex-wrap: nowrap;
-    gap: 50px;
-    padding: 15px 10%;
+    gap: 60px;
+    padding: 150px 10%;
     overflow-x: auto;
     overflow-y: hidden;
     flex: 1 1 auto;
@@ -20,7 +20,7 @@
 
 .horizontal-list-game-container > div {
     flex: 0 0 auto;
-    width: 420px;
+    width: 400px;
 }
 
 .game-fast-info {

@@ -180,6 +180,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
     return (
         <>
             <JoystickSetup command={joystickNavigation} />
+            <div className="background"></div>
             <div className="main-content">
                 {!currentGame ? (
                     <p className="error-message">Jogo não encontrado</p>
@@ -197,7 +198,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                         />
 
                         <div className="game-page-details-container">
-                            <div className="game-page-details-section">
+                            <div className="game-page-details-section" style={{border: 'none'}}>
                                 <h2 className="game-page-details-section-title">Opções</h2>
                                 <div className="game-page-options-container">
                                     {optionsItems.map((item, index) => {

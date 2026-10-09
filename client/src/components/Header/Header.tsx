@@ -159,7 +159,7 @@ const Header: React.FC = () => {
             <JoystickSetup command={joystickNavigation} />
             <div className="header">
                 <div className="logo-container">
-                    <img onClick={() => setIsHeaderMenuOpen(true)} className="logo" src={logo} alt="game backlog manager logo" />
+                    {/* <img onClick={() => setIsHeaderMenuOpen(true)} className="logo" src={logo} alt="game backlog manager logo" /> */}
                     {isSynchronizing && (
                         <div
                             className="sync-steam-btn-container"

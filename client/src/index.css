@@ -40,9 +40,23 @@
 }
 
 body {
-    background-color: #0d121b;
+    margin: 0;
+    position: relative;
+    min-height: 100vh;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url('./assets/background.png');
+    background-position: top;
+    background-size: cover;
+    filter: blur(2px);
+    transform: scale(1.1);
+}
+  
 .main-content {
     width: 100%;
     min-height: calc(100vh - 120px);
@@ -50,8 +64,8 @@ body {
 }
 
 .focused {
-    outline: 2px solid rgba(255, 255, 255, 0.8);
     outline: 2px solid rgb(207, 206, 206);
+    outline: 2px solid rgb(255, 255, 255);
     outline-offset: 3px;
     transform: scale(1.03);
     transition: 0.15s;
