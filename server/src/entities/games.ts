@@ -2,44 +2,20 @@ import { IGames } from "./interfaces/games.interface";
 
 export class Games implements IGames {
     id?: number;
-    title: string;
-    steam_id: number;
+    title!: string;
+    steam_id!: number;
     cover_square?: string;
     developer?: string;
     release_date?: string;
-    rtime_last_played: string;
-    beatable: boolean;
-    hidden: boolean;
+    rtime_last_played!: string;
+    beatable!: boolean;
+    hidden!: boolean;
     installed?: boolean;
     personal_rating?: number;
-    playtime: number;
-    status: string;
+    playtime!: number;
+    status!: string;
     
-    constructor(
-        title: string,
-        steam_id: number,
-        cover_square: string,
-        developer: string,
-        release_date: string,
-        rtime_last_played: string,
-        beatable: boolean,
-        hidden: boolean,
-        installed: boolean,
-        personal_rating: number,
-        playtime: number,
-        status: string
-    ) {
-        this.title = title;
-        this.steam_id = steam_id;
-        this.cover_square = cover_square;
-        this.developer = developer;
-        this.release_date = release_date;
-        this.rtime_last_played = rtime_last_played;
-        this.beatable = beatable;
-        this.hidden = hidden;
-        this.installed = installed;
-        this.personal_rating = personal_rating;
-        this.playtime = playtime;
-        this.status = status;
+    constructor(data: IGames) {
+        Object.assign(this, data);
     }
 }
