@@ -11,9 +11,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import home from '../../assets/icons/home.svg';
 import gamepad from '../../assets/icons/gamepad.svg';
 import folder from '../../assets/icons/folder.svg';
+import achievement from '../../assets/icons/achievement.svg';
 import homeSelected from '../../assets/icons/home-selected.svg';
 import gamepadSelected from '../../assets/icons/gamepad-selected.svg';
 import folderSelected from '../../assets/icons/folder-selected.svg';
+import achievementSelected from '../../assets/icons/achievement-selected.svg';
 
 
 interface MenuItems {
@@ -118,6 +120,14 @@ const Header: React.FC = () => {
             iconSelected: folderSelected,
             label: 'Coleções',
             alt: 'pasta'
+        },
+        {
+            url: '/achievements',
+            name: 'achievements',
+            icon: achievement,
+            iconSelected: achievementSelected,
+            label: 'Conquistas',
+            alt: 'trofeu'
         }
     ];
 
