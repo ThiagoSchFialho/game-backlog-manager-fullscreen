@@ -38,6 +38,7 @@ export interface IGamesModel {
     getGameBySteamIdWithGenres(steam_id: number): Promise<GameWithGenres | undefined>;
     getAllGames(): Promise<Games[]>;
     getAllGamesWithGenres(): Promise<GameWithGenres[]>
+    getGameIdsBySteamId(): Promise<{ id: number; steam_id: number }[]>;
     updateGame(id: number, input: UpdateGameInput): Promise<Games | undefined>;
     updateGameStatus(id: number, status: string): Promise<Games | undefined>;
     updateGameHidden(id: number, hidden: boolean): Promise<Games | undefined>;

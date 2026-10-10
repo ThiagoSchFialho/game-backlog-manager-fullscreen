@@ -161,6 +161,19 @@ export class GamesModel implements IGamesModel {
         }
     }
 
+    public async getGameIdsBySteamId(): Promise<{ id: number; steam_id: number }[]> {
+        try {
+            const result = await pool.query(`
+                SELECT id, steam_id FROM games;
+            `);
+ 
+            return result.rows;
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao buscar ids dos jogos.", error);
+        }
+    }
+
     public async updateGame(id: number, input: UpdateGameInput): Promise<Games | undefined> {
         try {
             const result = await pool.query(`
