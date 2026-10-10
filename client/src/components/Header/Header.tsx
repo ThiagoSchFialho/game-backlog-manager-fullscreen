@@ -33,7 +33,7 @@ interface TopMenuItems {
 const Header: React.FC = () => {
     const navigation = useNavigate();
     const location = useLocation();
-    const { syncSteam } = useDb();
+    const { syncSteam, syncAchievements } = useDb();
     const { shutdown, loading, error } = useShutdown();
     const { playCursorSound, playConfirmSound, playBackSound, playSwipeSound } = useSound();
     const [time, setTime] = useState(new Date());
@@ -67,6 +67,19 @@ const Header: React.FC = () => {
         }
     }
 
+    const handleSyncAchievements = async () => {
+        setIsHeaderMenuOpen(false);
+        if (!isSynchronizing) {
+            setIsSynchronizing(true);
+            const result = await syncAchievements();
+    
+            if (result) {
+                setIsSynchronizing(false);
+                window.location.reload();
+            }
+        }
+    }
+
     const handleClick = () => {
         setIsHeaderMenuOpen(false);
         shutdown();
@@ -77,6 +90,7 @@ const Header: React.FC = () => {
         { label: 'Backlog', action: () => { setIsHeaderMenuOpen(false); navigation('/backlog'); }},
         { label: 'Voltar', action: () => setIsHeaderMenuOpen(false) },
         { label: 'Sincronizar steam', action: () => handleSyncSteam() },
+        { label: 'Sincronizar conquistas', action: () => handleSyncAchievements() },
         { label: 'Sair', action: () => handleClick() }
     ]
 
@@ -194,7 +208,7 @@ const Header: React.FC = () => {
                     <img className="logo" src={logo} alt="game backlog manager logo" />
                     <ul>
                         {menuItems.map((item, index) => {
-                            if (index >= menuItems.length - 2) { return (
+                            if (index >= menuItems.length - 3) { return (
                                 <>
                                     <hr />
                                     <li
