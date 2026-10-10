@@ -19,22 +19,12 @@ import notChecked from '../../assets/icons/not-checked.svg';
 import type { Game } from '../../types/gamesType';
 import { useSound } from '../../hooks/useSound';
 import { useNavigate } from 'react-router-dom';
+import type { Achievement } from '../../types/achievementType';
 
 interface ScreenItems {
     label: string
     type: string
     action: () => void | Promise<void>
-}
-
-interface Achievement {
-    id: number;
-    api_name: string;
-    display_name: string | null;
-    description: string | null;
-    icon: string | null;
-    icon_gray: string | null;
-    unlocked: boolean;
-    unlocked_at: string | null;
 }
 
 const statusConfig = {
