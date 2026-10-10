@@ -18,6 +18,7 @@ import notChecked from '../../assets/icons/not-checked.svg';
 
 import type { Game } from '../../types/gamesType';
 import { useSound } from '../../hooks/useSound';
+import { useNavigate } from 'react-router-dom';
 
 interface ScreenItems {
     label: string
@@ -62,6 +63,7 @@ interface GamePageProps {
 }
 
 const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
+    const navigation = useNavigate();
     const { getGameById, getAchievements, handleStartGame, updateHidden, updateBeatable } = useDb();
     const { playCursorSound, playConfirmSound } = useSound();
     const [currentGame, setCurrentGame] = useState<Game>();
@@ -160,7 +162,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
         {
             label: 'Conquistas',
             type: 'achievements',
-            action: () => console.log('abrir conquistas')
+            action: () => navigation('/achievements')
         }
     ];
 
@@ -301,7 +303,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                             </div>
 
                             <div className="game-page-details-section">
-                                <h2 className="game-page-details-section-title">Conquistas recentes</h2>
+                                <h2 className="game-page-details-section-title">Últimas conquistas</h2>
                                 <div className="game-page-achievements">
                                     {recentAchievements.map((achievement) => (
                                         <div className="game-page-achievements-icon-container">
