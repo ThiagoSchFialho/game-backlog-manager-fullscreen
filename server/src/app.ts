@@ -1,14 +1,15 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import usersRouter from './routes/users';
-import gamesRouter from './routes/games';
-import genresRouter from './routes/genres';
-import gameGenresRouter from './routes/gameGenres';
-import collectionsRouter from './routes/collections';
-import collectionGamesRouter from './routes/collectionGames';
-import steamApiRouter from './routes/steamApi';
-import systemRouter from "./routes/system";
+import usersRouter from './routes/users.route';
+import gamesRouter from './routes/games.route';
+import genresRouter from './routes/genres.route';
+import gameGenresRouter from './routes/gameGenres.route';
+import collectionsRouter from './routes/collections.route';
+import collectionGamesRouter from './routes/collectionGames.route';
+import steamApiRouter from './routes/steamApi.route';
+import systemRouter from "./routes/system.route";
+import achievementsRouter from "./routes/achievements.route";
 
 dotenv.config();
 const app = express();
@@ -29,6 +30,7 @@ app.use('/collections', collectionsRouter);
 app.use('/collection-games', collectionGamesRouter);
 app.use('/steam-api', steamApiRouter);
 app.use("/system", systemRouter);
+app.use("/achievements", achievementsRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'API rodando!' });

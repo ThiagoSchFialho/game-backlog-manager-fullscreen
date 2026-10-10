@@ -2,10 +2,12 @@ import express, { Request, Response } from 'express';
 import { CreateGameInput } from "../models/interfaces/games.interface.model";
 import { GamesModel } from '../models/games.model';
 import { UsersModel } from '../models/users.model';
+import { AchievementsModel } from '../models/achievements.model';
 
 const router = express.Router();
 const userModel = new UsersModel();
 const gamesModel = new GamesModel();
+const achievementsModel = new AchievementsModel();
 
 interface SteamOwnedGame {
     appid: number;
@@ -25,6 +27,20 @@ interface SyncResult {
     status: 'created' | 'updated' | 'error';
     game?: any;
     error?: string;
+}
+
+interface SteamAchievementSchemaEntry {
+    name: string;
+    displayName: string;
+    description?: string;
+    icon: string;
+    icongray: string;
+}
+ 
+interface SteamPlayerAchievementEntry {
+    apiname: string;
+    achieved: number;
+    unlocktime: number;
 }
 
 const BATCH_SIZE = 5;
@@ -83,6 +99,34 @@ async function fetchSteamLibrary(user: any): Promise<SteamOwnedGame[]> {
 
     const data = await steamRes.json();
     return data.response.games ?? [];
+}
+
+async function fetchAchievementSchema(appid: number, apiKey: string): Promise<SteamAchievementSchemaEntry[] | null> {
+    try {
+        const res = await fetch(`https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${apiKey}&appid=${appid}`);
+        if (!res.ok) return null;
+ 
+        const json = await res.json();
+        return json?.game?.availableGameStats?.achievements ?? null;
+    } catch (error) {
+        console.error(`Erro ao buscar schema de conquistas de ${appid}:`, error);
+        return null;
+    }
+}
+ 
+async function fetchPlayerAchievements(appid: number, user: any): Promise<SteamPlayerAchievementEntry[] | null> {
+    try {
+        const res = await fetch(`https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${user.steam_api_key}&steamid=${user.steam_id}&appid=${appid}`);
+        if (!res.ok) return null;
+ 
+        const json = await res.json();
+        if (!json?.playerstats?.success) return null;
+ 
+        return json.playerstats.achievements ?? null;
+    } catch (error) {
+        console.error(`Erro ao buscar conquistas do jogador para ${appid}:`, error);
+        return null;
+    }
 }
 
 /**
@@ -247,5 +291,76 @@ router.get('/sync-playtime-from-steam', (req: Request, res: Response) =>
 router.get('/sync-rtime-last-played-from-steam', (req: Request, res: Response) =>
     handleAttributeSync(req, res, 'rtime_last_played')
 );
+
+router.get('/sync-achievements-from-steam', async (req: Request, res: Response) => {
+    try {
+        const user = await userModel.getUser();
+ 
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
+ 
+        const trackedGames = await gamesModel.getGameIdsBySteamId();
+ 
+        if (!trackedGames.length) {
+            return res.status(200).json([]);
+        }
+ 
+        const results: { steam_id: number; status: 'synced' | 'error'; error?: string }[] = [];
+ 
+        for (let i = 0; i < trackedGames.length; i += BATCH_SIZE) {
+            const batch = trackedGames.slice(i, i + BATCH_SIZE);
+ 
+            const batchResults = await Promise.all(
+                batch.map(async ({ id, steam_id }) => {
+                    try {
+                        const hasSchema = await achievementsModel.hasSchema(id);
+ 
+                        if (!hasSchema) {
+                            const schema = await fetchAchievementSchema(steam_id, user.steam_api_key);
+ 
+                            if (schema?.length) {
+                                await achievementsModel.upsertSchema(id, schema.map((a) => ({
+                                    api_name: a.name,
+                                    display_name: a.displayName ?? null,
+                                    description: a.description ?? null,
+                                    icon: a.icon ?? null,
+                                    icon_gray: a.icongray ?? null,
+                                })));
+                            }
+                        }
+ 
+                        const playerAchievements = await fetchPlayerAchievements(steam_id, user);
+ 
+                        if (playerAchievements?.length) {
+                            await achievementsModel.bulkUpdateUnlocked(id, playerAchievements.map((a) => ({
+                                api_name: a.apiname,
+                                unlocked: a.achieved === 1,
+                                unlocked_at: a.unlocktime > 0 ? a.unlocktime : null,
+                            })));
+                        }
+ 
+                        return { steam_id, status: 'synced' as const };
+                    } catch (error: any) {
+                        console.error(`Erro ao sincronizar conquistas de ${steam_id}:`, error);
+                        return { steam_id, status: 'error' as const, error: error?.message ?? 'Erro desconhecido' };
+                    }
+                })
+            );
+ 
+            results.push(...batchResults);
+ 
+            if (i + BATCH_SIZE < trackedGames.length) {
+                await delay(BATCH_DELAY_MS);
+            }
+        }
+ 
+        const hasErrors = results.some((r) => r.status === 'error');
+        return res.status(hasErrors ? 207 : 200).json(results);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
 
 export default router;
