@@ -1,0 +1,75 @@
+.game-achievements-progress-main-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+}
+
+.game-achievements-progress-container {
+    display: flex;
+    gap: 30px;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 10px;
+    padding: 20px 30px;
+    margin: 0 20%;
+}
+
+.game-achievements-progress-container-focused {
+    background-color: var(--bg-card-secondary);
+    border: 1px solid var(--primary);
+}
+
+.achievement-game-img {
+    width: 140px;
+    border-radius: 10px;
+}
+
+.achievement-data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.achievement-game-title-percent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.achievement-game-title {
+    font-size: 20px;
+}
+
+.achievement-game-percent {
+    margin-top: 40px;
+    margin-right: 10px;
+    font-size: 23px;
+    font-weight: 300;
+}
+
+.achievement-progress-bar {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background-color: var(--text-muted);
+    border-radius: 10px;
+    overflow: hidden; /* corta o preenchimento nas bordas arredondadas */
+}
+
+.achievement-progress-fill {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.achievement-progress-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}

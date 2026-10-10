@@ -1,6 +1,6 @@
 import pool from "../config/db.config";
+import { Achievements } from "../entities/achievements";
 import {
-    Achievement,
     AchievementSchemaInput,
     AchievementUnlockEntry,
     GameAchievementProgress,
@@ -83,7 +83,7 @@ export class AchievementsModel implements IAchievementsModel {
         }
     }
 
-    public async getByGameId(gameId: number): Promise<Achievement[]> {
+    public async getByGameId(gameId: number): Promise<Achievements[]> {
         try {
             const result = await pool.query(`
                 SELECT * FROM achievements
