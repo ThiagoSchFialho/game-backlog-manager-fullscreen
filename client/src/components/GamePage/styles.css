@@ -94,5 +94,30 @@
 }
 
 .game-page-achievements {
-    width: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 45px;
+    padding-top: 20px;
+    padding-left: 40px;
+    margin-right: -20px;
+    height: calc(100% - 40px);
+}
+
+.game-page-achievements-icon-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.game-page-achievement-icon {
+    width: 130px;
+    height: 130px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.game-page-achievement-label {
+    max-width: 130px;
+    font-size: 14px;
+    color: var(--text-secondary);
 }

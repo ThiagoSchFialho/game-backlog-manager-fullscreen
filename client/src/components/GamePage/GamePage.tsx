@@ -25,6 +25,17 @@ interface ScreenItems {
     action: () => void | Promise<void>
 }
 
+interface Achievement {
+    id: number;
+    api_name: string;
+    display_name: string | null;
+    description: string | null;
+    icon: string | null;
+    icon_gray: string | null;
+    unlocked: boolean;
+    unlocked_at: string | null;
+}
+
 const statusConfig = {
     played: { icon: played, label: 'Jogado', color: '#539FE9' },
     'not-played': { icon: notPlayed, label: 'Não jogado', color: '#D4AC27' },
@@ -32,6 +43,8 @@ const statusConfig = {
 };
 
 const BANNER_INDEX = 999;
+
+const MAX_RECENT_ACHIEVEMENTS = 5;
 
 const NAVIGATION_MAP: Record<number, Partial<Record<string, number>>> = {
     0: { cima: BANNER_INDEX, baixo: 1, direita: 4 },
@@ -49,13 +62,14 @@ interface GamePageProps {
 }
 
 const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
-    const { getGameById, handleStartGame, updateHidden, updateBeatable } = useDb();
+    const { getGameById, getAchievements, handleStartGame, updateHidden, updateBeatable } = useDb();
     const { playCursorSound, playConfirmSound } = useSound();
     const [currentGame, setCurrentGame] = useState<Game>();
     const currentStatus = statusConfig[currentGame?.status ?? 'not-played'];
     const [selectedIndex, setSelectedIndex] = useState(BANNER_INDEX);
     const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [achievements, setAchievements] = useState<Achievement[]>([]);
 
     const getGame = async () => {
         const game = await getGameById(String(gameId));
@@ -63,9 +77,29 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
             setCurrentGame(game);
         }
     }
+
+    const loadAchievements = async () => {
+        const data = await getAchievements(String(gameId));
+        if (data) {
+            setAchievements(data);
+        }
+    }
+
     useEffect(() => {
         getGame();
+        loadAchievements();
     }, []);
+
+    const unlockedAchievements = achievements.filter((a) => a.unlocked);
+
+    const recentAchievements = unlockedAchievements
+        .filter((a) => a.icon && a.unlocked_at)
+        .sort((a, b) => new Date(b.unlocked_at!).getTime() - new Date(a.unlocked_at!).getTime())
+        .slice(0, MAX_RECENT_ACHIEVEMENTS);
+
+    const achievementsLabel = achievements.length
+        ? `${unlockedAchievements.length}/${achievements.length}`
+        : '—';
 
     const handleUpdateHidden = async (id: string, hidden: boolean) => {
         const response = await updateHidden(id, hidden);
@@ -261,7 +295,7 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                                             <img src={trophy} />
                                             <p className="title">Conquistas</p>
                                         </div>
-                                        <p>?/?</p>
+                                        <p>{achievementsLabel}</p>
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +303,18 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
                             <div className="game-page-details-section">
                                 <h2 className="game-page-details-section-title">Conquistas recentes</h2>
                                 <div className="game-page-achievements">
-
+                                    {recentAchievements.map((achievement) => (
+                                        <div className="game-page-achievements-icon-container">
+                                            <img
+                                                key={achievement.id}
+                                                className="game-page-achievement-icon"
+                                                src={achievement.icon!}
+                                                alt={achievement.display_name ?? achievement.api_name}
+                                                title={achievement.display_name ?? achievement.api_name}
+                                            />
+                                            <p className="game-page-achievement-label">{achievement.display_name}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
