@@ -8,6 +8,7 @@ export interface Achievement {
     icon_gray: string | null;
     unlocked: boolean;
     unlocked_at: string | null;
+    global_percent: number | null;
 }
 
 export interface AchievementSchemaInput {
@@ -30,6 +31,11 @@ export interface GameAchievementProgress {
     total: number;
 }
 
+export interface AchievementGlobalPercentEntry {
+    api_name: string;
+    global_percent: number;
+}
+
 export interface IAchievementsModel {
     hasSchema(gameId: number): Promise<boolean>;
     upsertSchema(gameId: number, items: AchievementSchemaInput[]): Promise<void>;
@@ -37,4 +43,6 @@ export interface IAchievementsModel {
     getByGameId(gameId: number): Promise<Achievement[]>;
     getProgressByGameId(gameId: number): Promise<GameAchievementProgress | undefined>;
     getProgressForAllGames(): Promise<GameAchievementProgress[]>;
+    needsGlobalPercent(gameId: number): Promise<boolean>;
+    bulkUpdateGlobalPercent(gameId: number, entries: AchievementGlobalPercentEntry[]): Promise<{ api_name: string }[]>;
 }

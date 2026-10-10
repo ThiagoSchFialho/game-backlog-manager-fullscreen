@@ -4,7 +4,8 @@ import {
     AchievementSchemaInput,
     AchievementUnlockEntry,
     GameAchievementProgress,
-    IAchievementsModel
+    IAchievementsModel,
+    AchievementGlobalPercentEntry
 } from "./interfaces/achievements.interface.model";
 
 function dbError(context: string, error: unknown): Error {
@@ -131,6 +132,48 @@ export class AchievementsModel implements IAchievementsModel {
         } catch (error) {
             console.error(error);
             throw dbError("Erro ao buscar progresso de conquistas de todos os jogos.", error);
+        }
+    }
+
+    public async needsGlobalPercent(gameId: number): Promise<boolean> {
+        try {
+            const result = await pool.query(`
+                SELECT 1 FROM achievements
+                WHERE game_id = $1 AND global_percent IS NULL
+                LIMIT 1;
+            `, [gameId]);
+ 
+            return (result.rowCount ?? 0) > 0;
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao verificar raridade das conquistas.", error);
+        }
+    }
+ 
+    public async bulkUpdateGlobalPercent(
+        gameId: number,
+        entries: AchievementGlobalPercentEntry[]
+    ): Promise<{ api_name: string }[]> {
+        if (!entries.length) return [];
+ 
+        try {
+            const apiNames = entries.map((e) => e.api_name);
+            const percents = entries.map((e) => e.global_percent);
+ 
+            const result = await pool.query(`
+                UPDATE achievements AS a
+                SET global_percent = v.global_percent
+                FROM (
+                    SELECT * FROM UNNEST($2::text[], $3::real[]) AS v(api_name, global_percent)
+                ) AS v
+                WHERE a.game_id = $1 AND a.api_name = v.api_name
+                RETURNING a.api_name;
+            `, [gameId, apiNames, percents]);
+ 
+            return result.rows;
+        } catch (error) {
+            console.error(error);
+            throw dbError("Erro ao atualizar raridade das conquistas.", error);
         }
     }
 }
