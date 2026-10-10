@@ -20,6 +20,21 @@ CREATE TABLE games (
     status VARCHAR(50)
 );
 
+CREATE TABLE IF NOT EXISTS achievements (
+    id SERIAL PRIMARY KEY,
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    api_name TEXT NOT NULL,
+    display_name TEXT,
+    description TEXT,
+    icon TEXT,
+    icon_gray TEXT,
+    unlocked BOOLEAN NOT NULL DEFAULT false,
+    unlocked_at TIMESTAMP,
+    UNIQUE (game_id, api_name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_achievements_game_id ON achievements (game_id);
+
 CREATE TABLE genres (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
