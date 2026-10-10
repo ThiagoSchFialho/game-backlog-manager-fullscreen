@@ -43,6 +43,11 @@ interface SteamPlayerAchievementEntry {
     unlocktime: number;
 }
 
+interface SteamGlobalPercentEntry {
+    name: string;
+    percent: number | string;
+}
+
 const BATCH_SIZE = 5;
 const BATCH_DELAY_MS = 1000;
 
@@ -125,6 +130,19 @@ async function fetchPlayerAchievements(appid: number, user: any): Promise<SteamP
         return json.playerstats.achievements ?? null;
     } catch (error) {
         console.error(`Erro ao buscar conquistas do jogador para ${appid}:`, error);
+        return null;
+    }
+}
+
+async function fetchGlobalPercentages(appid: number): Promise<SteamGlobalPercentEntry[] | null> {
+    try {
+        const res = await fetch(`https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=${appid}`);
+        if (!res.ok) return null;
+ 
+        const json = await res.json();
+        return json?.achievementpercentages?.achievements ?? null;
+    } catch (error) {
+        console.error(`Erro ao buscar raridade das conquistas de ${appid}:`, error);
         return null;
     }
 }
@@ -327,6 +345,18 @@ router.get('/sync-achievements-from-steam', async (req: Request, res: Response) 
                                     icon: a.icon ?? null,
                                     icon_gray: a.icongray ?? null,
                                 })));
+                            }
+                        }
+
+                        if (await achievementsModel.needsGlobalPercent(id)) {
+                            const percentages = await fetchGlobalPercentages(steam_id);
+ 
+                            const entries = (percentages ?? [])
+                                .map((p) => ({ api_name: p.name, global_percent: Number(p.percent) }))
+                                .filter((e) => Number.isFinite(e.global_percent));
+ 
+                            if (entries.length) {
+                                await achievementsModel.bulkUpdateGlobalPercent(id, entries);
                             }
                         }
  
