@@ -1,9 +1,66 @@
+.achievements-page-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 20% 20px 20%;
+}
+
+.achievements-degrade {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    bottom: -30px;
+    height: 20px;
+    background: linear-gradient(#040a1c, rgba(0, 0, 0, 0));
+}
+
+.achievements-qnt {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.achievement-sort-label-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.x-btn-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-card-secondary);
+    border: var(--border-primary);
+    border-radius: 100%;
+    padding: 2px 5px;
+    color: var(--info);
+}
+
+.x-btn-icon p {
+    color: var(--info);
+}
+
+.achievement-sort-label {
+
+}
+
 .game-achievements-progress-main-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
     overflow-y: auto;
     max-height: calc(100vh - 80px);
+    padding-top: 10px;
 }
 
 .game-achievements-progress-container {

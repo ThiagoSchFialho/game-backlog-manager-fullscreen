@@ -188,10 +188,18 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
             )}
 
             <div className="main-content">
-                <p>{unlockedAchievementsCount}</p>
-                <p className="achievement-sort-label">
-                    Ordenado por: {sortMode === "recent" ? "Último jogado" : "Mais conquistas"} (X)
-                </p>
+                <div className="achievements-page-header">
+                    <p className="achievements-qnt">Numero de conquistas: {unlockedAchievementsCount}</p>
+                    <div className="achievement-sort-label-container">
+                        <div className="x-btn-icon">
+                            <p>X</p>
+                        </div>
+                        <p className="achievement-sort-label">
+                            Ordenado por: {sortMode === "recent" ? "Último jogado" : "Mais conquistas"}
+                        </p>
+                    </div>
+                    <div className="achievements-degrade"></div>
+                </div>
                 <div className="game-achievements-progress-main-container" ref={scrollContainerRef}>
                     {sortedGames.map((game, index) => (
                         <div
