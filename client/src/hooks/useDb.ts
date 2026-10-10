@@ -200,6 +200,59 @@ export const useDb = () => {
         }
     }
 
+    const getAchievements = async (gameId: string) => {
+        try {
+            const response = await fetch (`${host}/achievements/${gameId}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao carregar conquistas.", data.error ?? data.message);
+                return null;
+            }
+
+            return data;
+
+        } catch (error) {
+            console.error("Erro ao carregar conquistas.", error);
+        }
+    }
+
+    const getAchievementsProgress = async (gameId?: string) => {
+        const path = gameId ? `/achievements/progress/${gameId}` : `/achievements/progress`;
+
+        try {
+            const response = await fetch (`${host}${path}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao carregar progresso de conquistas.", data.error ?? data.message);
+                return null;
+            }
+
+            return data;
+
+        } catch (error) {
+            console.error("Erro ao carregar progresso de conquistas.", error);
+        }
+    }
+
+    const syncAchievements = async () => {
+        try {
+            const response = await fetch (`${host}/steam-api/sync-achievements-from-steam`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao sincronizar conquistas.", data.error);
+                return null;
+            }
+
+            return data;
+
+        } catch (error) {
+            console.error("Erro ao sincronizar conquistas.", error);
+        }
+    }
+
     return {
         handleStartGame,
         getGameById,
@@ -210,6 +263,9 @@ export const useDb = () => {
         updateRTimeLastPlayed,
         syncSteam,
         syncPlaytime,
-        syncRtimeLastPlayed
+        syncRtimeLastPlayed,
+        getAchievements,
+        getAchievementsProgress,
+        syncAchievements
     };
 }
