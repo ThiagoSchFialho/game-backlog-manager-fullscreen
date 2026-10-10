@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS achievements (
     icon_gray TEXT,
     unlocked BOOLEAN NOT NULL DEFAULT false,
     unlocked_at TIMESTAMP,
+    global_percent REAL;
     UNIQUE (game_id, api_name)
 );
 
