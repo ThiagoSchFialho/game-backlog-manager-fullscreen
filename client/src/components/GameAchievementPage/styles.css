@@ -1,0 +1,62 @@
+.background {
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d121b;
+    background-color: #0d121bbd;
+}
+
+.game-achievements-page {
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+    margin: 50px 20% 0 20%;
+    padding-bottom: 150px;
+}
+
+.game-achievements-page-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--bg-card);
+    border: var(--border-primary);
+    border-radius: 10px;
+}
+
+.game-achievements-page-container-focused {
+    background-color: var(--bg-card-secondary);
+    border: 1px solid var(--primary);
+}
+
+.game-achievement-page-icon {
+    width: 80px;
+    border-radius: 5px;
+}
+
+.game-achievement-page-name-time-container {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+
+.game-achievement-page-name-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-achievement-page-name {
+    font-size: 20px;
+}
+
+.game-achievement-page-time {
+    letter-spacing: 0.2px;
+}
+
+.game-achievement-page-description {
+    border-left: 1px solid var(--border);
+    padding: 0 10px;
+}

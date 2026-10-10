@@ -16,7 +16,8 @@ const AppRoutes = () => {
             <Route path='/backlog' element={<Backlog />} />
             <Route path='/collections' element={<Collections />} />
             <Route path='/collection/:id' element={<Collection />} />
-            <Route path='/achievements' element={<Achievements />} />
+            <Route path='/achievements/' element={<Achievements />} />
+            <Route path='/achievements/:id' element={<Achievements />} />
         </Routes>
     )
 }

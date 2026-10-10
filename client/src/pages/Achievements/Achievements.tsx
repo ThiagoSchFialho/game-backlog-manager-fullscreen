@@ -6,6 +6,8 @@ import "./styles.css";
 import { getGameCover } from "../../utils/getGameCover";
 import JoystickSetup from "../../components/JoystickSetup/JoystickSetup";
 import { useSound } from "../../hooks/useSound";
+import GameAchievementPage from "../../components/GameAchievementPage/GameAchievementPage";
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface GameAchievementProgress {
     game_id: number;
@@ -24,6 +26,7 @@ interface AchievementsProps {
 }
 
 const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
+    const { id } = useParams<{ id: string }>();
     const { playSelectSound, playConfirmSound } = useSound();
     const { fetchGames, getAchievementsProgress } = useDb();
     const [games, setGames] = useState<GameWithAchievements[]>([]);
@@ -32,6 +35,14 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
     const [isOnGameAchievementPage, setIsOnGameAchievementPage] = useState<boolean>(false);
     const [commandCoolDown, setCommandCoolDown] = useState<boolean>(false);
     const [sortMode, setSortMode] = useState<SortMode>("recent");
+    const [selectedGameId, setSelectedGameId] = useState(0);
+
+    useEffect(() => {
+        if(id) {
+            setSelectedGameId(Number(id));
+            setIsOnGameAchievementPage(true);
+        }
+    })
 
     const getPercent = (g: GameWithAchievements) =>
         g.progress.total > 0 ? g.progress.unlocked / g.progress.total : 0;
@@ -82,10 +93,15 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
         selectedIndexRef.current = selectedIndex;
     }, [selectedIndex]);
 
-    const itemsLengthRef = useRef(games.length);
+    const sortedGamesRef = useRef(sortedGames);
     useEffect(() => {
-        itemsLengthRef.current = games.length;
-    }, [games.length]);
+        sortedGamesRef.current = sortedGames;
+    }, [sortedGames]);
+
+    const itemsLengthRef = useRef(sortedGames.length);
+    useEffect(() => {
+        itemsLengthRef.current = sortedGames.length;
+    }, [sortedGames.length]);
 
     const joystickNavigation = (command: string) => {
         if (command === 'START') {
@@ -115,7 +131,9 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
         } else if (command === 'A') {
             if (commandCoolDown) return;
             playConfirmSound();
-            games[currentIndex];
+            const game = sortedGamesRef.current[currentIndex];
+            setSelectedGameId(Number(game.id));
+            setIsOnGameAchievementPage(true);
         } else if (command === 'B') {
             if (commandCoolDown) return;
             onBack?.();
@@ -135,59 +153,64 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
     };
 
     // SCROLL ==========================================================================
-        const SCROLL_DURATION = 90;
-    
-        const scrollContainerRef = useRef<HTMLDivElement>(null);
-        const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
-        const animationRef = useRef<number | null>(null);
-    
-        useEffect(() => {
-            const container = scrollContainerRef.current;
-            const el = itemRefs.current[selectedIndex];
-            if (!container || !el) return;
-    
-            const containerRect = container.getBoundingClientRect();
-            const elRect = el.getBoundingClientRect();
-    
-            const elTopInContainer = elRect.top - containerRect.top + container.scrollTop;
-            const target =
-                elTopInContainer - container.clientHeight / 2 + elRect.height / 2;
-    
-            const start = container.scrollTop;
-            const distance = target - start;
-            const startTime = performance.now();
-    
+    const SCROLL_DURATION = 90;
+
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
+    const animationRef = useRef<number | null>(null);
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        const el = itemRefs.current[selectedIndex];
+        if (!container || !el) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+
+        const elTopInContainer = elRect.top - containerRect.top + container.scrollTop;
+        const target =
+            elTopInContainer - container.clientHeight / 2 + elRect.height / 2;
+
+        const start = container.scrollTop;
+        const distance = target - start;
+        const startTime = performance.now();
+
+        if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+
+        const easeInOut = (t: number) =>
+            t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+        const step = (now: number) => {
+            const progress = Math.min((now - startTime) / SCROLL_DURATION, 1);
+            container.scrollTop = start + distance * easeInOut(progress);
+
+            if (progress < 1) {
+                animationRef.current = requestAnimationFrame(step);
+            } else {
+                animationRef.current = null;
+            }
+        };
+
+        animationRef.current = requestAnimationFrame(step);
+
+        return () => {
             if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
-    
-            const easeInOut = (t: number) =>
-                t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    
-            const step = (now: number) => {
-                const progress = Math.min((now - startTime) / SCROLL_DURATION, 1);
-                container.scrollTop = start + distance * easeInOut(progress);
-    
-                if (progress < 1) {
-                    animationRef.current = requestAnimationFrame(step);
-                } else {
-                    animationRef.current = null;
-                }
-            };
-    
-            animationRef.current = requestAnimationFrame(step);
-    
-            return () => {
-                if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
-            };
-        }, [selectedIndex]);
-        // SCROLL ==========================================================================
+        };
+    }, [selectedIndex]);
+    // SCROLL ==========================================================================
 
     return (
         <>
+
+            {isOnGameAchievementPage && selectedGameId !== undefined && (
+                <GameAchievementPage gameId={String(selectedGameId)} onExitGamePage={handleCloseGameAchievementPage} />
+            )}
+
             {!isOnGameAchievementPage && (
                 <JoystickSetup command={joystickNavigation} />
             )}
 
-            <div className="main-content">
+            <div className="main-content" style={{ display: isOnGameAchievementPage ? 'none' : undefined }}>
                 <div className="achievements-page-header">
                     <p className="achievements-qnt">Numero de conquistas: {unlockedAchievementsCount}</p>
                     <div className="achievement-sort-label-container">
