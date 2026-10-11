@@ -7,7 +7,7 @@ import { getGameCover } from "../../utils/getGameCover";
 import JoystickSetup from "../../components/JoystickSetup/JoystickSetup";
 import { useSound } from "../../hooks/useSound";
 import GameAchievementPage from "../../components/GameAchievementPage/GameAchievementPage";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 interface GameAchievementProgress {
     game_id: number;
@@ -21,11 +21,7 @@ type GameWithAchievements = Game & {
 
 type SortMode = "recent" | "achievements";
 
-interface AchievementsProps {
-    onBack?: () => void;
-}
-
-const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
+const Achievements: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const { playSelectSound, playConfirmSound } = useSound();
     const { fetchGames, getAchievementsProgress } = useDb();
@@ -35,7 +31,7 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
     const [isOnGameAchievementPage, setIsOnGameAchievementPage] = useState<boolean>(false);
     const [commandCoolDown, setCommandCoolDown] = useState<boolean>(false);
     const [sortMode, setSortMode] = useState<SortMode>("recent");
-    const [selectedGameId, setSelectedGameId] = useState(0);
+    const [selectedGameId, setSelectedGameId] = useState<number>(0);
 
     useEffect(() => {
         if(id) {
@@ -134,9 +130,6 @@ const Achievements: React.FC<AchievementsProps> = ({ onBack }) => {
             const game = sortedGamesRef.current[currentIndex];
             setSelectedGameId(Number(game.id));
             setIsOnGameAchievementPage(true);
-        } else if (command === 'B') {
-            if (commandCoolDown) return;
-            onBack?.();
         } else if (command === 'X') {
             playSelectSound();
             setSortMode((prev) => (prev === "recent" ? "achievements" : "recent"));

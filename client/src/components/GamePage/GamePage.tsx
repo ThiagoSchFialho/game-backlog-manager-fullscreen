@@ -152,7 +152,8 @@ const GamePage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
         {
             label: 'Conquistas',
             type: 'achievements',
-            action: () => navigation(`/achievements/${currentGame?.id}`)
+            action: () => console.log('abrir conquistas')
+            // action: () => navigation(`/achievements/${currentGame?.id}`)
         }
     ];
 

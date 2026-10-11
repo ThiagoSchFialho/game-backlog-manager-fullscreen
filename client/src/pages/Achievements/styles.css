@@ -50,10 +50,6 @@
     color: var(--info);
 }
 
-.achievement-sort-label {
-
-}
-
 .game-achievements-progress-main-container {
     display: flex;
     flex-direction: column;
@@ -112,7 +108,7 @@
     height: 20px;
     background-color: var(--text-muted);
     border-radius: 10px;
-    overflow: hidden; /* corta o preenchimento nas bordas arredondadas */
+    overflow: hidden;
 }
 
 .achievement-progress-fill {

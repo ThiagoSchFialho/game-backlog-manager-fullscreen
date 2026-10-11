@@ -15,7 +15,7 @@ interface GamePageProps {
 }
 
 const GameAchievementPage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }) => {
-    const { getGameById, getAchievements} = useDb();
+    const { getGameById, getAchievements } = useDb();
     const { playSelectSound } = useSound();
     const [currentGame, setCurrentGame] = useState<Game>();
     const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -47,7 +47,7 @@ const GameAchievementPage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }
         .sort((a, b) => b.global_percent! - a.global_percent!);
 
     const achievementsLabel = achievements.length
-        ? `${unlockedAchievements.length}/${achievements.length}`
+        ? `${unlockedAchievements.length} / ${achievements.length}`
         : '—';
 
     function formatarData(data: string | null): string {
@@ -159,7 +159,26 @@ const GameAchievementPage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }
             <div className="background"></div>
 
             <div className="main-content">
-                <h1>{achievementsLabel}</h1>
+                <div className="game-achievements-page-header">
+                    <p className="game-achievement-page-progress">{achievementsLabel}</p>
+                    <div className="game-achievement-page-progress-bar-container">
+                        <div className="game-achievement-page-progress-bar">
+                            <div
+                                className="game-achievement-page-progress-fill"
+                                style={{
+                                    width: `${achievements.length > 0
+                                        ? (unlockedAchievements.length / achievements.length) * 100
+                                        : 0}%`,
+                                }}
+                            />
+                        </div>
+                        <p className="game-achievement-page-game-percent">
+                            {achievements.length > 0
+                                ? Math.floor((unlockedAchievements.length / achievements.length) * 100)
+                                : 0}%
+                        </p>
+                    </div>
+                </div>
                 <div className="game-achievements-page" ref={scrollContainerRef}>
                     {recentAchievements.map((achievement, index) => (
                         <div
@@ -186,7 +205,7 @@ const GameAchievementPage: React.FC<GamePageProps> = ({ gameId, onExitGamePage }
                             </div>
 
                             <div className="game-achievement-page-description">
-                                <p>{achievement.description}</p>
+                                <p>{achievement.description ? achievement.description : "|Secret achievement|"}</p>
                             </div>
                         </div>
                     ))}
